@@ -71,15 +71,7 @@ function Footer() {
             <Typography variant="h6">MarketPlace</Typography>
           </Box>
           <Box sx={{ paddingTop: "20px" }}>
-            {[
-              "All NFTs",
-              "Artworks",
-              "Sports",
-              "Utility",
-              "Music",
-              "Terms & Conditions",
-              "FAQs",
-            ].map((item, i) => (
+            {[ "Lorem Ipsum", "Lorem Ipsum"].map((item, i) => (
               <Box key={i}>
                 <Typography
                   variant="body2"
@@ -100,7 +92,7 @@ function Footer() {
             <Typography variant="h6">My Account</Typography>
           </Box>
           <Box sx={{ paddingTop: "20px" }}>
-            {["Profile", "Lorem Ipsum", "My Collections", "Lorem Ipsum"].map(
+            {[ "Lorem Ipsum", "Lorem Ipsum"].map(
               (item, i) => (
                 <Box key={i}>
                   <Typography
