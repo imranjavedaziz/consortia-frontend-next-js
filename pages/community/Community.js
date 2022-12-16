@@ -1,9 +1,27 @@
-import React from 'react'
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import NftCard from "../../src/components/common/NftCard";
+import NftSection from "../../src/components/common/NftSection";
+import PolygonButton from "../../src/components/common/PolygonButton";
+// import NftCardImg from ".."
 
 function Community() {
   return (
-    <div>Community</div>
-  )
+    <>
+      <PolygonButton />
+     
+     
+    </>
+  );
 }
 
-export default Community
+export default Community;

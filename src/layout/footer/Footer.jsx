@@ -24,22 +24,36 @@ function Footer() {
   ];
   return (
     <>
-      <Box sx={{padding:'40px 0px',display:'flex',justifyContent:'space-between'}}>
+      <Box
+        sx={{
+          padding: "40px 0px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <Box>
           <Image
             src="/assets/images/colorConsortiaLogo.svg"
             height={34}
             width={208}
           />
-          <Box sx={{paddingTop:'20px',paddingBottom:'32px'}}>
-            Consortia put the world's largest asset class, <br />
-            American residential real estate, on our private,
-            <br /> patent pending blockchain.
+          <Box sx={{ paddingTop: "20px", paddingBottom: "32px" }}>
+            <Typography
+              variant="body2"
+              fontSize="14px"
+              sx={{
+                opacity: 0.72,
+              }}
+            >
+              Consortia put the world's largest asset class, <br />
+              American residential real estate, on our private,
+              <br /> patent pending blockchain.
+            </Typography>
           </Box>
           <Box sx={{ display: "flex" }}>
-            {socilaIcons.map((item) => {
+            {socilaIcons.map((item, i) => {
               return (
-                <Box sx={{ paddingRight: "16px" }}>
+                <Box key={i} sx={{ paddingRight: "16px" }}>
                   <Image src={item?.icon} height={36} width={36} />
                 </Box>
               );
@@ -47,41 +61,73 @@ function Footer() {
           </Box>
         </Box>
         <Box>
-          <Box >Market Place</Box>
-          <Box sx={{paddingTop:'20px'}}>
-          {[
-            "All NFTs",
-            "Artworks",
-            "Sports",
-            "Utility",
-            "Music",
-            "Terms & Conditions",
-            "FAQs",
-          ].map((item) => (
-            <Box>
-              <Typography>{item}</Typography>
-            </Box>
-          ))}
+          <Box>
+            <Typography variant="h6">MarketPlace</Typography>
           </Box>
-          
-        </Box>
-        <Box>
-          <Box>My Account</Box>
-          <Box sx={{paddingTop:'20px'}}>
-          {["Profile", "Lorem Ipsum", "My Collections", "Lorem Ipsum"].map(
-            (item) => (
-              <Box >
-                <Typography>{item}</Typography>
+          <Box sx={{ paddingTop: "20px" }}>
+            {[
+              "All NFTs",
+              "Artworks",
+              "Sports",
+              "Utility",
+              "Music",
+              "Terms & Conditions",
+              "FAQs",
+            ].map((item, i) => (
+              <Box key={i}>
+                <Typography
+                  variant="body2"
+                  fontSize="14px"
+                  paddingY={0.5}
+                  sx={{
+                    opacity: 0.72,
+                  }}
+                >
+                  {item}
+                </Typography>
               </Box>
-            )
-          )}
-        </Box>
+            ))}
+          </Box>
         </Box>
         <Box>
-          <Box>Stay in the loop</Box>
-          <Box sx={{paddingTop:'20px'}}>
-            Join our mailing list to stay in the loop with our newest<br/> feature
-            releases, NFT drops, and tips and tricks for<br/> navigating NFTs.
+          <Box>
+            <Typography variant="h6">My Account</Typography>
+          </Box>
+          <Box sx={{ paddingTop: "20px" }}>
+            {["Profile", "Lorem Ipsum", "My Collections", "Lorem Ipsum"].map(
+              (item, i) => (
+                <Box key={i}>
+                  <Typography
+                    variant="body2"
+                    fontSize="14px"
+                    paddingY={0.5}
+                    sx={{
+                      opacity: 0.72,
+                    }}
+                  >
+                    {item}
+                  </Typography>
+                </Box>
+              )
+            )}
+          </Box>
+        </Box>
+        <Box>
+          <Box>
+            <Typography variant="h6">Stay in the loop</Typography>
+          </Box>
+          <Box sx={{ paddingTop: "20px" }}>
+            <Typography
+              variant="body2"
+              fontSize="14px"
+              sx={{
+                opacity: 0.72,
+              }}
+            >
+              Join our mailing list to stay in the loop with our newest
+              <br /> feature releases, NFT drops, and tips and tricks for
+              <br /> navigating NFTs.
+            </Typography>
           </Box>
         </Box>
       </Box>
