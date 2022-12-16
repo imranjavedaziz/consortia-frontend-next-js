@@ -58,6 +58,7 @@ const Header = () => {
               src="/assets/images/consortiaLogo.svg"
               width={180}
               height={29}
+              alt = "Logo"
             />
           </ImageLogo>
         </Grid>

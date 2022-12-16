@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Grid, Typography } from "@mui/material";
 import Image from "next/image";
+import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 function Footer() {
@@ -34,6 +34,7 @@ function Footer() {
         <Box>
           <Image
             src="/assets/images/colorConsortiaLogo.svg"
+            alt="Logo"
             height={34}
             width={208}
           />
@@ -45,7 +46,7 @@ function Footer() {
                 opacity: 0.72,
               }}
             >
-              Consortia put the world's largest asset class, <br />
+              Consortia put the world&apos;s largest asset class, <br />
               American residential real estate, on our private,
               <br /> patent pending blockchain.
             </Typography>
@@ -54,7 +55,12 @@ function Footer() {
             {socilaIcons.map((item, i) => {
               return (
                 <Box key={i} sx={{ paddingRight: "16px" }}>
-                  <Image src={item?.icon} height={36} width={36} />
+                  <Image
+                    src={item?.icon}
+                    height={36}
+                    width={36}
+                    alt="SocialIcons"
+                  />
                 </Box>
               );
             })}

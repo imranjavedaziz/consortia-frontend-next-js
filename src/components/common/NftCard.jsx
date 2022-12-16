@@ -26,6 +26,7 @@ const NftCard = ({ title, address }) => {
         component="img"
         height="220px"
         // width="250px"
+        alt="nft card Icon"
         image="/assets/images/nftCard.png"
         sx={{ borderRadius: "18px" }}
       ></CardMedia>
@@ -37,12 +38,14 @@ const NftCard = ({ title, address }) => {
               component="img"
               height={10}
               image="/assets/icons/heart.svg"
+              alt="Heart Icon"
             />
             <Typography variant="body2"> 0</Typography>
             <CardMedia
               component="img"
               height={10}
               image="/assets/icons/eye.svg"
+              alt="Eye Icon"
             />
             <Typography variant="body2"> 0</Typography>
           </Stack>

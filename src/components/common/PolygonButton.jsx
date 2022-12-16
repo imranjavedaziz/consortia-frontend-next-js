@@ -41,6 +41,7 @@ const PolygonButton = () => {
           }}
           component="img"
           image="/assets/icons/rocket.svg"
+          alt="Rocket Icon"
         />
         <Typography variant="h5"> EXPLORE MORE</Typography>
       </Box>

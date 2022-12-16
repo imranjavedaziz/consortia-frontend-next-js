@@ -47,6 +47,7 @@ export default function Home() {
           <Box>
             <Image
               src="/assets/images/landingPageBuilding.svg"
+              alt="Logo"
               height={564}
               width={597}
             />
