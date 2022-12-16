@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const ImageLogo = styled("div")({
   display: "flex",
-  justifyContent: "center",
+  // justifyContent: "start",
   alignItems: "center",
 });
 const NavigationList = styled(ImageLogo)({
@@ -45,7 +45,7 @@ const Header = () => {
   ];
   return (
     <>
-      <Grid container sx={{ paddingTop: "50px" }}>
+      <Grid container sx={{ padding: "50px 0px 80px 0px" }}>
         <Grid item xs={2}>
           <ImageLogo>
             <Image

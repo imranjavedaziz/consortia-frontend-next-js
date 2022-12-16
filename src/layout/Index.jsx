@@ -6,7 +6,8 @@ import { Box } from "@mui/system";
 
 export default function Index({children}) {
   const sectionStyle = {
-    height: "100vh",
+    minHeight: "100vh",
+    height: '100%',
     backgroundImage: `url(/assets/images/mainBackgound.svg)`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -14,14 +15,25 @@ export default function Index({children}) {
   return (
     <>
       <Paper
-        sx={{
-          paddingX: { xs: "120px" },
-        }}
         style={sectionStyle}
       >
+        <Box sx={{
+          paddingX: { xs: "120px" },
+          width:'100%'
+        }}>
         <Header />
         {children}
+        </Box>
+        <Box sx={{
+          paddingX: { xs: "120px" },
+          width:'100%',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)'
+        }}>
         <Footer />
+        </Box>
+        
+
       </Paper>
     </>
   );
