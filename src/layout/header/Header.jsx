@@ -26,7 +26,7 @@ const Header = () => {
     },
     {
       name: "Community",
-      path: "/community/Community",
+      path: "/community",
     },
     {
       name: "Training",

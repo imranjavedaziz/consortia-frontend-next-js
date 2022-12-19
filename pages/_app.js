@@ -13,6 +13,11 @@ const clientSideEmotionCache = createEmotionCache();
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const renderWithLayout =
+  Component.getLayout ||
+  function (page) {
+    return <Layout>{page}</Layout>;
+  };
 
   return (
     <CacheProvider value={emotionCache}>
@@ -22,9 +27,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={darkTheme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        {/* <Layout> */}
+       {renderWithLayout( <Component {...pageProps} />)}
+        {/* </Layout> */}
       </ThemeProvider>
     </CacheProvider>
   );
