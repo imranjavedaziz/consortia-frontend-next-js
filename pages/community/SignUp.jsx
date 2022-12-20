@@ -336,15 +336,10 @@ const SignUp = () => {
 
                   <Box display="flex" flexDirection="column">
                     <Button
-                      variant="contained"
-                      color="primary"
+                      variant="gradient"
+                      size="large"
                       type="submit"
                       disabled={isSubmitting}
-                      sx={{
-                        background:
-                          "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                        borderRadius: "24px",
-                      }}
                     >
                       Create Account
                     </Button>

@@ -14,6 +14,28 @@ export const lightTheme = createTheme({
 
 export const darkTheme = createTheme({
   components: {
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: "gradient", size: "small" },
+          style: {
+            textTransform: "none",
+            background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+            borderRadius: "8px",
+            width: "80px",
+          },
+        },
+        {
+          props: { variant: "gradient", size: "large" },
+          style: {
+            textTransform: "none",
+            background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+            borderRadius: "24px",
+            width: "100%",
+          },
+        },
+      ],
+    },
     MuiCssBaseline: {
       styleOverrides: {
         body: {
