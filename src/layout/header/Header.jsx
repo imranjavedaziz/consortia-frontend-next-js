@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const ImageLogo = styled("div")({
+export const ImageLogo = styled("div")({
   display: "flex",
   // justifyContent: "start",
   alignItems: "center",
