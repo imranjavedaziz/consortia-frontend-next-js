@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const ImageLogo = styled("div")({
+export const ImageLogo = styled("div")({
   display: "flex",
   // justifyContent: "start",
   alignItems: "center",
@@ -58,7 +58,7 @@ const Header = () => {
               src="/assets/images/consortiaLogo.svg"
               width={180}
               height={29}
-              alt = "Logo"
+              alt="Logo"
             />
           </ImageLogo>
         </Grid>
