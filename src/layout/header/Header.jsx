@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import Image from "next/image";
 import Link from "next/link";
@@ -58,11 +58,11 @@ const Header = () => {
               src="/assets/images/consortiaLogo.svg"
               width={180}
               height={29}
-              alt = "Logo"
+              alt="Logo"
             />
           </ImageLogo>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <NavigationList
             sx={{ display: "flex", justifyContent: "space-around" }}
           >
@@ -108,9 +108,36 @@ const Header = () => {
         </Grid>
         <Grid
           item
-          xs={2}
-          sx={{ display: "flex", justifyContent: "end" }}
-        ></Grid>
+          xs={3}
+          sx={{ display: "flex", justifyContent: "space-around" }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              background:"linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+              borderRadius: "24px",
+              width: "120px",
+              padding: "10px 0px",
+            }}
+            // onClick={handleClose}
+          >
+            Signup
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              background:"linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+              borderRadius: "24px",
+              width: "120px",
+              padding: "10px 0px",
+            }}
+            // onClick={handleClose}
+          >
+            Login
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

@@ -3,8 +3,11 @@ import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import { Grid, Paper } from "@mui/material";
 import { Box } from "@mui/system";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function Index({children}) {
+  const router =  useRouter()
   const sectionStyle = {
     minHeight: "100vh",
     height: '100%',
@@ -12,8 +15,14 @@ export default function Index({children}) {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+  // console.log('router.sdplit(/',router.pathname.split('/'))
+
   return (
     <>
+     <Head>
+      <title>{router.pathname.slice(1)}</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
       <Paper
         style={sectionStyle}
       >

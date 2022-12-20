@@ -92,6 +92,7 @@ export const darkTheme = createTheme({
     },
     secondary: {
       main: "#19857b",
+      purpleGray:"#313770"
     },
   },
 });

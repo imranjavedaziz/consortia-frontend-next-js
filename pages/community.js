@@ -8,6 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Head from "next/head";
 import React from "react";
 import NftCard from "../src/components/common/NftCard";
 import NftSection from "../src/components/common/NftSection";
@@ -19,6 +20,7 @@ import PolygonButton from "../src/components/common/PolygonButton";
 function Community() {
   return (
     <>
+   
       <PolygonButton />
      
      
