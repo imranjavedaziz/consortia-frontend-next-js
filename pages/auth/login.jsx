@@ -18,6 +18,7 @@ function Login() {
         open={open}
         setOpen={setOpen}
         title="Reset Password"
+        placeholder="Mail@example.com"
         text="Please enter your email address or username and we will email you a link to reset your password."
         btnText='Send Request'
       />
@@ -30,6 +31,7 @@ function Login() {
         open={openVeri}
         setOpen={setOpenVeri}
         title="Verification Code"
+        placeholder="Enter your email verification code"
         text="Verification Code has been sent to your mail and mobile number."
         btnText='Submit'
       />

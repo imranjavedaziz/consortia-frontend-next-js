@@ -14,10 +14,14 @@ const NavigationList = styled(ImageLogo)({
   padding: "0px 100px",
 });
 const Header = () => {
-  const { route } = useRouter();
+  const { route,push } = useRouter();
   const isActive = (path) => {
     return route == path;
   };
+ 
+  const goToSignup = () => {
+
+  }
 
   const navigationItems = [
     {
@@ -114,19 +118,21 @@ const Header = () => {
           <Button
             variant="contained"
             color="primary"
+            onClick={() => push("/auth/signup")}
             sx={{
               background:"linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
               borderRadius: "24px",
               width: "120px",
               padding: "10px 0px",
             }}
-            // onClick={handleClose}
+         
           >
             Signup
           </Button>
           <Button
             variant="contained"
             color="primary"
+            onClick={() => push("/auth/login")}
             sx={{
               background:"linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
               borderRadius: "24px",

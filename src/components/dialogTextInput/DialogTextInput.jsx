@@ -17,27 +17,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 //     border-radius: 50px;
 //   }
 // `;
-const GradiantTextField = styled(TextField)(() => ({
-  background: '',
-  padding: "5px 0",
+const GradiantTextField = styled(TextField)(({}) => ({
   "& .MuiInput-root": {
-    marginLeft: "5px",
+    paddingLeft: "15px",
   },
-  borderRadius: "24px",
-  "&:after": {
-    position: "absolute",
-    top: -2,
-    left: -2,
-    right: -2,
-    bottom: -2,
-    background: `linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)`,
-    content: '""',
-    zIndex: -1,
-    borderRadius: "24px",
-  },
+  "& input::placeholder": {
+    fontSize: "16px",
+    fontWeight: 400
+  }
 }));
 const TextFieldWrapper = styled(TextField)(() => ({}));
-function DialogTextInput({ open, setOpen, text, title, input, btnText }) {
+function DialogTextInput({ open, setOpen, text, title, input, btnText, placeholder }) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -93,17 +83,29 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText }) {
                 }}
               /> */}
               {/* </TextFieldWrapper> */}
-              <GradiantTextField
-                id="filled-basic"
-                variant="standard"
-                background="#bdbdbd"
-                InputProps={{
-                  disableUnderline: true,
+              <div
+                style={{
+                  background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "24px",
+                  marginTop:'40px'
                 }}
-                placeholder="Enter text here.."
-                // fullWidth
-              />
-              
+              >
+                <GradiantTextField
+                  variant="standard"
+                  placeholder={placeholder}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
+                  fullWidth
+                  sx={{
+                    background: "rgba(29, 6, 104, 0.7)",
+                    margin: "3px 3px 3px 3px",
+                    borderRadius: "24px",
+                  }}
+                />
+              </div>
             </Box>
           </DialogContentText>
         </DialogContent>
@@ -126,7 +128,6 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText }) {
           </Box>
         </DialogActions>
       </Dialog>
-     
     </>
   );
 }
