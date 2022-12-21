@@ -24,12 +24,22 @@ const GradiantTextField = styled(TextField)(({}) => ({
   },
   "& input::placeholder": {
     fontSize: "16px",
-    fontWeight: 400
-  }
+    fontWeight: 400,
+  },
 }));
 const TextFieldWrapper = styled(TextField)(() => ({}));
-function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, height,crossButtonEbable }) {
-  const handleClose = () => {
+function TextAndDoubleButtons({
+  open,
+  setIsPractitioner,
+  setOpen,
+  text,
+  title,
+  btnText1,
+  btnText2,
+  height,
+  crossButtonEbable,
+}) {
+  const handleClose = (e) => {
     setOpen(false);
   };
   return (
@@ -61,12 +71,19 @@ function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, 
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
-            {crossButtonEbable && <Box
-              sx={{ display: "flex", alignItems: "center" }}
-              onClick={handleClose}
-            >
-              <Image src="/assets/icons/cross.svg" height={22} width={22} />
-            </Box>}
+            {crossButtonEbable && (
+              <Box
+                sx={{ display: "flex", alignItems: "center" }}
+                onClick={handleClose}
+              >
+                <Image
+                  src="/assets/icons/cross.svg"
+                  height={22}
+                  width={22}
+                  alt=""
+                />
+              </Box>
+            )}
           </Box>
         </DialogTitle>
         <DialogContent sx={{ padding: "16px 0px" }}>
@@ -75,7 +92,13 @@ function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, 
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ padding: "16px 0px" }}>
-          <Box sx={{ width: "100%", display:'flex',justifyContent:'space-between' }}>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -84,10 +107,13 @@ function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, 
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
                 // width: "100%",
-                width:'230px',
+                width: "230px",
                 padding: "13px 61px",
               }}
-              onClick={handleClose}
+              onClick={() => {
+                setIsPractitioner(false);
+                handleClose();
+              }}
             >
               {btnText1}
             </Button>
@@ -99,10 +125,13 @@ function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, 
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
                 // width: "100%",
-                width:'230px',
+                width: "230px",
                 padding: "13px 61px",
               }}
-              onClick={handleClose}
+              onClick={() => {
+                setIsPractitioner(true);
+                handleClose();
+              }}
             >
               {btnText2}
             </Button>
