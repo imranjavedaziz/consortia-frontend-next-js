@@ -23,356 +23,197 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import AuthLayout from "../../src/authLayout/index"
+import AuthLayout from "../../src/authLayout/index";
 import TextAndDoubleButtons from "../../src/components/modals/textAndDoubleButtons/TextAndDoubleButtons";
+import CustomInputField from "../../src/components/common/CustomInputField";
 
+const inputFields = [
+  { name: "email", label: "Email Address", placeholder: "mail@example.com" },
+  {
+    name: "phone",
+    label: "Phone Number",
+    placeholder: "Enter your phone number",
+  },
+  {
+    name: "password",
+    label: "Password",
+    placeholder: "Minimum of 8 characters",
+    sensitive: true,
+  },
+  {
+    name: "confirm_password",
+    label: "Confirm Password",
+    placeholder: "Confirm Password",
+    sensitive: true,
+  },
+];
 
 const SignUp = () => {
-  const [open, setOpen] = useState(true)
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () =>
-    setShowConfirmPassword((show) => !show);
+  const [open, setOpen] = useState(true);
+  const [isPractitioner, setIsPractitioner] = useState(false);
 
   return (
-   <>
-   <TextAndDoubleButtons
+    <>
+      <TextAndDoubleButtons
         open={open}
+        setIsPractitioner={setIsPractitioner}
         title="This Account is for?"
         text="Please select your category if you are a practitioner then select practitioner otherwise select consumer."
         btnText1="consumer"
-        btnText2="practitionar"
+        btnText2="practitioner"
         setOpen={setOpen}
-        height='333px'
+        height="333px"
       />
-   <Grid container sx={{height:'100%',minHeight:'100vh'}}>
-      <Grid
-        item
-        xs={6}
-        sx={{
-          background: " url(/assets/images/signupbackground.png) no-repeat",
-          backgroundSize: "100%",
-          // minHeight: "100vh",
-        }}
-      >
-        <Box
-          height="100%"
-          paddingY={5}
+      {console.log(isPractitioner)}
+      <Grid container sx={{ height: "100%", minHeight: "100vh" }}>
+        <Grid
+          item
+          xs={6}
           sx={{
-            background: "rgba(24, 10, 91, 0.8)",
-            display: "flex",
-            justifyContent: "center",
+            background: " url(/assets/images/signupbackground.png) no-repeat",
+            backgroundSize: "cover",
           }}
         >
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            width={390}
-            height={89}
-            alt="Logo"
-          />
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={6}
-        // paddingY={8}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        rowGap={3}
-        justifyContent="center"
-      >
-        <Typography variant="h3">User Registration</Typography>
-
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
-            remember: true,
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-            console.log(values);
-            setSubmitting(false);
-          }}
-          validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .email("Email should be a valid email")
-              .required("Email is Required"),
-            password: Yup.string().required("Password is required"),
-          })}
+          <Box
+            height="100%"
+            paddingY={5}
+            sx={{
+              background: "rgba(24, 10, 91, 0.8)",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              width={390}
+              height={89}
+              alt="Logo"
+            />
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={6}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          rowGap={3}
+          justifyContent="center"
         >
-          {(props) => {
-            const {
-              values,
-              touched,
-              errors,
-              dirty,
-              isSubmitting,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              handleReset,
-            } = props;
-            return (
-              <form onSubmit={handleSubmit} autoComplete='off'>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  boxSizing="border-box"
-                  width="80%"
-                  margin="auto"
-                  // paddingX={2}
-                  rowGap={2}
+          <Typography variant="h3">User Registration</Typography>
+          <Formik
+            initialValues={{
+              isPractitioner: isPractitioner,
+              first_name: "",
+              last_name: "",
+              email: "",
+              password: "",
+              confirm_password: "",
+            }}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              console.log(values);
+              setSubmitting(false);
+            }}
+            validationSchema={Yup.object().shape({
+              first_name: Yup.string().required("First Name is required"),
+              last_name: Yup.string().required("Last Name is required"),
+              email: Yup.string()
+                .email("Should be a valid email")
+                .required("Email is required"),
+              phone: Yup.string().required("Phone number is required"),
+              password: Yup.string()
+                .required("Password is required")
+                .min(8, "Password Should have a minimum of 8 characters"),
+              confirm_password: Yup.string()
+                .required("Confirm Password is required")
+                .oneOf([Yup.ref("password"), null], "Passwords must match"),
+            })}
+          >
+            {(props) => {
+              const { isSubmitting, handleSubmit } = props;
+              return (
+                <form
+                  onSubmit={handleSubmit}
+                  autoComplete="off"
+                  style={{ width: "80%" }}
                 >
-                  <Box>
-                    <InputLabel shrink htmlFor="first-name-input">
-                      Enter your Name:
-                    </InputLabel>
-                    <Box
-                      display="flex"
-                      // alignItems="center"
-                      // justifyContent="center"
-                      gap={2}
-                    >
-                      <TextField
-                        inputProps={{
-                          style: {
-                            height: "15px",
-                          },
-                        }}
-                        sx={{
-                          "& legend": { display: "none" },
-                          "& fieldset": {
-                            top: 0,
-                            borderRadius: "24px",
-                          },
-                        }}
-                        id="first-name-input"
-                        error={errors.name && touched.name}
-                        label=""
-                        name="first-name-input"
-                        // className={classes.textField}
-                        value={values.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={errors.name && touched.name && errors.name}
-                      />
-                      <TextField
-                        inputProps={{
-                          style: {
-                            height: "15px",
-                          },
-                        }}
-                        sx={{
-                          "& legend": { display: "none" },
-                          "& fieldset": {
-                            top: 0,
-                            borderRadius: "24px",
-                          },
-                        }}
-                        id="last-name-input"
-                        error={errors.last_name && touched.last_name}
-                        label=""
-                        name="last-name-input"
-                        // className={classes.textField}
-                        value={values.last_name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={
-                          errors.last_name &&
-                          touched.last_name &&
-                          errors.last_name
-                        }
-                      />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    boxSizing="border-box"
+                    width="80%"
+                    margin="auto"
+                    // paddingX={2}
+                    rowGap={3}
+                  >
+                    <Box>
+                      <InputLabel shrink htmlFor="first_name">
+                        Name
+                      </InputLabel>
+                      <Box
+                        display="flex"
+                        alignItems="start"
+                        columnGap={3}
+                        justifyContent="space-between"
+                      >
+                        <CustomInputField
+                          name="first_name"
+                          placeholder="First Name"
+                        />
+                        <CustomInputField
+                          name="last_name"
+                          placeholder="Last Name"
+                        />
+                      </Box>
+                    </Box>
+                    {inputFields.map(
+                      ({ name, label, placeholder, sensitive }) => (
+                        <CustomInputField
+                          key={name}
+                          name={name}
+                          label={label}
+                          placeholder={placeholder}
+                          sensitive={sensitive}
+                        />
+                      )
+                    )}
+
+                    <Box display="flex" flexDirection="column">
+                      {isPractitioner ? (
+                        <Button
+                          variant="gradient"
+                          size="large"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
+                          Next
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="gradient"
+                          size="large"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
+                          Create Account
+                        </Button>
+                      )}
                     </Box>
                   </Box>
-                  <Box>
-                    <InputLabel shrink htmlFor="email-input">
-                      Enter your Email:
-                    </InputLabel>
-                    <TextField
-                      fullWidth
-                      inputProps={{
-                        style: {
-                          height: "15px",
-                        },
-                      }}
-                      sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": {
-                          top: 0,
-                          borderRadius: "24px",
-                        },
-                      }}
-                      id="email-input"
-                      error={errors.email && touched.email}
-                      label=""
-                      name="email"
-                      // className={classes.textField}
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={errors.email && touched.email && errors.email}
-                    />
-                  </Box>
-
-                  <Box>
-                    <InputLabel shrink htmlFor="phone-input">
-                      Phone Number:
-                    </InputLabel>
-                    <TextField
-                      fullWidth
-                      inputProps={{
-                        style: {
-                          height: "15px",
-                        },
-                      }}
-                      sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": {
-                          top: 0,
-                          borderRadius: "24px",
-                        },
-                      }}
-                      id="phone-input"
-                      error={errors.phone && touched.phone}
-                      label=""
-                      name="phone"
-                      // className={classes.textField}
-                      value={values.phone}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={errors.phone && touched.phone && errors.phone}
-                    />
-                  </Box>
-
-                  <Box>
-                    <InputLabel shrink htmlFor="password-input">
-                      Password:
-                    </InputLabel>
-                    <TextField
-                      fullWidth
-                      inputProps={{
-                        style: {
-                          height: "15px",
-                        },
-                      }}
-                      sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": {
-                          top: 0,
-                          borderRadius: "24px",
-                        },
-                      }}
-                      id="password-input"
-                      label=""
-                      name="password"
-                      error={errors.password && touched.password}
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={
-                        errors.password && touched.password && errors.password
-                      }
-                      type={showPassword ? "text" : "password"}
-                      InputProps={{
-                        endAdornment: (
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            // onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {showPassword ? (
-                              <VisibilityOff opacity={0.8} />
-                            ) : (
-                              <Visibility opacity={0.8} />
-                            )}
-                          </IconButton>
-                        ),
-                      }}
-                    />
-                  </Box>
-
-                  <Box>
-                    <InputLabel shrink htmlFor="confirm-password-input">
-                      Confirm Password:
-                    </InputLabel>
-                    <TextField
-                      fullWidth
-                      inputProps={{
-                        style: {
-                          height: "15px",
-                        },
-                      }}
-                      sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": {
-                          top: 0,
-                          borderRadius: "24px",
-                        },
-                      }}
-                      id="confirm-password-input"
-                      label=""
-                      name="confirm_password"
-                      error={
-                        errors.confirm_password && touched.confirm_password
-                      }
-                      value={values.confirm_password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={
-                        errors.confirm_password &&
-                        touched.confirm_password &&
-                        errors.confirm_password
-                      }
-                      type={showConfirmPassword ? "text" : "password"}
-                      InputProps={{
-                        endAdornment: (
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowConfirmPassword}
-                            edge="end"
-                          >
-                            {showConfirmPassword ? (
-                              <VisibilityOff opacity={0.8} />
-                            ) : (
-                              <Visibility opacity={0.8} />
-                            )}
-                          </IconButton>
-                        ),
-                      }}
-                    />
-                  </Box>
-
-                  <Box display="flex" flexDirection="column">
-                    <Button
-                      variant="gradient"
-                      size="large"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Create Account
-                    </Button>
-                  </Box>
-                </Box>
-              </form>
-            );
-          }}
-        </Formik>
-        <Box></Box>
+                </form>
+              );
+            }}
+          </Formik>
+          <Box></Box>
+        </Grid>
       </Grid>
-    </Grid>
-   </>
-    
+    </>
   );
 };
 
 export default SignUp;
 
-SignUp.getLayout = function(page) {
-    return <AuthLayout>{page}</AuthLayout>;
-  };
+SignUp.getLayout = function (page) {
+  return <AuthLayout>{page}</AuthLayout>;
+};

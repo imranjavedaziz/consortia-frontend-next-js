@@ -24,11 +24,20 @@ const GradiantTextField = styled(TextField)(({}) => ({
   },
   "& input::placeholder": {
     fontSize: "16px",
-    fontWeight: 400
-  }
+    fontWeight: 400,
+  },
 }));
 const TextFieldWrapper = styled(TextField)(() => ({}));
-function DialogTextInput({ open, setOpen, text, title, input, btnText, placeholder,inputTypeCode }) {
+function DialogTextInput({
+  open,
+  setOpen,
+  text,
+  title,
+  input,
+  btnText,
+  placeholder,
+  inputTypeCode,
+}) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -66,7 +75,12 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
               sx={{ display: "flex", alignItems: "center" }}
               onClick={handleClose}
             >
-              <Image src="/assets/icons/cross.svg" height={22} width={22} />
+              <Image
+                src="/assets/icons/cross.svg"
+                height={22}
+                width={22}
+                alt=""
+              />
             </Box>
           </Box>
         </DialogTitle>
@@ -87,11 +101,12 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
               {/* </TextFieldWrapper> */}
               <div
                 style={{
-                  background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                  background:
+                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                   display: "flex",
                   justifyContent: "center",
                   borderRadius: "24px",
-                  marginTop:'40px'
+                  marginTop: "40px",
                 }}
               >
                 <GradiantTextField
@@ -99,15 +114,19 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
                   placeholder={placeholder}
                   InputProps={{
                     disableUnderline: true,
-                  endAdornment: (
-                      inputTypeCode && <IconButton
+                    endAdornment: inputTypeCode && (
+                      <IconButton
                         aria-label="toggle password visibility"
                         // onClick={handleClickShowPassword}
                         // onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
                         <Box>
-                          <Typography variant="subtitle1" color='secondary.yellow' sx={{paddingRight:"20px"}}>
+                          <Typography
+                            variant="subtitle1"
+                            color="secondary.yellow"
+                            sx={{ paddingRight: "20px" }}
+                          >
                             Resend Code
                           </Typography>
                         </Box>

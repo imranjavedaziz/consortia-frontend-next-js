@@ -24,16 +24,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
+import CustomInputField from "../../src/components/common/CustomInputField";
 
 function Login() {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
   return (
     <>
-      <Grid container sx={{height:'100%',minHeight:'100vh'}}>
+      <Grid container sx={{ height: "100%", minHeight: "100vh" }}>
         <Grid
           item
           md={6}
@@ -74,90 +70,29 @@ function Login() {
             })}
           >
             {(props) => {
-              const {
-                values,
-                touched,
-                errors,
-                dirty,
-                isSubmitting,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                handleReset,
-              } = props;
+              const { values, isSubmitting, handleChange, handleSubmit } =
+                props;
               return (
-                <form onSubmit={handleSubmit} style={{width: '70%'}} >
+                <form onSubmit={handleSubmit} style={{ width: "70%" }}>
                   {console.log(values)}
-                  <Box display="flex" flexDirection="column" rowGap={5} sx={{width:'100%'}}>
-                    <Box width='100%'>
-                      <InputLabel shrink htmlFor="email-input">
-                        Enter your Email:
-                      </InputLabel>
-                      <TextField
-                      fullWidth
-                        sx={{
-                          "& legend": { display: "none" },
-                          "& fieldset": {
-                            top: 0,
-                            borderRadius: "24px",
-                          },
-                        }}
-                        id="email-input"
-                        error={errors.email && touched.email}
-                        label=""
-                        name="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={
-                          errors.email && touched.email && errors.email
-                        }
-                      />
-                    </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    rowGap={5}
+                    sx={{ width: "100%" }}
+                  >
+                    <CustomInputField
+                      name="email"
+                      label="Enter Your Email"
+                      placeholder="mail@example.com"
+                    />
+                    <CustomInputField
+                      name="password"
+                      label="Password"
+                      placeholder="Password"
+                      sensitive
+                    />
 
-                    <Box>
-                      <InputLabel shrink htmlFor="password-input">
-                        Password:
-                      </InputLabel>
-                      <TextField
-                      fullWidth
-                        sx={{
-                          height: "50px",
-                          "& legend": { display: "none" },
-                          "& fieldset": {
-                            top: 0,
-                            borderRadius: "24px",
-                          },
-                        }}
-                        id="password-input"
-                        label=""
-                        name="password"
-                        error={errors.password && touched.password}
-                        value={values.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        helperText={
-                          errors.password && touched.password && errors.password
-                        }
-                        type={showPassword ? "text" : "password"}
-                        InputProps={{
-                          endAdornment: (
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              // onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? (
-                                <VisibilityOff opacity={0.8} />
-                              ) : (
-                                <Visibility opacity={0.8} />
-                              )}
-                            </IconButton>
-                          ),
-                        }}
-                      />
-                    </Box>
                     <Box display="flex" flexDirection="column">
                       <Box
                         display="flex"
@@ -216,8 +151,17 @@ function Login() {
             }}
           </Formik>
         </Grid>
-        <Grid item xs={6} display='flex' alignItems='center' justifyContent='center'>
-          <Card sx={{ background: "inherit", width: "80%", margin: 'auto' }} elevation={0} >
+        <Grid
+          item
+          xs={6}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Card
+            sx={{ background: "inherit", width: "80%", margin: "auto" }}
+            elevation={0}
+          >
             <CardMedia
               title="Laptop"
               image="/assets/images/loginLaptopImage.png"
