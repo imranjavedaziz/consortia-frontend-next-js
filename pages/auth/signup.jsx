@@ -24,8 +24,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index"
+import TextAndDoubleButtons from "../../src/components/modals/textAndDoubleButtons/TextAndDoubleButtons";
+
 
 const SignUp = () => {
+  const [open, setOpen] = useState(true)
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -34,7 +37,17 @@ const SignUp = () => {
     setShowConfirmPassword((show) => !show);
 
   return (
-    <Grid container sx={{height:'100%',minHeight:'100vh'}}>
+   <>
+   <TextAndDoubleButtons
+        open={open}
+        title="This Account is for?"
+        text="Please select your category if you are a practitioner then select practitioner otherwise select consumer."
+        btnText1="consumer"
+        btnText2="practitionar"
+        setOpen={setOpen}
+        height='333px'
+      />
+   <Grid container sx={{height:'100%',minHeight:'100vh'}}>
       <Grid
         item
         xs={6}
@@ -353,6 +366,8 @@ const SignUp = () => {
         <Box></Box>
       </Grid>
     </Grid>
+   </>
+    
   );
 };
 

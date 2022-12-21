@@ -1,13 +1,14 @@
 import React from "react";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Box, styled, width } from "@mui/system";
+import { Box, height, styled, width } from "@mui/system";
 import Image from "next/image";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,7 +28,7 @@ const GradiantTextField = styled(TextField)(({}) => ({
   }
 }));
 const TextFieldWrapper = styled(TextField)(() => ({}));
-function DialogTextInput({ open, setOpen, text, title, input, btnText, placeholder }) {
+function TextAndDoubleButtons({ open, setOpen, text, title, btnText1, btnText2, height,crossButtonEbable }) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -44,7 +45,7 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
             backgroundColor: "secondary.purpleGray",
             borderRadius: "24px",
             width: "571px",
-            height: "397px",
+            height: height,
             padding: "40px",
           },
         }}
@@ -60,57 +61,21 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
-            <Box
+            {crossButtonEbable && <Box
               sx={{ display: "flex", alignItems: "center" }}
               onClick={handleClose}
             >
               <Image src="/assets/icons/cross.svg" height={22} width={22} />
-            </Box>
+            </Box>}
           </Box>
         </DialogTitle>
         <DialogContent sx={{ padding: "16px 0px" }}>
           <DialogContentText id="alert-dialog-slide-description">
             <Typography variant="body1">{text}</Typography>
-            <Box>
-              {/* <TextFieldWrapper> */}
-
-              {/* <TextField
-                sx={{
-                  "& .MuiInputLabel-root": { color: "green" },
-                  borderColor:
-                    "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                  borderRadius: 1,
-                }}
-              /> */}
-              {/* </TextFieldWrapper> */}
-              <div
-                style={{
-                  background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                  display: "flex",
-                  justifyContent: "center",
-                  borderRadius: "24px",
-                  marginTop:'40px'
-                }}
-              >
-                <GradiantTextField
-                  variant="standard"
-                  placeholder={placeholder}
-                  InputProps={{
-                    disableUnderline: true,
-                  }}
-                  fullWidth
-                  sx={{
-                    background: "rgba(29, 6, 104, 0.7)",
-                    margin: "3px 3px 3px 3px",
-                    borderRadius: "24px",
-                  }}
-                />
-              </div>
-            </Box>
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ padding: "16px 0px" }}>
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%", display:'flex',justifyContent:'space-between' }}>
             <Button
               variant="contained"
               color="primary"
@@ -118,12 +83,28 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
                 background:
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
-                width: "100%",
-                padding: "10px 0px",
+                // width: "100%",
+                width:'230px',
+                padding: "13px 61px",
               }}
               onClick={handleClose}
             >
-              {btnText}
+              {btnText1}
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                background:
+                  "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                borderRadius: "24px",
+                // width: "100%",
+                width:'230px',
+                padding: "13px 61px",
+              }}
+              onClick={handleClose}
+            >
+              {btnText2}
             </Button>
           </Box>
         </DialogActions>
@@ -132,4 +113,4 @@ function DialogTextInput({ open, setOpen, text, title, input, btnText, placehold
   );
 }
 
-export default DialogTextInput;
+export default TextAndDoubleButtons;

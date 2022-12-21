@@ -102,6 +102,12 @@ export const darkTheme = createTheme({
       lineHeight: "16px",
       color: "#fff",
     },
+    subtitle1: {
+      fontWeight: 400,
+      fontSize: "12px",
+      lineHeight: "18px",
+      color:'#fff'
+    }
   },
 
   palette: {
@@ -115,7 +121,8 @@ export const darkTheme = createTheme({
     },
     secondary: {
       main: "#19857b",
-      purpleGray:"#313770"
+      purpleGray:"#313770",
+      yellow:'#FAE94D'
     },
   },
 });
