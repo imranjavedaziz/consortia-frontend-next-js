@@ -108,9 +108,7 @@ function Login() {
               remember: true,
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              // console.log("submitting");
               await login(values);
-              // console.log("submitted");
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string()

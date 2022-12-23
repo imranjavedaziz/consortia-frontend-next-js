@@ -23,7 +23,7 @@ import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
 import TextAndDoubleButtons from "../../src/components/modals/textAndDoubleButtons/TextAndDoubleButtons";
 import CustomInputField from "../../src/components/common/CustomInputField";
-import { getToken, privateAxios, publicAxios } from "../../src/api";
+import { publicAxios } from "../../src/api";
 import toast, { Toaster } from "react-hot-toast";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import countries from "../../src/listOfCountriesAndStates.json";
@@ -103,8 +103,6 @@ const SignUp = () => {
   const [showSecondForm, setShowSecondForm] = useState(false);
   const { push } = useRouter();
 
-  console.log(getToken());
-
   const signup = async ({
     firstName,
     lastName,
@@ -152,11 +150,11 @@ const SignUp = () => {
           },
         }
       );
-      console.log(res);
       toast.success("Details Added Successfully");
       setTimeout(() => push("/"), 2000);
     } catch (error) {
       console.log(error);
+      toast.error(error?.data?.message);
     }
   };
   return (
