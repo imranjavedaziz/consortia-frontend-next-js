@@ -5,7 +5,6 @@ import { Box } from "@mui/material";
 
 function Index({ children }) {
   const router = useRouter();
-  console.log("router.sdplit(/", router.pathname.split("/"));
   return (
     <>
       <Head>
