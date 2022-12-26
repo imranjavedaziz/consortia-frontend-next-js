@@ -18,19 +18,19 @@ export default function Index({ children }) {
 
   return (
     <>
-      <Head>
-        <title>{router.pathname.slice(1)}</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <Paper style={sectionStyle}>
-        <Box
-          sx={{
-            paddingX: { xs: "120px" },
-            width: "100%",
-          }}
-        >
-          <Header />
-          {children}
+     <Head>
+      <title>{router.pathname.slice(1)}</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
+      <Paper
+        style={sectionStyle}
+      >
+        <Box sx={{
+          paddingX: { xs: "20px",md:"30",lg:"120px", },
+          width:'100%'
+        }}>
+        <Header />
+        {children}
         </Box>
         <Box
           sx={{

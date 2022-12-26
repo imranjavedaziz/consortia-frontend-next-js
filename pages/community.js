@@ -13,6 +13,6 @@ function Community() {
 }
 
 export default Community;
-Community.getLayout = function (page) {
-  return <NftsLayout>{page}</NftsLayout>;
-};
+// Community.getLayout = function (page) {
+//   return <NftsLayout>{page}</NftsLayout>;
+// };
