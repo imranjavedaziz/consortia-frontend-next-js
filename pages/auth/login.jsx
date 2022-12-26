@@ -233,7 +233,6 @@ function Login() {
             />
           </Card>
         </Grid>
-        <Toaster position="top-center" reverseOrder={false} />
       </Grid>
     </>
   );

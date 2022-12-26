@@ -173,8 +173,6 @@ const SignUp = () => {
           </Formik>
           <Box></Box>
         </Grid>
-
-        <Toaster position="top-center" reverseOrder={false} />
       </Grid>
     </>
   );

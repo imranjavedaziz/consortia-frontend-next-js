@@ -31,10 +31,10 @@ import { useRouter } from "next/router";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
+  { value: "loan officer", label: "Loan Officer / Lender" },
   { value: "title/escrow", label: "Title / Settlement" },
   { value: "mortgage broker", label: "Mortgage Broker" },
   { value: "appraiser", label: "Appraiser" },
-  { value: "loan officer", label: "Loan Officer / Lender" },
 ];
 
 const listOfCountries = countries.countries.map((item) => ({
@@ -75,11 +75,6 @@ const secondFormInputFields = [
     name: "companyName",
     label: "Business Name",
     placeholder: "Enter your Business Name",
-  },
-  {
-    name: "license",
-    label: "License Number",
-    placeholder: "EF12345678910",
   },
   {
     name: "country",
@@ -123,8 +118,11 @@ const SignUp = () => {
       setEmail(email);
       setEmailVerificationOpen(true);
     } catch (error) {
-      toast.error(error?.data?.message);
-      console.log(error?.data?.message);
+      if (error?.data?.message) {
+        toast.error(error?.data?.message);
+      } else {
+        toast.error(error?.data?.err?.msg);
+      }
     }
   };
   const completeDetails = async ({
@@ -141,7 +139,7 @@ const SignUp = () => {
           practitionerType: practitioner,
           state: state,
           country: country,
-          licenseNumber: license,
+          ...(license.length > 1 && { licenseNumber: license }),
           companyName: companyName,
         },
         {
@@ -151,7 +149,7 @@ const SignUp = () => {
         }
       );
       toast.success("Details Added Successfully");
-      setTimeout(() => push("/"), 2000);
+      setTimeout(() => push("/"), 2500);
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message);
@@ -361,21 +359,36 @@ const SignUp = () => {
             <Formik
               initialValues={{
                 isPractitioner: isPractitioner,
-                firstName: "",
-                lastName: "",
-                phoneNumber: "",
-                email: "",
-                password: "",
-                confirm_password: "",
+                practitioner: "",
+                companyName: "",
+                country: "",
+                state: "",
+                license: "",
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 setSubmitting(true);
                 await completeDetails(values);
                 setSubmitting(false);
               }}
+              validationSchema={Yup.object().shape({
+                practitioner: Yup.string().required(
+                  "Practitioner type is required"
+                ),
+                companyName: Yup.string().required("Business Name is required"),
+                country: Yup.string().required("Country is required"),
+                state: Yup.string().required("Province / State is required"),
+                license: Yup.string().when(["practitioner", "country"], {
+                  is: (practitioner, country) =>
+                    (practitioner == "agent/broker" ||
+                      practitioner == "loan officer") &&
+                    country == "United States",
+                  then: Yup.string().required("This field is required"),
+                  otherwise: Yup.string().optional(),
+                }),
+              })}
             >
               {(props) => {
-                const { isSubmitting, handleSubmit } = props;
+                const { isSubmitting, handleSubmit, values } = props;
                 return (
                   <form
                     onSubmit={handleSubmit}
@@ -403,6 +416,17 @@ const SignUp = () => {
                           />
                         )
                       )}
+                      <CustomInputField
+                        name={"license"}
+                        label={
+                          values.practitioner == "loan officer"
+                            ? "NMLS"
+                            : values.practitioner == "title/escrow"
+                            ? "Title Number"
+                            : "License Number"
+                        }
+                        placeholder={"EF12345678910"}
+                      />
                       <Box display="flex" flexDirection="column">
                         <Button
                           variant="gradient"
@@ -420,8 +444,6 @@ const SignUp = () => {
             </Formik>
           </Grid>
         )}
-
-        <Toaster position="top-center" reverseOrder={false} />
       </Grid>
     </>
   );
