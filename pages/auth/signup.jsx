@@ -1,24 +1,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Box, Button, Grid, InputLabel, Typography } from "@mui/material";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
 import TextAndDoubleButtons from "../../src/components/modals/textAndDoubleButtons/TextAndDoubleButtons";
@@ -28,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import countries from "../../src/listOfCountriesAndStates.json";
 import { useRouter } from "next/router";
+import PhoneInput from "react-phone-input-2";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
