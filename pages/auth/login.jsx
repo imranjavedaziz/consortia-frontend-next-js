@@ -43,6 +43,7 @@ function Login() {
         email,
         password,
       });
+      localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));  
       localStorage.setItem("access_token", res?.data?.data?.token);
       toast.success("Welcome Back!");
     } catch (error) {
@@ -113,7 +114,7 @@ function Login() {
             validationSchema={Yup.object().shape({
               email: Yup.string()
                 .email("Email should be a valid email")
-                .required("Email is Required"),
+                .required("Email is required"),
               password: Yup.string().required("Password is required"),
             })}
           >
@@ -176,7 +177,7 @@ function Login() {
                               textDecoration: "underline",
                             }}
                           >
-                            Forgot Password
+                            Forgot Password?
                           </Typography>
                         </Button>
                       </Box>
@@ -203,6 +204,7 @@ function Login() {
                             textDecoration: "underline",
                             textTransform: "none",
                             fontSize: "16px",
+                            color:'#6720FF'
                           }}
                         >
                           Signup

@@ -12,7 +12,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import sidebarLogo from "../../../public/assets/icons/sidebarLogo.svg";
 import CloseIcon from '@mui/icons-material/Close';
-import { pages } from "../../utils/dashboardPages";
+import { practitionarPages,consumerPages } from "../../utils/dashboardPages";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -33,8 +33,10 @@ const StyledListItem = styled(ListItem)({
 export default function SidebarList({setopenForMobile}) {
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const isLaptop = useMediaQuery("(min-width:1000px)");
+  const profile_info = JSON.parse(localStorage.getItem('profile_info'))
 
   const { route, push } = useRouter();
+  console.log('route', route)
 
   const handleListItemClick = (page) => {
     setSelectedIndex(page?.id);
@@ -74,12 +76,12 @@ export default function SidebarList({setopenForMobile}) {
       </Box>
 
       <List component="nav" aria-label="main mailbox folders">
-        {pages.map((item, index) =>
+        {( profile_info?.user?.role === "practitioner" ? practitionarPages : consumerPages).map((item, index) =>
           !item.nested ? (
             <StyledListItem key={index}>
               <ListItemButton
               disableRipple
-                selected={selectedIndex == item?.id}
+                selected={route == item?.path}
                 onClick={() => handleListItemClick(item, item?.id)}
               >
                 <ListItemIcon>
@@ -94,7 +96,7 @@ export default function SidebarList({setopenForMobile}) {
             </StyledListItem>
           ) : (
             <>
-              <ListItemButton disableRipple onClick={() => handleClick(item?.id)} key={index}>
+              <ListItemButton disableRipple selected={route == item?.path} onClick={() => handleClick(item?.id)} key={index}>
                 <ListItemIcon>
                   <Image src={item?.icon} height={22} width={22} />
                 </ListItemIcon>

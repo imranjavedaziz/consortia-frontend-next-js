@@ -13,8 +13,14 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const GradiantTextField = styled(TextField)(({}) => ({
   paddingRight: "20px",
+
   "& .MuiInput-root": {
     paddingLeft: "20px",
+   
+    "& .MuiSelect-select":{
+      display: "flex",
+      alignItems: "center",
+    },
   },
   "& input::placeholder": {
     fontSize: "16px",
@@ -27,6 +33,9 @@ const CustomInputField = ({
   options,
   sensitive,
   placeholder,
+  onCutHandler,
+  onCopyHandler,
+  onPasteHandler,
   ...props
 }) => {
   const [field, meta] = useField(props);
@@ -49,6 +58,7 @@ const CustomInputField = ({
           display: "flex",
           justifyContent: "center",
           borderRadius: "24px",
+          alignItems:'center'
         }}
       >
         <GradiantTextField
@@ -57,6 +67,9 @@ const CustomInputField = ({
           variant="standard"
           type={sensitive ? (showPassword ? "text" : "password") : "text"}
           placeholder={placeholder}
+          onCut={onCutHandler}
+          onCopy={onCopyHandler}
+          onPaste={onPasteHandler}
           InputProps={{
             disableUnderline: true,
             ...(sensitive && {
@@ -81,8 +94,8 @@ const CustomInputField = ({
           style={{
             background: Boolean(meta.touched && meta.error)
               ? "rgba(29, 6, 104, 0.9)"
-              : "rgba(29, 6, 104, 0.7)",
-            margin: "3px 3px 3px 3px",
+              : "rgba(29, 6, 104, 1)",
+            margin: "2px 2px 2px 2px",
             borderRadius: "24px",
           }}
         >
@@ -90,7 +103,7 @@ const CustomInputField = ({
             options &&
             options.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-                {option.label}
+              <Typography variant='body2'>{option.label}</Typography>  
               </MenuItem>
             ))}
         </GradiantTextField>

@@ -114,7 +114,7 @@ function DialogResetPassword({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{padding:'20px 0px'}}>
           <Typography variant="body1">{text}</Typography>
           <Box>
             {/* <TextFieldWrapper> */}
@@ -169,6 +169,7 @@ function DialogResetPassword({
                 borderRadius: "24px",
                 width: "100%",
                 padding: "10px 0px",
+                textTransform:'capitalize'
               }}
               onClick={() => resetPassword(email)}
             >
