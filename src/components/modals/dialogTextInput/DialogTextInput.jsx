@@ -47,6 +47,7 @@ function DialogTextInput({
 }) {
   const handleClose = () => {
     setOpen(false);
+    setCode('')
   };
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
@@ -54,22 +55,27 @@ function DialogTextInput({
 
   const verifyCode = async (email) => {
     try {
-      setFetching(true);
-      const res = await publicAxios.post("auth/verify", {
-        email,
-        verificationCode: code,
-      });
-      setFetching(false);
-      console.log(res);
-      localStorage.setItem("access_token", res?.data?.data?.token);
-      toast.success(res?.data?.message);
-      if (!isPractitioner) {
-        return setTimeout(() => {
-          push("/");
-        }, 2500);
+      if(code.length>0){
+        setFetching(true);
+        const res = await publicAxios.post("auth/verify", {
+          email,
+          verificationCode: code,
+        });
+        setFetching(false);
+        console.log(res);
+        localStorage.setItem("access_token", res?.data?.data?.token);
+        toast.success(res?.data?.message);
+        if (!isPractitioner) {
+          return setTimeout(() => {
+            push("/");
+          }, 2500);
+        }
+        setShowSecondForm(true);
+        handleClose();
+      }else{
+      toast.error('Please enter OTP')
       }
-      setShowSecondForm(true);
-      handleClose();
+      
     } catch (error) {
       setFetching(false);
       toast.error(error?.data?.message);
@@ -97,7 +103,7 @@ function DialogTextInput({
             borderRadius: "24px",
             width: "571px",
             // height: "397px",
-            padding: "40px",
+            padding: "40px 38px",
           },
         }}
       >
@@ -125,9 +131,9 @@ function DialogTextInput({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{padding: '20px 10px'}}>
           <Typography variant="body1">{text}</Typography>
-          <Box>
+          <Box sx={{width:'100%',paddingTop:'40px'}}>
             {/* <TextFieldWrapper> */}
 
             {/* <TextField
@@ -146,7 +152,7 @@ function DialogTextInput({
                 display: "flex",
                 justifyContent: "center",
                 borderRadius: "24px",
-                marginTop: "40px",
+                // marginTop: "40px",
               }}
             >
               <GradiantTextField
@@ -198,6 +204,7 @@ function DialogTextInput({
                 borderRadius: "24px",
                 width: "100%",
                 padding: "10px 0px",
+                textTransform:'capitalize'
               }}
               onClick={() => verifyCode(email)}
             >

@@ -1,24 +1,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Box, Button, Grid, InputLabel, Typography } from "@mui/material";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
 import TextAndDoubleButtons from "../../src/components/modals/textAndDoubleButtons/TextAndDoubleButtons";
@@ -28,6 +11,8 @@ import toast, { Toaster } from "react-hot-toast";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import countries from "../../src/listOfCountriesAndStates.json";
 import { useRouter } from "next/router";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -54,12 +39,14 @@ const inputFields = [
     label: "Password",
     placeholder: "Minimum of 8 characters",
     sensitive: true,
+    onCutCopyPaste:(e) =>e.preventDefault(),
   },
   {
     name: "confirm_password",
     label: "Confirm Password",
     placeholder: "Confirm Password",
     sensitive: true,
+    onCutCopyPaste:(e) =>e.preventDefault(),
   },
 ];
 
@@ -94,8 +81,9 @@ const SignUp = () => {
   const [open, setOpen] = useState(true);
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
+  const [phoneNo, setPhoneNo] = useState("");
   const [email, setEmail] = useState("");
-  const [showSecondForm, setShowSecondForm] = useState(false);
+  const [showSecondForm, setShowSecondForm] = useState(true);
   const { push } = useRouter();
 
   const signup = async ({
@@ -236,15 +224,15 @@ const SignUp = () => {
                 setSubmitting(false);
               }}
               validationSchema={Yup.object().shape({
-                firstName: Yup.string().required("First Name is required"),
-                lastName: Yup.string().required("Last Name is required"),
+                firstName: Yup.string().required("First Name is required").matches(/^[A-Za-z]+$/,"First Name can only contain alphabets"),
+                lastName: Yup.string().required("Last Name is required").matches(/^[A-Za-z]+$/,"Last Name can only contain alphabets"),
                 email: Yup.string()
-                  .email("Should be a valid email")
+                  .email("Email Should be a valid email")
                   .required("Email is required"),
                 phoneNumber: Yup.string().required("Phone number is required"),
                 password: Yup.string()
                   .required("Password is required")
-                  .min(8, "Password Should have a minimum of 8 characters")
+                  .min(8, "Password should have a minimum of 8 characters")
                   .matches(
                     /(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$/,
                     "Must contain atleast one lowercase, one uppercase, a number, and a symbol"
@@ -292,18 +280,104 @@ const SignUp = () => {
                         </Box>
                       </Box>
                       {inputFields.map(
-                        ({ name, label, placeholder, sensitive }) => (
+                        ({ name, label, placeholder, sensitive,onCutCopyPaste }) => (
                           <CustomInputField
                             key={name}
                             name={name}
                             label={label}
                             placeholder={placeholder}
                             sensitive={sensitive}
+                            onCutHandler={onCutCopyPaste}
+                            onCopyHandler={onCutCopyPaste}
+                            onPasteHandler={onCutCopyPaste}
                           />
                         )
                       )}
 
-                      <Box display="flex" flexDirection="column">
+                      {/* <Box
+                        sx={{
+                          // background: false
+                          //   ? "rgba(255,0,0,0.7)"
+                          //   : "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                          display: "flex",
+                          justifyContent: "center",
+                          position: "relative",
+                          borderRadius: "24px",
+                          "&:after": {
+                            position: "absolute",
+                            top: -4,
+                            left: -4,
+                            right: -4,
+                            bottom: -4,
+                            background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                            content: '""',
+                            zIndex: -1,
+                            borderRadius: '24px'
+                          },
+                          "& .react-tel-input ": {
+                            "& .form-control": {
+                              display: "block !important",
+                              boxSizing: "border-box !important",
+                              marginTop: "0 !important",
+                              paddingLeft: ["30px", "42px !important"],
+                              height: "43px",
+                              borderRadius: "30px !important",
+                              border: "none",
+                              background: "rgba(29, 6, 104, 0.7)",
+                              width:'100%',
+                              color: "#fff",
+                              outline: "0",
+                            },
+                            "& .flag-dropdown": {
+                              outline: "0",
+                              position: "absolute",
+                              top: "0",
+                              bottom: "0",
+                              color: "black",
+                              padding: "0",
+                              background: "transparent",
+                              border: "none",
+                              borderRadius: "30px 0 0 30px",
+                              "& :hover":{
+                                backgroundColor:'none'
+                              }
+                            },
+                          },
+                        }}
+                      >
+                        <PhoneInput
+                          required={true}
+                          name="phone"
+                          country={"gb"}
+                          enableSearch={true}
+                          value={phoneNo}
+                          countryCodeEditable={false}
+                          jumpCursorToEnd={true}
+                          // disableCountryCode={true}
+                          onChange={(phone) => {
+                            setPhoneNo(phone);
+                          }}
+
+                          // isValid={(value, country) => {
+                          //   if (value.match(/12345/)) {
+                          //     return "Invalid value: " + value + ", " + country.name;
+                          //   } else if (value.match(/1234/)) {
+                          //     return false;
+                          //   } else {
+                          //     return true;
+                          //   }
+                          // }}
+                          // inputProps={{
+                          //   name: "phone",
+                          //   required: true,
+                          //   // value: `${phoneNo == "" ? "" : `+${phoneNo}`}`,
+                          //   autoComplete: "off",
+                          //   pattern: ".{12,}",
+                          // }}
+                        />
+                      </Box> */}
+
+                      <Box display="flex" flexDirection="column" mt={4}>
                         {isPractitioner ? (
                           <Button
                             variant="gradient"
