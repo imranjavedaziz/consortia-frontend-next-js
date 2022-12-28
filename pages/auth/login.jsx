@@ -191,6 +191,7 @@ function Login() {
                             "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                           borderRadius: "24px",
                           width: { xs: "90%", md: "100%" },
+                          textTransform:'capitalize'
                         }}
                       >
                         Login
