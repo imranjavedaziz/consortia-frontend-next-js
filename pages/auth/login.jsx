@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { ImageLogo } from "../../src/layout/header/Header";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Visibility from "@mui/icons-material/Visibility";
@@ -25,10 +25,57 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
 import CustomInputField from "../../src/components/common/CustomInputField";
+import toast, { Toaster } from "react-hot-toast";
+import { publicAxios } from "../../src/api";
+import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/router";
+import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
+import DialogResetPassword from "../../src/components/modals/resetPassword/DialogResetPassword";
 
 function Login() {
+  const { push } = useRouter();
+  const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const login = async ({ email, password }) => {
+    try {
+      const res = await publicAxios.post("auth/login", {
+        email,
+        password,
+      });
+      localStorage.setItem("access_token", res?.data?.data?.token);
+      toast.success("Welcome Back!");
+    } catch (error) {
+      if (error?.data?.data?.verified === false) {
+        setEmail(email);
+        setEmailVerificationOpen(true);
+        return;
+      }
+      toast.error(error?.data?.message);
+      console.log(error);
+    }
+  };
   return (
     <>
+      <DialogTextInput
+        open={emailVerificationOpen}
+        setOpen={setEmailVerificationOpen}
+        title="Verification Code"
+        text="Verification code has been sent to your email"
+        btnText="Submit"
+        inputTypeCode
+        placeholder="Enter your verification code"
+        email={email}
+      />
+      <DialogResetPassword
+        open={resetPasswordOpen}
+        setOpen={setResetPasswordOpen}
+        title="Reset Password"
+        text="Please enter your email address and we will email you a link to reset your password."
+        btnText="Send Request"
+        placeholder="Mail@example.com"
+      />
+
       <Grid container sx={{ height: "100%", minHeight: "100vh" }}>
         <Grid
           item
@@ -40,7 +87,10 @@ function Login() {
           alignItems="center"
           justifyContent="center"
         >
-          <ImageLogo>
+          <ImageLogo
+            sx={{ ":hover": { cursor: "pointer" } }}
+            onClick={() => push("/")}
+          >
             <Image
               src="/assets/images/consortiaLogo.svg"
               width={390}
@@ -57,10 +107,8 @@ function Login() {
               password: "",
               remember: true,
             }}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(true);
-              console.log(values);
-              setSubmitting(false);
+            onSubmit={async (values, { setSubmitting }) => {
+              await login(values);
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string()
@@ -74,7 +122,6 @@ function Login() {
                 props;
               return (
                 <form onSubmit={handleSubmit} style={{ width: "70%" }}>
-                  {console.log(values)}
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -117,7 +164,10 @@ function Login() {
                             <Typography variant="body2">Remember Me</Typography>
                           }
                         />
-                        <Button variant="text">
+                        <Button
+                          variant="text"
+                          onClick={() => setResetPasswordOpen(true)}
+                        >
                           <Typography
                             variant="body2"
                             sx={{
@@ -130,11 +180,11 @@ function Login() {
                           </Typography>
                         </Button>
                       </Box>
-                      <Button
+                      <LoadingButton
                         variant="contained"
                         color="primary"
                         type="submit"
-                        disabled={isSubmitting}
+                        loading={isSubmitting}
                         sx={{
                           background:
                             "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
@@ -143,7 +193,21 @@ function Login() {
                         }}
                       >
                         Login
-                      </Button>
+                      </LoadingButton>
+                      <Typography variant="body2" textAlign="center">
+                        Don&apos;t have an account yet?{" "}
+                        <Button
+                          variant="text"
+                          onClick={() => push("signup")}
+                          sx={{
+                            textDecoration: "underline",
+                            textTransform: "none",
+                            fontSize: "16px",
+                          }}
+                        >
+                          Signup
+                        </Button>
+                      </Typography>
                     </Box>
                   </Box>
                 </form>

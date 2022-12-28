@@ -32,7 +32,7 @@ const GradiantTextField = styled(TextField)(({}) => ({
   },
 }));
 const TextFieldWrapper = styled(TextField)(() => ({}));
-function DialogTextInput({
+function DialogResetPassword({
   open,
   setOpen,
   text,
@@ -41,34 +41,26 @@ function DialogTextInput({
   btnText,
   placeholder,
   inputTypeCode,
-  email,
   isPractitioner,
   setShowSecondForm,
 }) {
   const handleClose = () => {
     setOpen(false);
+    setEmail("");
   };
-  const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
-  const { push } = useRouter();
 
-  const verifyCode = async (email) => {
+  const resetPassword = async (email) => {
     try {
       setFetching(true);
-      const res = await publicAxios.post("auth/verify", {
+      const res = await publicAxios.post("auth/reset-password", {
         email,
-        verificationCode: code,
       });
       setFetching(false);
       console.log(res);
-      localStorage.setItem("access_token", res?.data?.data?.token);
       toast.success(res?.data?.message);
-      if (!isPractitioner) {
-        return setTimeout(() => {
-          push("/");
-        }, 2500);
-      }
-      setShowSecondForm(true);
+
       handleClose();
     } catch (error) {
       setFetching(false);
@@ -76,19 +68,12 @@ function DialogTextInput({
       console.log(error);
     }
   };
-  const resendCode = async (email) => {
-    const res = await publicAxios.post("auth/resend", {
-      email,
-    });
-    toast.success(res?.data?.message);
-  };
+
   return (
     <>
       <Dialog
         open={open}
-        onBackdropClick="false"
         TransitionComponent={Transition}
-        keepMounted
         // onClose={handleClose}
         // aria-describedby="alert-dialog-slide-description"
         PaperProps={{
@@ -113,7 +98,11 @@ function DialogTextInput({
               {title}
             </Typography>
             <Box
-              sx={{ display: "flex", alignItems: "center" }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                ":hover": { cursor: "pointer" },
+              }}
               onClick={handleClose}
             >
               <Image
@@ -151,30 +140,12 @@ function DialogTextInput({
             >
               <GradiantTextField
                 variant="standard"
+                type="email"
                 placeholder={placeholder}
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 InputProps={{
                   disableUnderline: true,
-                  endAdornment: inputTypeCode && (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => resendCode(email)}
-                      // onClick={handleClickShowPassword}
-                      // onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          color="secondary.yellow"
-                          sx={{ paddingRight: "20px" }}
-                        >
-                          Resend Code
-                        </Typography>
-                      </Box>
-                    </IconButton>
-                  ),
                 }}
                 fullWidth
                 sx={{
@@ -199,7 +170,7 @@ function DialogTextInput({
                 width: "100%",
                 padding: "10px 0px",
               }}
-              onClick={() => verifyCode(email)}
+              onClick={() => resetPassword(email)}
             >
               {btnText}
             </LoadingButton>
@@ -210,4 +181,4 @@ function DialogTextInput({
   );
 }
 
-export default DialogTextInput;
+export default DialogResetPassword;

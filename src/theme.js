@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+const theme=createTheme()
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
@@ -88,13 +89,20 @@ export const darkTheme = createTheme({
       fontSize: "18px",
       lineHeight: "28px",
       color: "#fff",
+     
     },
 
     body1: {
-      fontWeight: 400,
-      fontSize: "20px",
+      fontWeight: 600,
       lineHeight: "30px",
       color: "#fff",
+      [theme.breakpoints.up('sm')]: {
+        fontSize: "13px !important",
+      },
+      [theme.breakpoints.up('md')]: {
+        fontSize: "20px !important",
+      },
+      
     },
     body2: {
       fontWeight: 400,
@@ -106,6 +114,12 @@ export const darkTheme = createTheme({
       fontWeight: 400,
       fontSize: "12px",
       lineHeight: "18px",
+      color:'#fff'
+    },
+    subtitle2: {
+      fontWeight: 600,
+      fontSize: "14px",
+      lineHeight: "17px",
       color:'#fff'
     }
   },
@@ -122,7 +136,19 @@ export const darkTheme = createTheme({
     secondary: {
       main: "#19857b",
       purpleGray:"#313770",
-      yellow:'#FAE94D'
+      yellow:'#FAE94D',
+     
     },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl:1536,
+      xxl:2000,
+      fk:2560,
+    }
   },
 });

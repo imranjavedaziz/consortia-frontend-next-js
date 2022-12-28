@@ -44,12 +44,13 @@ export default function Home() {
           </Box>
         </Box>
         <Box>
-          <Box>
+          <Box sx={{display:{xs:"none",md:"block"}}} >
             <Image
               src="/assets/images/landingPageBuilding.svg"
               alt="Logo"
               height={564}
               width={597}
+              style={{width:"100%"}}
             />
           </Box>
         </Box>

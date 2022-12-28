@@ -1,7 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
-import { Grid, Typography } from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 function Footer() {
@@ -26,7 +26,7 @@ function Footer() {
     <>
       <Box
         sx={{
-          padding: "40px 0px",
+          padding: "40px 0px 32px 0px",
           display: "flex",
           justifyContent: "space-between",
         }}
@@ -71,7 +71,7 @@ function Footer() {
             <Typography variant="h6">MarketPlace</Typography>
           </Box>
           <Box sx={{ paddingTop: "20px" }}>
-            {[ "Lorem Ipsum", "Lorem Ipsum"].map((item, i) => (
+            {["Lorem Ipsum", "Lorem Ipsum"].map((item, i) => (
               <Box key={i}>
                 <Typography
                   variant="body2"
@@ -92,22 +92,20 @@ function Footer() {
             <Typography variant="h6">My Account</Typography>
           </Box>
           <Box sx={{ paddingTop: "20px" }}>
-            {[ "Lorem Ipsum", "Lorem Ipsum"].map(
-              (item, i) => (
-                <Box key={i}>
-                  <Typography
-                    variant="body2"
-                    fontSize="14px"
-                    paddingY={0.5}
-                    sx={{
-                      opacity: 0.72,
-                    }}
-                  >
-                    {item}
-                  </Typography>
-                </Box>
-              )
-            )}
+            {["Lorem Ipsum", "Lorem Ipsum"].map((item, i) => (
+              <Box key={i}>
+                <Typography
+                  variant="body2"
+                  fontSize="14px"
+                  paddingY={0.5}
+                  sx={{
+                    opacity: 0.72,
+                  }}
+                >
+                  {item}
+                </Typography>
+              </Box>
+            ))}
           </Box>
         </Box>
         <Box>
@@ -127,6 +125,19 @@ function Footer() {
               <br /> navigating NFTs.
             </Typography>
           </Box>
+        </Box>
+      </Box>
+      <Box>
+        <Box>
+          <Typography variant='h6' sx={{textDecoration:'underline'}}>POWERED BY BLOCKCHAIN</Typography>
+        </Box>
+      </Box>
+      <Box>
+        <Box><Divider sx={{borderBottomWidth:'1px',margin:'20px 0px 13px 0px'}} /></Box>
+      </Box>
+      <Box>
+        <Box sx={{width:'100%', display:'flex',justifyContent:'center', paddingBottom:'16px'}}>
+          <Typography variant='subtitle2'>Copyright © 2022 REAL ESTATE CONSORTIA - All Rights Reserved</Typography>
         </Box>
       </Box>
     </>
