@@ -50,23 +50,31 @@ function DialogResetPassword({
   };
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(true)
 
   const resetPassword = async (email) => {
-    try {
-      setFetching(true);
-      const res = await publicAxios.post("auth/reset-password", {
-        email,
-      });
-      setFetching(false);
-      console.log(res);
-      toast.success(res?.data?.message);
+    if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+      try {
 
-      handleClose();
-    } catch (error) {
-      setFetching(false);
-      toast.error(error?.data?.message);
-      console.log(error);
+        setFetching(true);
+        const res = await publicAxios.post("auth/reset-password", {
+          email,
+        });
+        setFetching(false);
+        console.log(res);
+        toast.success(res?.data?.message);
+  
+        handleClose();
+      } catch (error) {
+        setFetching(false);
+        toast.error(error?.data?.message);
+        console.log(error);
+      }
+    }else{
+setIsValidEmail(false)
+toast.error('Please enter a valid email!')
     }
+   
   };
 
   return (
@@ -139,11 +147,13 @@ function DialogResetPassword({
               }}
             >
               <GradiantTextField
+              error={!isValidEmail}
                 variant="standard"
                 type="email"
                 placeholder={placeholder}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) =>{ 
+                  setEmail(e.target.value)}}
                 InputProps={{
                   disableUnderline: true,
                 }}
