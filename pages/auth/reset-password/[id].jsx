@@ -26,6 +26,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import CustomInputField from "../../../src/components/common/CustomInputField";
 import { publicAxios } from "../../../src/api";
+import { useTitle } from "../../../src/utils/Title";
 
 const inputFields = [
   {
@@ -49,6 +50,8 @@ const SignUp = () => {
   } = useRouter();
 
   const resetPassword = async ({ password }) => {
+    useTitle("Reset Password");
+
     try {
       const res = await publicAxios.post("auth/reset-password", {
         newPassword: password,
