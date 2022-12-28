@@ -83,7 +83,7 @@ const SignUp = () => {
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [phoneNo, setPhoneNo] = useState("");
   const [email, setEmail] = useState("");
-  const [showSecondForm, setShowSecondForm] = useState(true);
+  const [showSecondForm, setShowSecondForm] = useState(false);
   const { push } = useRouter();
 
   const signup = async ({
