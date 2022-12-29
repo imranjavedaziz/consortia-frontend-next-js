@@ -52,7 +52,7 @@ function Login() {
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access_token", res?.data?.data?.token);
       toast.success("Welcome Back!");
-      push("/dashboard/mint-nft");
+      push("/dashboard/landing");
     } catch (error) {
       if (error?.data?.data?.verified === false) {
         setEmail(email);
