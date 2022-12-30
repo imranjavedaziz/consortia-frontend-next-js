@@ -16,13 +16,13 @@ const GradiantTextField = styled(TextField)(({}) => ({
 
   "& .MuiInput-root": {
     paddingLeft: "20px",
-    "& input":{
-      fontSize:'13px',
-      padding:'10px 0px',
-      fontWeight:500
+    "& input": {
+      fontSize: "13px",
+      padding: "10px 0px",
+      fontWeight: 500,
     },
-   
-    "& .MuiSelect-select":{
+
+    "& .MuiSelect-select": {
       display: "flex",
       alignItems: "center",
     },
@@ -63,7 +63,7 @@ const CustomInputField = ({
           display: "flex",
           justifyContent: "center",
           borderRadius: "24px",
-          alignItems:'center'
+          alignItems: "center",
         }}
       >
         <GradiantTextField
@@ -75,6 +75,9 @@ const CustomInputField = ({
           onCut={onCutHandler}
           onCopy={onCopyHandler}
           onPaste={onPasteHandler}
+          inputProps={{
+            ...(props.name == "phoneNumber" && { maxLength: 13 }),
+          }}
           InputProps={{
             disableUnderline: true,
             ...(sensitive && {
@@ -108,7 +111,7 @@ const CustomInputField = ({
             options &&
             options.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-              <Typography variant='body2'>{option.label}</Typography>  
+                <Typography variant="body2">{option.label}</Typography>
               </MenuItem>
             ))}
         </GradiantTextField>
