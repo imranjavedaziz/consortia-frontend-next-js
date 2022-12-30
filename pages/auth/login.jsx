@@ -43,11 +43,12 @@ function Login() {
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
 
-  const login = async ({ email, password }) => {
+  const login = async ({ email, password, remember }) => {
     try {
       const res = await publicAxios.post("auth/login", {
         email,
         password,
+        rememberMe: remember,
       });
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access_token", res?.data?.data?.token);
@@ -198,7 +199,7 @@ function Login() {
                             "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                           borderRadius: "24px",
                           width: { xs: "90%", md: "100%" },
-                          textTransform:'capitalize'
+                          textTransform: "capitalize",
                         }}
                       >
                         Login
