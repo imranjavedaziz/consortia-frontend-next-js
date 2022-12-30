@@ -176,8 +176,9 @@ const SignUp = () => {
           item
           xs={6}
           sx={{
-            background: " url(/assets/images/signupbackground.png) no-repeat",
-            backgroundSize: "cover",
+            background: " url(/assets/images/signupbackground.jpg) no-repeat",
+            backgroundSize: "100% 100%",
+            width:"100%"
           }}
         >
           <Box
@@ -187,6 +188,7 @@ const SignUp = () => {
               background: "rgba(24, 10, 91, 0.8)",
               display: "flex",
               justifyContent: "center",
+            
             }}
           >
             <Box sx={{ ":hover": { cursor: "pointer" } }}>
