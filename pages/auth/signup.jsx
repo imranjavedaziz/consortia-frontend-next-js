@@ -140,7 +140,7 @@ const SignUp = () => {
         }
       );
       toast.success("Details Added Successfully");
-      setTimeout(() => push("/"), 2500);
+      setTimeout(() => push("/dashboard/landing"), 2500);
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message);
@@ -178,7 +178,7 @@ const SignUp = () => {
           sx={{
             background: " url(/assets/images/signupbackground.jpg) no-repeat",
             backgroundSize: "100% 100%",
-            width:"100%"
+            // width:"100%"
           }}
         >
           <Box
