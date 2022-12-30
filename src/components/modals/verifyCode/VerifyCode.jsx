@@ -132,7 +132,7 @@ function VerifyCodeModal({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{padding:'16px 0px'}}>
           <Typography variant="body1">{text}</Typography>
           <Box>
             {/* <TextFieldWrapper> */}
@@ -166,7 +166,7 @@ function VerifyCodeModal({
                 }}
                 fullWidth
                 sx={{
-                  background: "rgba(29, 6, 104, 0.7)",
+                  background: "rgba(29, 6, 104, 1)",
                   margin: "3px 3px 3px 3px",
                   borderRadius: "24px",
                 }}
@@ -186,6 +186,7 @@ function VerifyCodeModal({
                 borderRadius: "24px",
                 width: "100%",
                 padding: "10px 0px",
+                textTransform:'capitalize'
               }}
               onClick={() => changePassword()}
             >

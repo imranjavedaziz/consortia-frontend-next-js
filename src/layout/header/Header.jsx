@@ -129,6 +129,7 @@ const Header = () => {
           }}
         >
           {isLoggedIn ? (
+            <Link href='/dashboard/landing'>
             <Button
               variant="contained"
               color="primary"
@@ -144,10 +145,13 @@ const Header = () => {
                 padding: { xs: "0px", md: "10px 0px" },
                 height: { xs: "25px", md: "33px", xl: "37px" },
                 fontSize: { xs: "13px", xl: "17px" },
+                textTransform:'capitalize'
               }}
             >
-              Logout
+              Dashboard
             </Button>
+            </Link>
+            
           ) : (
             <>
               <Button
