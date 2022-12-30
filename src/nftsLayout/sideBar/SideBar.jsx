@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 // @mui
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import SidebarList from "./SidebarList";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 // ----------------------------------------------------------------------
 
 
  const Sidebar = ({setopenForMobile}) => {
+   const {push} = useRouter()
 
   return (
     <Box
@@ -15,10 +18,17 @@ import SidebarList from "./SidebarList";
         flexShrink: { lg: 0 ,height:'100vh'},
       }}
     >
-      <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
+      <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%',paddingBottom:'80px'}}>
         <SidebarList setopenForMobile={setopenForMobile} />
         <Box>
-          sfsfaf
+          <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}} onClick={() => {
+                localStorage.removeItem("access_token");
+                push('/')
+                // setIsLoggedIn(false);
+              }}>
+            <Image src='/assets/icons/logout.svg' height={32} width={32} alt='logout' />
+            <Typography variant="h5" sx={{paddingLeft:'12px'}}>Logout</Typography>
+          </Box>
         </Box>
       </Box>
     </Box>
