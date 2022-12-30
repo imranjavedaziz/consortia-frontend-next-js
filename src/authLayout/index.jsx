@@ -7,7 +7,10 @@ import { Toaster } from "react-hot-toast";
 function Index({ children }) {
   const { push } = useRouter();
 
-  const router = useRouter();
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) push("/dashboard/landing");
+  }, []);
 
   return (
     <>

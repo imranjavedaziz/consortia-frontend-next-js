@@ -30,6 +30,10 @@ function NftsLayout({ children }) {
     setopenForMobile(true);
   };
   const theme = useTheme();
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) push("/auth/login");
+  }, []);
 
   return (
     <>

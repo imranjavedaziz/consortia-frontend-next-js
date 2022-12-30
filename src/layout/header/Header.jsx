@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Grid, Typography, useMediaQuery } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import Image from "next/image";
@@ -26,6 +26,14 @@ const Header = () => {
   const isActive = (path) => {
     return route == path;
   };
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const goToSignup = () => {};
 
