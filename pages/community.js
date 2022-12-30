@@ -7,7 +7,7 @@ import DialogTextInput from "../src/components/modals/dialogTextInput/DialogText
 function Community() {
   return (
     <>
-      {/* <ComingSoon /> */} nft
+      <ComingSoon /> 
     </>
   );
 }
