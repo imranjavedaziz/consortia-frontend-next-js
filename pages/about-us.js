@@ -1,10 +1,12 @@
-import React from 'react'
+import React from "react";
 import ComingSoon from "../src/components/common/comingSoon/ComingSoon";
 
 function AboutUs() {
   return (
-    <><ComingSoon /></>
-  )
+    <div style={{ width: "5%" }}>
+      <ComingSoon />
+    </div>
+  );
 }
 
-export default AboutUs
+export default AboutUs;
