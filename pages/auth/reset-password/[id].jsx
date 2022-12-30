@@ -48,9 +48,9 @@ const SignUp = () => {
     push,
     query: { id },
   } = useRouter();
+  useTitle("Reset Password");
 
   const resetPassword = async ({ password }) => {
-    useTitle("Reset Password");
 
     try {
       const res = await publicAxios.post("auth/reset-password", {
