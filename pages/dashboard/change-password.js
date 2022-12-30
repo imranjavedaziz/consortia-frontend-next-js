@@ -71,6 +71,7 @@ const ChangePassword = () => {
           background:
             "linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)",
           borderRadius: "24px",
+          // border:'1px solid '
         }}
       >
         <Box>
