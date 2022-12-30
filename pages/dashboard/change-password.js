@@ -132,14 +132,14 @@ const ChangePassword = () => {
                     )
                   )}
 
-                  <Box display="flex" flexDirection="column">
+                  <Box display="flex" flexDirection="column" mt={7}>
                     <Button
                       variant="gradient"
                       size="large"
                       type="submit"
                       disabled={isSubmitting}
                     >
-                      Save Settings
+                      Change Password
                     </Button>
                   </Box>
                 </Box>

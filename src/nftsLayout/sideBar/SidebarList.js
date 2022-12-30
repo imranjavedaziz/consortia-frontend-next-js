@@ -15,17 +15,34 @@ import CloseIcon from '@mui/icons-material/Close';
 import { practitionarPages,consumerPages } from "../../utils/dashboardPages";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const StyledListItem = styled(ListItem)({
   "& .MuiTypography-root": {},
   "& .MuiListItemButton-root": {
-    borderRadius: "10px",
+    // borderRadius: "10px",
     color: "#616161",
   },
   "& .Mui-selected": {
     background:
       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%) !important",
     color: "rgba(59,130,246,.5) !important",
+    // position: "relative",
+    // marginRight: "6px",
+    // height: "100%",
+    // zIndex: "99",
+    // "&::after": {
+    //   content: "''",
+    //   position: "absolute",
+    //   borderRight: "1px solid",
+    //   borderColor: 'red',
+    //   width: "0",
+    //   height: "100%",
+    //   zIndex: "1",
+    //   top: 0,
+    //   right: "0px",
+    // },
+
     // fontWeight: "900 !important",
   },
 });
@@ -69,16 +86,18 @@ export default function SidebarList({setopenForMobile}) {
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
       <Box sx={{ display: "flex", justifyContent:isLaptop?  "center":"space-around",alignItems:"center", py: 3 }}>
-        <Image src={sidebarLogo} height={34} width={"100%"} />
+       <Link href='/'>
+       <Image src={sidebarLogo} height={34} width={"100%"} />
+       </Link> 
        {!isLaptop && <IconButton  color="primary" onClick={()=>setopenForMobile(false)} >
             <CloseIcon />
           </IconButton>}
       </Box>
 
-      <List component="nav" aria-label="main mailbox folders">
+      <List component="nav" aria-label="main mailbox folders" >
         {( profile_info?.user?.role === "practitioner" ? practitionarPages : consumerPages).map((item, index) =>
           !item.nested ? (
-            <StyledListItem key={index}>
+            <StyledListItem key={index} sx={{paddingLeft:'0px'}}>
               <ListItemButton
               disableRipple
                 selected={route == item?.path}

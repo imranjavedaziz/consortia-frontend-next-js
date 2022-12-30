@@ -38,7 +38,7 @@ export default function Header() {
   const open = Boolean(anchorEl);
   const icons = [
     { path: "/assets/icons/setting.svg", name: "setting" },
-    { path: "/assets/icons/notifications.svg", name: "notifications" },
+    // { path: "/assets/icons/notifications.svg", name: "notifications" },
     { path: "/assets/icons/userProfile.svg", name: "userProfile" },
   ];
   const handleClick = (event) => {
@@ -58,8 +58,8 @@ export default function Header() {
     },
     { name: "Edit Profile", path: "", rel: "edit-profile" },
     { name: "Change Password", path: "", rel: "change-password" },
-    { name: "NFT Wallet", path: "/assets/icons/wallet.svg", rel: "/" },
-    { name: "Night Mode", path: "/assets/icons/nightMode.svg", rel: "/" },
+    { name: "NFT Wallet", path: "/assets/icons/wallet.svg",  },
+    { name: "Night Mode", path: "/assets/icons/nightMode.svg",  },
   ];
   return (
     <>
@@ -80,15 +80,15 @@ export default function Header() {
               padding: "0px !important",
               display: "flex",
               justifyContent: isMobile
-                ? "space-around"
+                ? "end"
                 : isTablet
-                ? "space-around"
-                : "space-between",
+                ? "end"
+                : "end",
             }}
           >
             {/* <Typography sx={{ flexGrow: 1 }}>News</Typography>
              */}
-            <GradiantTextField
+            {/* <GradiantTextField
               variant="body2"
               id="outlined-adornment-amount"
               placeholder="Search"
@@ -97,7 +97,6 @@ export default function Header() {
               Height={isMobile ? "40px" : "50px"}
               startAdornment={
                 <InputAdornment position="start">
-                  {/* className={classes.searchIcon} */}
                   <span style={{ display: "flex", alignContent: "center" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +119,7 @@ export default function Header() {
                 </InputAdornment>
               }
               label="Search"
-            />
+            /> */}
             <Box
               sx={{
                 display: "flex",
@@ -128,7 +127,7 @@ export default function Header() {
               }}
             >
               {icons.map((item, i) => (
-                <IconButton key={item.name + i} onClick={handleClick}>
+                <IconButton key={item.name + i} onClick={handleClick} sx={{cursor:'pointer'}}>
                   <Image
                     src={item.path}
                     height={isMobile ? 20 : 33}
@@ -161,7 +160,7 @@ export default function Header() {
             <>
               <MenuItem
                 onClick={() => {
-                  push(item.rel);
+                  item?.rel &&  push(item?.rel);
                   handleClose();
                 }}
               >
