@@ -98,7 +98,7 @@ const CustomInputField = ({
           {...props}
           style={{
             background: Boolean(meta.touched && meta.error)
-              ? "rgba(29, 6, 104, 0.9)"
+              ? "rgba(29, 6, 104, 1)"
               : "rgba(29, 6, 104, 1)",
             margin: "2px 2px 2px 2px",
             borderRadius: "24px",
