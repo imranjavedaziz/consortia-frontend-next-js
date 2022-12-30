@@ -3,9 +3,12 @@ import Head from "next/head";
 import Image from "next/image";
 import PolygonButton from "../src/components/common/PolygonButton";
 import NftLandingPageSection from "../src/components/NftLandingPageSection";
+import { useTitle } from "../src/utils/Title";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  useTitle("Home");
+
   return (
     <>
       <Box
@@ -44,13 +47,13 @@ export default function Home() {
           </Box>
         </Box>
         <Box>
-          <Box sx={{display:{xs:"none",md:"block"}}} >
+          <Box sx={{ display: { xs: "none", md: "block" } }}>
             <Image
               src="/assets/images/landingPageBuilding.svg"
               alt="Logo"
               height={564}
               width={597}
-              style={{width:"100%"}}
+              style={{ width: "100%" }}
             />
           </Box>
         </Box>

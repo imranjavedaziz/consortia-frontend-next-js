@@ -19,6 +19,7 @@ const GradiantTextField = styled(TextField)(({}) => ({
     "& input":{
       fontSize:'13px',
       padding:'10px 0px',
+      fontWeight:500
     },
    
     "& .MuiSelect-select":{

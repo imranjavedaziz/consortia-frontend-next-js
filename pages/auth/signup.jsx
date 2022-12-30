@@ -13,6 +13,7 @@ import countries from "../../src/listOfCountriesAndStates.json";
 import { useRouter } from "next/router";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { useTitle } from "../../src/utils/Title";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -22,7 +23,7 @@ const practitionerOptions = [
   { value: "appraiser", label: "Appraiser" },
 ];
 
-const listOfCountries = countries.countries.map((item) => ({
+export const listOfCountries = countries.countries.map((item) => ({
   value: item.country,
   label: item.country,
 }));
@@ -39,14 +40,14 @@ const inputFields = [
     label: "Password",
     placeholder: "Minimum of 8 characters",
     sensitive: true,
-    onCutCopyPaste:(e) =>e.preventDefault(),
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
   {
     name: "confirm_password",
     label: "Confirm Password",
     placeholder: "Confirm Password",
     sensitive: true,
-    onCutCopyPaste:(e) =>e.preventDefault(),
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
 ];
 
@@ -78,6 +79,8 @@ const secondFormInputFields = [
 ];
 
 const SignUp = () => {
+  useTitle("Signup");
+
   const [open, setOpen] = useState(true);
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
@@ -224,8 +227,18 @@ const SignUp = () => {
                 setSubmitting(false);
               }}
               validationSchema={Yup.object().shape({
-                firstName: Yup.string().required("First Name is required").matches(/^[A-Za-z]+$/,"First Name can only contain alphabets"),
-                lastName: Yup.string().required("Last Name is required").matches(/^[A-Za-z]+$/,"Last Name can only contain alphabets"),
+                firstName: Yup.string()
+                  .required("First Name is required")
+                  .matches(
+                    /^[A-Za-z]+$/,
+                    "First Name can only contain alphabets"
+                  ),
+                lastName: Yup.string()
+                  .required("Last Name is required")
+                  .matches(
+                    /^[A-Za-z]+$/,
+                    "Last Name can only contain alphabets"
+                  ),
                 email: Yup.string()
                   .email("Email Should be a valid email")
                   .required("Email is required"),
@@ -280,7 +293,13 @@ const SignUp = () => {
                         </Box>
                       </Box>
                       {inputFields.map(
-                        ({ name, label, placeholder, sensitive,onCutCopyPaste }) => (
+                        ({
+                          name,
+                          label,
+                          placeholder,
+                          sensitive,
+                          onCutCopyPaste,
+                        }) => (
                           <CustomInputField
                             key={name}
                             name={name}
