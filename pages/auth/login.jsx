@@ -31,21 +31,28 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import DialogResetPassword from "../../src/components/modals/resetPassword/DialogResetPassword";
+import { useTitle } from "../../src/utils/Title";
+import { useAuthContext } from "../../src/context/AuthContext";
 
 function Login() {
+  useTitle("Login");
+
   const { push } = useRouter();
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
   const login = async ({ email, password }) => {
     try {
       const res = await publicAxios.post("auth/login", {
         email,
         password,
       });
-      localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));  
+      localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access_token", res?.data?.data?.token);
       toast.success("Welcome Back!");
+      push("/dashboard/landing");
     } catch (error) {
       if (error?.data?.data?.verified === false) {
         setEmail(email);
@@ -205,7 +212,7 @@ function Login() {
                             textDecoration: "underline",
                             textTransform: "none",
                             fontSize: "16px",
-                            color:'#6720FF'
+                            color: "#6720FF",
                           }}
                         >
                           Signup

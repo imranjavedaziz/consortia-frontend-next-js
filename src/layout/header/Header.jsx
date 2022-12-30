@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import GradientBorderButton from "../../components/common/gradientBorderButton/GradientBorderButton";
+import { useAuthContext } from "../../context/AuthContext";
 
 export const ImageLogo = styled("div")({
   display: "flex",
@@ -13,11 +14,13 @@ export const ImageLogo = styled("div")({
 });
 
 const NavigationList = styled(ImageLogo)({
-  padding: {xs:"unset",md:"0px 100px"},
+  padding: { xs: "unset", md: "0px 100px" },
 });
 
 const Header = () => {
-  const { route,push } = useRouter();
+  const { route, push } = useRouter();
+  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
   const isNotLap = useMediaQuery("(max-width:900px)");
 
   const isActive = (path) => {
@@ -50,26 +53,28 @@ const Header = () => {
   ];
   return (
     <>
-      <Grid container 
-      alignItems={"center"}
-      sx={{ padding: "50px 0px 80px 0px" }}
+      <Grid
+        container
+        alignItems={"center"}
+        sx={{ padding: "50px 0px 80px 0px" }}
       >
         <Grid item xs={2}>
           <ImageLogo>
             <Image
               src="/assets/images/consortiaLogo.svg"
-              width={isNotLap?100:180}
+              width={isNotLap ? 100 : 180}
               height={29}
               alt="Logo"
             />
           </ImageLogo>
         </Grid>
-        <Grid item xs={7} >
+        <Grid item xs={7}>
           <NavigationList
-            sx={{ display: "flex", 
-            justifyContent: "center",
-            gap:{xs:1,md:2,lg:4}
-           }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: { xs: 1, md: 2, lg: 4 },
+            }}
           >
             {navigationItems.map((item, i) => {
               return (
@@ -112,44 +117,76 @@ const Header = () => {
             })}
           </NavigationList>
         </Grid>
+
         <Grid
           item
           xs={3}
-          sx={{ display: "flex",alignItems:"center", justifyContent: "end",gap:{xs:1,lg:3,xl:4}}}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "end",
+            gap: { xs: 1, lg: 3, xl: 4 },
+          }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => push("/auth/signup")}
-            sx={{
-              background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-              borderRadius: "24px",
-              width:{xs:"70px",md: "120px"},
-              padding: {xs:"0px",md:"10px 0px"},
-              height:{xs:"25px",md:"33px",xl:"37px"},
-              fontSize:{xs:"13px",xl:"17px"}
-            }}
-          >
-            Signup
-          </Button>
-         
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => push("/auth/login")}
-            sx={{
-              background: "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-              borderRadius: "24px",
-             
-              width:{xs:"70px",md: "120px"},
-              padding: {xs:"0px",xl:"10px 0px"},
-              height:{xs:"25px",md:"33px",xl:"37px"},
-              fontSize:{xs:"13px",xl:"16px"}
-            }}
-            // onClick={handleClose}
-          >
-            Login
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                setIsLoggedIn(false);
+              }}
+              sx={{
+                background:
+                  "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                borderRadius: "24px",
+                width: { xs: "70px", md: "120px" },
+                padding: { xs: "0px", md: "10px 0px" },
+                height: { xs: "25px", md: "33px", xl: "37px" },
+                fontSize: { xs: "13px", xl: "17px" },
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => push("/auth/signup")}
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                  borderRadius: "24px",
+                  width: { xs: "70px", md: "120px" },
+                  padding: { xs: "0px", md: "10px 0px" },
+                  height: { xs: "25px", md: "33px", xl: "37px" },
+                  fontSize: { xs: "13px", xl: "17px" },
+                }}
+              >
+                Signup
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => push("/auth/login")}
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                  borderRadius: "24px",
+
+                  width: { xs: "70px", md: "120px" },
+                  padding: { xs: "0px", xl: "10px 0px" },
+                  height: { xs: "25px", md: "33px", xl: "37px" },
+                  fontSize: { xs: "13px", xl: "16px" },
+                }}
+                // onClick={handleClose}
+              >
+                Login
+              </Button>
+            </>
+          )}
         </Grid>
       </Grid>
       {/* <GradientBorderButton btnText='login' /> */}

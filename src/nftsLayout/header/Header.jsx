@@ -14,6 +14,7 @@ import {
   Menu,
 } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
   borderRadius: "16px",
@@ -29,6 +30,8 @@ const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
 }));
 
 export default function Header() {
+  const { push } = useRouter();
+
   const isMobile = useMediaQuery("(max-width:600px)");
   const isTablet = useMediaQuery("(max-width:1000px)");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,11 +51,15 @@ export default function Header() {
     setAnchorEl(null);
   };
   const menuItems = [
-    { name: "Profile", path: "/assets/icons/profile.svg" },
-    { name: "Edit Profile", path: "" },
-    { name: "Change Password", path: "" },
-    { name: "NFT Wallet", path: "/assets/icons/wallet.svg" },
-    { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
+    {
+      name: "Profile",
+      path: "/assets/icons/profile.svg",
+      rel: "profile",
+    },
+    { name: "Edit Profile", path: "", rel: "edit-profile" },
+    { name: "Change Password", path: "", rel: "change-password" },
+    { name: "NFT Wallet", path: "/assets/icons/wallet.svg", rel: "/" },
+    { name: "Night Mode", path: "/assets/icons/nightMode.svg", rel: "/" },
   ];
   return (
     <>
@@ -143,25 +150,37 @@ export default function Header() {
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
-       sx={{
-        '.MuiMenu-paper': {
-          backgroundColor:'#fff'
-        }
-       }}
+        sx={{
+          ".MuiMenu-paper": {
+            backgroundColor: "#fff",
+          },
+        }}
       >
         {menuItems.map((item, i) => {
           return (
             <>
-              <MenuItem onClick={handleClose} >
+              <MenuItem
+                onClick={() => {
+                  push(item.rel);
+                  handleClose();
+                }}
+              >
                 <Box>
-                  {item.path && <Image
-                    src={item.path}
-                    alt={item.name}
-                    height={18}
-                    width={18}
-                  />}
+                  {item.path && (
+                    <Image
+                      src={item.path}
+                      alt={item.name}
+                      height={18}
+                      width={18}
+                    />
+                  )}
                 </Box>
-                <Typography variant="body2" sx={{color:'black', paddingLeft:'14px'}}>{item.name}</Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "black", paddingLeft: "14px" }}
+                >
+                  {item.name}
+                </Typography>
               </MenuItem>
             </>
           );

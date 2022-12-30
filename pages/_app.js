@@ -8,6 +8,7 @@ import { darkTheme, lightTheme } from "../src/theme";
 import createEmotionCache from "../src/createEmotionCache";
 import Layout from "../src/layout/Index";
 import NftsLayout from "../src/nftsLayout";
+import { AuthContext } from "../src/context/AuthContext";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -24,13 +25,16 @@ export default function MyApp(props) {
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <link rel="shortcut icon" href="/consortiaFavicon.png" />
       </Head>
       <ThemeProvider theme={darkTheme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        {/* <Layout> */}
-        {renderWithLayout(<Component {...pageProps} />)}
-        {/* </Layout> */}
+        <AuthContext>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          {/* <Layout> */}
+          {renderWithLayout(<Component {...pageProps} />)}
+          {/* </Layout> */}
+        </AuthContext>
       </ThemeProvider>
     </CacheProvider>
   );
