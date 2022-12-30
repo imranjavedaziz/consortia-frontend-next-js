@@ -12,11 +12,14 @@ import SidebarList from "./SidebarList";
     <Box
       component="nav"
       sx={{
-        flexShrink: { lg: 0 },
+        flexShrink: { lg: 0 ,height:'100vh'},
       }}
     >
-      <Box>
+      <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
         <SidebarList setopenForMobile={setopenForMobile} />
+        <Box>
+          sfsfaf
+        </Box>
       </Box>
     </Box>
   );
