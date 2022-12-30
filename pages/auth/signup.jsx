@@ -33,7 +33,7 @@ const inputFields = [
   {
     name: "phoneNumber",
     label: "Phone Number",
-    placeholder: "Enter your phone number",
+    placeholder: "+12345678900",
   },
   {
     name: "password",
@@ -242,7 +242,12 @@ const SignUp = () => {
                 email: Yup.string()
                   .email("Email Should be a valid email")
                   .required("Email is required"),
-                phoneNumber: Yup.string().required("Phone number is required"),
+                phoneNumber: Yup.string()
+                  .required("Phone number is required")
+                  .matches(
+                    /^\+([0-9]){11,12}$/gm,
+                    "Please enter a valid phone number"
+                  ),
                 password: Yup.string()
                   .required("Password is required")
                   .min(8, "Password should have a minimum of 8 characters")
