@@ -66,7 +66,7 @@ export const darkTheme = createTheme({
   },
 
   typography: {
-    fontFamily: "Roboto",
+    fontFamily: "Poppins, sans-serif",
     fontWeightLight: 400,
     fontWeightRegular: 500,
     fontWeightMedium: 600,
@@ -81,6 +81,7 @@ export const darkTheme = createTheme({
     },
 
     h3: {
+      fontFamily: "Graphik, sans-serif",
       fontWeight: 600,
       fontSize: "40px",
       lineHeight: "44px",

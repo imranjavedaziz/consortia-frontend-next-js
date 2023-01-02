@@ -8,7 +8,7 @@ const NftLandingPageSection = () => {
       <Typography variant="h3" textAlign="center">
         BLOCKCHAIN FOR REAL ESTATE
       </Typography>
-      <Typography variant="h5" textAlign="center">
+      <Typography variant="h5" textAlign="center" sx={{ color: "#FAFBFC" }}>
         The future of real estate NOW
       </Typography>
       <NftSection title="Luxury Home NFTs" />
