@@ -4,15 +4,22 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Collapse, IconButton, ListItem, SvgIcon, Typography, useMediaQuery } from "@mui/material";
+import {
+  Collapse,
+  IconButton,
+  ListItem,
+  SvgIcon,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import styled from "@emotion/styled";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import sidebarLogo from "../../../public/assets/icons/sidebarLogo.svg";
-import CloseIcon from '@mui/icons-material/Close';
-import { practitionarPages,consumerPages } from "../../utils/dashboardPages";
+import CloseIcon from "@mui/icons-material/Close";
+import { practitionarPages, consumerPages } from "../../utils/dashboardPages";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -47,19 +54,18 @@ const StyledListItem = styled(ListItem)({
   },
 });
 
-export default function SidebarList({setopenForMobile}) {
+export default function SidebarList({ setopenForMobile }) {
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const isLaptop = useMediaQuery("(min-width:1000px)");
-  const profile_info = JSON.parse(localStorage.getItem('profile_info'))
+  const profile_info = JSON.parse(localStorage.getItem("profile_info"));
 
   const { route, push } = useRouter();
-  console.log('route', route)
+  console.log("route", route);
 
   const handleListItemClick = (page) => {
     setSelectedIndex(page?.id);
     push(page.path);
-   !isLaptop && setopenForMobile(false)
-
+    !isLaptop && setopenForMobile(false);
   };
   const [parent, setParent] = React.useState(-1);
 
@@ -71,38 +77,62 @@ export default function SidebarList({setopenForMobile}) {
     }
   };
   React.useEffect(() => {
-
-    if (route.includes("-nft")) {
-      setParent(2);
-    } else if (route.includes("practitioner")) {
-      setParent(3);
-    } else if (route.includes("credits")){
-      setParent(4);
-    }
-    else  if (route.includes("community")){
+    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
+    if(profileInfo?.user?.role === 'practitioner'){
+      if (route.includes("-nft")) {
+        setParent(2);
+      } else if (route.includes("practitioner")) {
+        setParent(3);
+      } else if (route.includes("credits")) {
+        setParent(4);
+      } else if (route.includes("community")) {
         setParent(-1);
-      } else if(route.includes("dashboard")){
-        setParent(1)
+      } else if (route.includes("dashboard")) {
+        setParent(1);
       }
+    }else{
+      if (route.includes("dashboard")) {
+        setParent(1);
+      } else if (route.includes("credits")) {
+        setParent(3);
+      } else if (route.includes("-nft")) {
+        setParent(2);
+      } else if (route.includes("community")) {
+        setParent(-1);
+      }
+    }
+    
   }, [route]);
-  console.log('parent', parent)
+  console.log("parent", parent);
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
-      <Box sx={{ display: "flex", justifyContent:isLaptop?  "center":"space-around",alignItems:"center", py: 3 }}>
-       <Link href='/'>
-       <Image src={sidebarLogo} height={34} width={"100%"} />
-       </Link> 
-       {!isLaptop && <IconButton  color="primary" onClick={()=>setopenForMobile(false)} >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: isLaptop ? "center" : "space-around",
+          alignItems: "center",
+          py: 3,
+        }}
+      >
+        <Link href="/">
+          <Image src={sidebarLogo} height={34} width={"100%"} />
+        </Link>
+        {!isLaptop && (
+          <IconButton color="primary" onClick={() => setopenForMobile(false)}>
             <CloseIcon />
-          </IconButton>}
+          </IconButton>
+        )}
       </Box>
 
-      <List component="nav" aria-label="main mailbox folders" >
-        {( profile_info?.user?.role === "practitioner" ? practitionarPages : consumerPages).map((item, index) =>
+      <List component="nav" aria-label="main mailbox folders">
+        {(profile_info?.user?.role === "practitioner"
+          ? practitionarPages
+          : consumerPages
+        ).map((item, index) =>
           !item.nested ? (
-            <StyledListItem key={index} sx={{paddingLeft:'0px'}}>
+            <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
               <ListItemButton
-              disableRipple
+                disableRipple
                 selected={route == item?.path}
                 onClick={() => handleListItemClick(item, item?.id)}
               >
@@ -118,7 +148,12 @@ export default function SidebarList({setopenForMobile}) {
             </StyledListItem>
           ) : (
             <>
-              <ListItemButton disableRipple selected={route == item?.path} onClick={() => handleClick(item?.id)} key={index}>
+              <ListItemButton
+                disableRipple
+                selected={route == item?.path}
+                onClick={() => handleClick(item?.id)}
+                key={index}
+              >
                 <ListItemIcon>
                   <Image src={item?.icon} height={22} width={22} />
                 </ListItemIcon>

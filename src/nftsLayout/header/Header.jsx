@@ -39,7 +39,7 @@ export default function Header() {
   const icons = [
     { path: "/assets/icons/setting.svg", name: "setting" },
     // { path: "/assets/icons/notifications.svg", name: "notifications" },
-    { path: "/assets/icons/userProfile.svg", name: "userProfile" },
+    { path: "/assets/icons/profileImage.svg", name: "userProfile" },
   ];
   const handleClick = (event) => {
     // console.log(event.target.alt)
@@ -54,10 +54,10 @@ export default function Header() {
     {
       name: "Profile",
       path: "/assets/icons/profile.svg",
-      rel: "profile",
+      rel: "edit-profile" ,
     },
-    { name: "Edit Profile", path: "", rel: "edit-profile" },
-    { name: "Change Password", path: "", rel: "change-password" },
+    // { name: "Edit Profile", path: "", rel: "edit-profile" },
+    { name: "Change Password", path: "/assets/icons/changePassword.svg", rel: "change-password" },
     { name: "NFT Wallet", path: "/assets/icons/wallet.svg",  },
     { name: "Night Mode", path: "/assets/icons/nightMode.svg",  },
   ];
