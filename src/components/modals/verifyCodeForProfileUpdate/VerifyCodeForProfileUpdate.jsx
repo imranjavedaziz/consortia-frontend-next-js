@@ -43,33 +43,38 @@ function VerifyCodeForProfileUpdate({
   updatedUserData,
   fetchUpdatedData,
 }) {
-  const handleClose = () => {
-    fetchUpdatedData();
-    setOpen(false);
-  };
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
 
+  const handleClose = () => {
+    fetchUpdatedData();
+    setCode("");
+    setOpen(false);
+  };
   const changePassword = async () => {
     try {
-      setFetching(true);
-      const res = await publicAxios.put(
-        "user/update",
-        {
-          ...updatedUserData,
-          verificationCode: code,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      if (code.length > 0) {
+        setFetching(true);
+        const res = await publicAxios.put(
+          "user/update",
+          {
+            ...updatedUserData,
+            verificationCode: code,
           },
-        }
-      );
-      setFetching(false);
-      console.log(res?.data?.message);
-      toast.success(res?.data?.message);
-      handleClose();
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        setFetching(false);
+        console.log(res?.data?.message);
+        toast.success(res?.data?.message);
+        handleClose();
+      } else {
+        toast.error("Please enter OTP");
+      }
     } catch (error) {
       setFetching(false);
       if (error?.data?.message) {
@@ -101,7 +106,7 @@ function VerifyCodeForProfileUpdate({
             borderRadius: "24px",
             width: "571px",
             // height: "397px",
-            padding: "40px",
+            padding: "40px 38px",
           },
         }}
       >
@@ -129,9 +134,9 @@ function VerifyCodeForProfileUpdate({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ padding: "20px 10px" }}>
           <Typography variant="body1">{text}</Typography>
-          <Box>
+          <Box sx={{ width: "100%" }}>
             {/* <TextFieldWrapper> */}
 
             {/* <TextField
