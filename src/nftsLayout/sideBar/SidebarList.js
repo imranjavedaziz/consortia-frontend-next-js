@@ -73,16 +73,19 @@ export default function SidebarList({setopenForMobile}) {
   React.useEffect(() => {
 
     if (route.includes("-nft")) {
-      setParent(1);
-    } else if (route.includes("practitioner")) {
       setParent(2);
-    } else if (route.includes("credits")){
+    } else if (route.includes("practitioner")) {
       setParent(3);
+    } else if (route.includes("credits")){
+      setParent(4);
     }
     else  if (route.includes("community")){
         setParent(-1);
+      } else if(route.includes("dashboard")){
+        setParent(1)
       }
   }, [route]);
+  console.log('parent', parent)
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
       <Box sx={{ display: "flex", justifyContent:isLaptop?  "center":"space-around",alignItems:"center", py: 3 }}>

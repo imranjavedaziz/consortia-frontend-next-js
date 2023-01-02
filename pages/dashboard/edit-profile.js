@@ -155,6 +155,43 @@ const EditProfile = () => {
               await updateUserData(values);
               setSubmitting(false);
             }}
+            validationSchema={Yup.object().shape({
+              firstName: Yup.string()
+                  .required("First Name is required")
+                  .matches(
+                    /^[A-Za-z]+$/,
+                    "First Name can only contain alphabets"
+                  ),
+                  lastName: Yup.string()
+                  .required("Last Name is required")
+                  .matches(
+                    /^[A-Za-z]+$/,
+                    "Last Name can only contain alphabets"
+                  ),
+                  email: Yup.string()
+                  .email("Email Should be a valid email")
+                  .required("Email is required"),
+                  phoneNumber: Yup.string()
+                  .required("Phone number is required")
+                  .matches(
+                    /^\+([0-9]){11,12}$/gm,
+                    "Please enter a valid phone number"
+                  ),
+              practitioner: Yup.string().required(
+                "Practitioner type is required"
+              ),
+              companyName: Yup.string().required("Business Name is required"),
+              country: Yup.string().required("Country is required"),
+              state: Yup.string().required("Province / State is required"),
+              license: Yup.string().when(["practitioner", "country"], {
+                is: (practitioner, country) =>
+                  (practitioner == "agent/broker" ||
+                    practitioner == "loan officer") &&
+                  country == "United States",
+                then: Yup.string().required("This field is required"),
+                otherwise: Yup.string().optional(),
+              }),
+            })}
           >
             {(props) => {
               const { isSubmitting, handleSubmit, initialValues, resetForm } =

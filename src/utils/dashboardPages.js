@@ -82,14 +82,14 @@ export const consumerPages = [
   //   ],
   // },
   {
-    id: 4,
+    id: 3,
     title: "My Credits",
     icon: credits,
     nested: true,
 
     children: [
-      { id: 4.1, icon: mintNFT,path:"/dashboard/credits-child/", title: "Credits 1" },
-      { id: 4.2, icon: tagNFT,path:"/dashboard/credits-child2/", title: "Credits 2" },
+      { id: 3.1, icon: mintNFT,path:"/dashboard/credits-child/", title: "Credits 1" },
+      { id: 3.2, icon: tagNFT,path:"/dashboard/credits-child2/", title: "Credits 2" },
     ],
   },
 ];

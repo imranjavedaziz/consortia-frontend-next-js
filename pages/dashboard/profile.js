@@ -15,7 +15,7 @@ const Profile = () => {
       }}
     >
       <Image
-        src="/assets/images/comingSoon.png"
+        src="/assets/images/comingSoon.svg"
         alt="Coming Soon"
         height={400}
         width={600}
