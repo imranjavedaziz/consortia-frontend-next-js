@@ -77,6 +77,7 @@ export default function SidebarList({ setopenForMobile }) {
     }
   };
   React.useEffect(() => {
+    // debugger;
     const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
     if(profileInfo?.user?.role === 'practitioner'){
       if (route.includes("-nft")) {

@@ -127,7 +127,7 @@ export default function Header() {
               }}
             >
               {icons.map((item, i) => (
-                <IconButton key={item.name + i} onClick={handleClick} sx={{cursor:'pointer'}}>
+                <IconButton key={item.name + i} onClick={handleClick} >
                   <Image
                     src={item.path}
                     height={isMobile ? 20 : 33}

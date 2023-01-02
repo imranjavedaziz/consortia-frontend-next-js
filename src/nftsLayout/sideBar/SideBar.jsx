@@ -37,6 +37,7 @@ const Sidebar = ({ setopenForMobile }) => {
             }}
             onClick={() => {
               localStorage.removeItem("access_token");
+              localStorage.removeItem("profile_info");
               push("/");
               // setIsLoggedIn(false);
             }}
