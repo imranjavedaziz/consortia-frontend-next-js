@@ -32,7 +32,9 @@ const NftCard = ({ title, address }) => {
       ></CardMedia>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6">US-06041-N</Typography>
+          <Typography variant="h6" fontWeight={500} fontSize="16px">
+            US-06041-N
+          </Typography>
           <Stack direction="row" gap={0.8} alignItems="center">
             <CardMedia
               component="img"
@@ -53,7 +55,8 @@ const NftCard = ({ title, address }) => {
         <Box width="170px">
           <Typography
             variant="body2"
-            fontSize="12px"
+            fontSize="10px"
+            fontWeight={500}
             sx={{ color: "rgba(224, 224, 224, 0.8)" }}
           >
             Address 1111 Stoney View Ln, St. Louis, MO 6...

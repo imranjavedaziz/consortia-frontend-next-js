@@ -106,6 +106,8 @@ function TextAndDoubleButtons({
                 background:
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
+                fontSize: "20px",
+                textTransform: "capitalize",
                 // width: "100%",
                 width: "230px",
                 padding: "13px 61px",
@@ -124,6 +126,8 @@ function TextAndDoubleButtons({
                 background:
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
+                fontSize: "20px",
+                textTransform: "capitalize",
                 // width: "100%",
                 width: "230px",
                 padding: "13px 61px",

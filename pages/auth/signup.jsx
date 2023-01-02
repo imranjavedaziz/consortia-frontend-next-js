@@ -81,7 +81,12 @@ const secondFormInputFields = [
 
 const SignUp = () => {
   useTitle("Signup");
-  const { showSecondForm, setShowSecondForm, choosePractitionerOpen, setChoosePractitionerOpen } = useAuthContext();
+  const {
+    showSecondForm,
+    setShowSecondForm,
+    choosePractitionerOpen,
+    setChoosePractitionerOpen,
+  } = useAuthContext();
 
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
@@ -156,7 +161,7 @@ const SignUp = () => {
         btnText1="consumer"
         btnText2="practitioner"
         setOpen={setChoosePractitionerOpen}
-        height="333px"
+        height="350px"
       />
       <DialogTextInput
         open={emailVerificationOpen}
@@ -407,6 +412,10 @@ const SignUp = () => {
                             size="large"
                             type="submit"
                             disabled={isSubmitting}
+                            sx={{
+                              fontSize: "20px",
+                              fontWeight: 600,
+                            }}
                           >
                             Next
                           </Button>
@@ -530,6 +539,10 @@ const SignUp = () => {
                           size="large"
                           type="submit"
                           disabled={isSubmitting}
+                          sx={{
+                            fontSize: "20px",
+                            fontWeight: 600,
+                          }}
                         >
                           Complete Details
                         </Button>

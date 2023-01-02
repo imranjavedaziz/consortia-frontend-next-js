@@ -43,7 +43,10 @@ const PolygonButton = () => {
           image="/assets/icons/rocket.svg"
           alt="Rocket Icon"
         />
-        <Typography variant="h5"> EXPLORE MORE</Typography>
+        <Typography variant="h5" fontWeight={600}>
+          {" "}
+          EXPLORE MORE
+        </Typography>
       </Box>
     </Box>
   );

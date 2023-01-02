@@ -95,6 +95,7 @@ const Header = () => {
                   {isActive(item.path) ? (
                     <Typography
                       varaint="h6"
+                      fontWeight={500}
                       sx={{
                         // textDecoration: "underline",
 
@@ -116,7 +117,11 @@ const Header = () => {
                       {item.name}
                     </Typography>
                   ) : (
-                    <Typography varaint="h6" sx={{ opacity: 0.5 }}>
+                    <Typography
+                      varaint="h6"
+                      fontWeight={500}
+                      sx={{ opacity: 0.5 }}
+                    >
                       {item.name}
                     </Typography>
                   )}
@@ -172,6 +177,7 @@ const Header = () => {
                   padding: { xs: "0px", md: "10px 0px" },
                   height: { xs: "25px", md: "33px", xl: "37px" },
                   fontSize: { xs: "13px", xl: "17px" },
+                  fontWeight: 700,
                 }}
               >
                 Signup
@@ -190,6 +196,7 @@ const Header = () => {
                   padding: { xs: "0px", xl: "10px 0px" },
                   height: { xs: "25px", md: "33px", xl: "37px" },
                   fontSize: { xs: "13px", xl: "16px" },
+                  fontWeight: 700,
                 }}
                 // onClick={handleClose}
               >

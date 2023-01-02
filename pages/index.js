@@ -38,15 +38,21 @@ export default function Home() {
           <Box sx={{ display: "flex" }}>
             <Box sx={{ paddingRight: "40px" }}>
               <Typography variant="h2">98K+</Typography>
-              <Typography variant="h5">Properties</Typography>
+              <Typography variant="h5" fontWeight={600}>
+                Properties
+              </Typography>
             </Box>
             <Box sx={{ paddingRight: "40px" }}>
               <Typography variant="h2">12K+</Typography>
-              <Typography variant="h5">Practitioner</Typography>
+              <Typography variant="h5" fontWeight={600}>
+                Practitioner
+              </Typography>
             </Box>
             <Box sx={{ paddingRight: "40px" }}>
               <Typography variant="h2">15K+</Typography>
-              <Typography variant="h5">Consumer</Typography>
+              <Typography variant="h5" fontWeight={600}>
+                Consumer
+              </Typography>
             </Box>
           </Box>
         </Box>

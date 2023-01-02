@@ -213,7 +213,11 @@ function Login() {
                       >
                         Login
                       </LoadingButton>
-                      <Typography variant="body2" textAlign="center">
+                      <Typography
+                        variant="body2"
+                        textAlign="center"
+                        fontWeight={500}
+                      >
                         Don&apos;t have an account yet?{" "}
                         <Button
                           variant="text"
