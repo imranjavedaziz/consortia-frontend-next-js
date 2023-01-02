@@ -34,7 +34,13 @@ function NftsLayout({ children }) {
     const token = localStorage.getItem("access_token");
     if (!token) push("/auth/login");
   }, []);
-
+  const sectionStyle = {
+    minHeight: "100vh",
+    height: "100%",
+    backgroundImage: `url(/assets/images/dashboardBackground.svg)`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  };
   return (
     <>
       <Box
@@ -43,6 +49,7 @@ function NftsLayout({ children }) {
             md: "flex",
           },
         }}
+        style={sectionStyle}
       >
         <CssBaseline />
         {isLaptop ? (

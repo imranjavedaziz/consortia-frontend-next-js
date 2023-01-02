@@ -64,6 +64,8 @@ function DialogTextInput({
         setFetching(false);
         console.log(res);
         localStorage.setItem("access_token", res?.data?.data?.token);
+        localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
+
         toast.success(res?.data?.message);
         if (!isPractitioner) {
           return setTimeout(() => {
