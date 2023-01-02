@@ -4,11 +4,13 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import SidebarList from "./SidebarList";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../../context/AuthContext";
 
 // ----------------------------------------------------------------------
 
 const Sidebar = ({ setopenForMobile }) => {
   const { push } = useRouter();
+  const { setChoosePractitionerOpen } = useAuthContext();
 
   return (
     <Box
@@ -36,6 +38,7 @@ const Sidebar = ({ setopenForMobile }) => {
               cursor: "pointer",
             }}
             onClick={() => {
+              setChoosePractitionerOpen(true);
               localStorage.removeItem("access_token");
               localStorage.removeItem("profile_info");
               push("/");

@@ -109,7 +109,7 @@ export const darkTheme = createTheme({
     },
 
     body1: {
-      fontWeight: 600,
+      fontWeight: 400,
       lineHeight: "30px",
       color: "#fff",
       [theme.breakpoints.up("sm")]: {

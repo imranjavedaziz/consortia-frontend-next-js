@@ -41,7 +41,7 @@ function Login() {
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const { setShowSecondForm, setChoosePractitionerOpen } = useAuthContext();
 
   const login = async ({ email, password, remember }) => {
     try {
@@ -53,7 +53,16 @@ function Login() {
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access_token", res?.data?.data?.token);
       toast.success("Welcome Back!");
-      push("/dashboard/landing");
+      if (
+        res?.data?.data?.user?.complete ||
+        res?.data?.data?.user?.role == "user"
+      ) {
+        push("/dashboard/landing");
+      } else {
+        setShowSecondForm(true);
+        setChoosePractitionerOpen(false);
+        push("signup");
+      }
     } catch (error) {
       if (error?.data?.data?.verified === false) {
         setEmail(email);

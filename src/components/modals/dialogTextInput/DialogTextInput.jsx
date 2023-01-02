@@ -13,6 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../../../context/AuthContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,19 +44,19 @@ function DialogTextInput({
   inputTypeCode,
   email,
   isPractitioner,
-  setShowSecondForm,
 }) {
   const handleClose = () => {
     setOpen(false);
-    setCode('')
+    setCode("");
   };
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
+  const { showSecondForm, setShowSecondForm } = useAuthContext();
 
   const verifyCode = async (email) => {
     try {
-      if(code.length>0){
+      if (code.length > 0) {
         setFetching(true);
         const res = await publicAxios.post("auth/verify", {
           email,
@@ -74,10 +75,9 @@ function DialogTextInput({
         }
         setShowSecondForm(true);
         handleClose();
-      }else{
-      toast.error('Please enter OTP')
+      } else {
+        toast.error("Please enter OTP");
       }
-      
     } catch (error) {
       setFetching(false);
       toast.error(error?.data?.message);
@@ -133,9 +133,9 @@ function DialogTextInput({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{padding: '20px 10px'}}>
+        <DialogContent sx={{ padding: "20px 10px" }}>
           <Typography variant="body1">{text}</Typography>
-          <Box sx={{width:'100%',paddingTop:'40px'}}>
+          <Box sx={{ width: "100%", paddingTop: "40px" }}>
             {/* <TextFieldWrapper> */}
 
             {/* <TextField
@@ -206,7 +206,7 @@ function DialogTextInput({
                 borderRadius: "24px",
                 width: "100%",
                 padding: "10px 0px",
-                textTransform:'capitalize'
+                textTransform: "capitalize",
               }}
               onClick={() => verifyCode(email)}
             >
