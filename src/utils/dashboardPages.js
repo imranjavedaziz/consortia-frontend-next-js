@@ -20,7 +20,7 @@ export const practitionarPages = [
     id: 2,
     title: "Property",
     nested: true,
-    icon: property,
+    icon: '/assets/icons/mainProperty.svg',
     children: [
       { id: 2.1, icon: mintNFT,path:"/property/mint-nft/", title: "Mint NFTs" },
       { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
@@ -65,7 +65,7 @@ export const consumerPages = [
     id: 2,
     title: "Property",
     nested: true,
-    icon: property,
+    icon: '/assets/icons/mainProperty.svg',
     children: [
       { id: 2.1, icon: mintNFT,path:"/property/mint-nft/", title: "Mint NFTs" },
       { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
