@@ -23,7 +23,11 @@ export default function Home() {
             </Typography>
           </Box>
           <Box sx={{ padding: "32px 0px 40px 0px" }}>
-            <Typography variant="body1">
+            <Typography
+              variant="body1"
+              fontWeight={400}
+              sx={{ color: "#FAFBFC" }}
+            >
               Consortia is the only NFT and training solution led by an <br />
               SEC registered investment banker, real estate broker and
               <br /> mortgage loan originator. We focus on SEC rules, RESPA,
