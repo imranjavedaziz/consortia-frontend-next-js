@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { listOfCountries } from "../auth/signup";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import VerifyCodeForProfileUpdate from "../../src/components/modals/verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
+import { useTitle } from "../../src/utils/Title";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -71,6 +72,8 @@ const consumerInputField = [
 ];
 
 const EditProfile = () => {
+  useTitle("Edit Profile");
+
   const [userData, setUserData] = useState({});
   const [updatedUserData, setUpdatedUserData] = useState({});
   const [openVerificationModal, setOpenVerificationModal] = useState(false);
@@ -114,6 +117,8 @@ const EditProfile = () => {
       }
     });
     if (Object.keys(valuesToSend).length > 0) {
+      console.log("in if");
+
       setUpdatedUserData(valuesToSend);
       try {
         const res = await publicAxios.put("user/update", valuesToSend, {
@@ -132,6 +137,7 @@ const EditProfile = () => {
         }
       }
     } else {
+      console.log("in else");
       toast.error("No changes detected");
     }
   };
@@ -197,7 +203,7 @@ const EditProfile = () => {
                       /^\+([0-9]){11,12}$/gm,
                       "Please enter a valid phone number"
                     ),
-                  practitioner: Yup.string().required(
+                  practitionerType: Yup.string().required(
                     "Practitioner type is required"
                   ),
                   companyName: Yup.string().required(
@@ -205,14 +211,17 @@ const EditProfile = () => {
                   ),
                   country: Yup.string().required("Country is required"),
                   state: Yup.string().required("Province / State is required"),
-                  license: Yup.string().when(["practitioner", "country"], {
-                    is: (practitioner, country) =>
-                      (practitioner == "agent/broker" ||
-                        practitioner == "loan officer") &&
-                      country == "United States",
-                    then: Yup.string().required("This field is required"),
-                    otherwise: Yup.string().optional(),
-                  }),
+                  licenseNumber: Yup.string().when(
+                    ["practitionerType", "country"],
+                    {
+                      is: (practitionerType, country) =>
+                        (practitionerType == "agent/broker" ||
+                          practitionerType == "loan officer") &&
+                        country == "United States",
+                      then: Yup.string().required("This field is required"),
+                      otherwise: Yup.string().optional(),
+                    }
+                  ),
                 })}
               >
                 {(props) => {

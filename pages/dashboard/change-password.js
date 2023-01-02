@@ -7,6 +7,7 @@ import CustomInputField from "../../src/components/common/CustomInputField";
 import { publicAxios } from "../../src/api";
 import toast, { Toaster } from "react-hot-toast";
 import VerifyCodeModal from "../../src/components/modals/verifyCode/VerifyCode";
+import { useTitle } from "../../src/utils/Title";
 
 const inputFields = [
   {
@@ -30,6 +31,8 @@ const inputFields = [
 ];
 
 const ChangePassword = () => {
+  useTitle("Change Password");
+
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const changePassword = async ({ current_password, password }) => {
     try {
