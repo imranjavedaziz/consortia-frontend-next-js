@@ -3,7 +3,7 @@ import ComingSoon from "../src/components/common/comingSoon/ComingSoon";
 
 function AboutUs() {
   return (
-    <div style={{ width: "5%" }}>
+    <div>
       <ComingSoon />
     </div>
   );
