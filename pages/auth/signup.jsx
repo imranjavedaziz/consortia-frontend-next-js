@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
+import { useAuthContext } from "../../src/context/AuthContext";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -80,13 +81,12 @@ const secondFormInputFields = [
 
 const SignUp = () => {
   useTitle("Signup");
+  const { showSecondForm, setShowSecondForm, choosePractitionerOpen, setChoosePractitionerOpen } = useAuthContext();
 
-  const [open, setOpen] = useState(true);
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [phoneNo, setPhoneNo] = useState("");
   const [email, setEmail] = useState("");
-  const [showSecondForm, setShowSecondForm] = useState(false);
   const { push } = useRouter();
 
   const signup = async ({
@@ -149,13 +149,13 @@ const SignUp = () => {
   return (
     <>
       <TextAndDoubleButtons
-        open={open}
+        open={choosePractitionerOpen}
         setIsPractitioner={setIsPractitioner}
         title="This Account is for?"
         text="Please select your category if you are a practitioner then select practitioner otherwise select consumer."
         btnText1="consumer"
         btnText2="practitioner"
-        setOpen={setOpen}
+        setOpen={setChoosePractitionerOpen}
         height="333px"
       />
       <DialogTextInput
@@ -168,8 +168,6 @@ const SignUp = () => {
         placeholder="Enter your verification code"
         email={email}
         isPractitioner={isPractitioner}
-        showSecondForm={showSecondForm}
-        setShowSecondForm={setShowSecondForm}
       />
       <Grid container sx={{ height: "100%", minHeight: "100vh" }}>
         <Grid
@@ -188,7 +186,6 @@ const SignUp = () => {
               background: "rgba(24, 10, 91, 0.8)",
               display: "flex",
               justifyContent: "center",
-            
             }}
           >
             <Box sx={{ ":hover": { cursor: "pointer" } }}>
