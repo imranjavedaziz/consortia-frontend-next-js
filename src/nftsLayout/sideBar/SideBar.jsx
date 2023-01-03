@@ -5,9 +5,18 @@ import SidebarList from "./SidebarList";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../context/AuthContext";
+import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------
 
+const SideBarParent = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  height: "100%",
+  paddingBottom: "80px",
+  borderRight: `0.5px solid ${theme.palette.secondary.darkGray}`,
+}));
 const Sidebar = ({ setopenForMobile }) => {
   const { push } = useRouter();
   const { setChoosePractitionerOpen } = useAuthContext();
@@ -19,15 +28,7 @@ const Sidebar = ({ setopenForMobile }) => {
         flexShrink: { lg: 0, minHeight: "100vh", height: "100%" },
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "100%",
-          paddingBottom: "80px",
-        }}
-      >
+      <SideBarParent>
         <SidebarList setopenForMobile={setopenForMobile} />
         <Box>
           <Box
@@ -56,7 +57,7 @@ const Sidebar = ({ setopenForMobile }) => {
             </Typography>
           </Box>
         </Box>
-      </Box>
+      </SideBarParent>
     </Box>
   );
 };

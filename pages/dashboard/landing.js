@@ -41,7 +41,7 @@ function Landing() {
         {profileInfo?.user?.role === "practitioner" && (
           <Box width={230} mr={5}>
             <Button variant="gradient" size="large" sx={{ fontSize: "20px" }}>
-              Mint Practitioner NFT
+              Mint Practitioner
             </Button>
           </Box>
         )}

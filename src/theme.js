@@ -152,6 +152,7 @@ export const darkTheme = createTheme({
       main: "#19857b",
       purpleGray: "#313770",
       yellow: "#FAE94D",
+      darkGray: "#454470",
     },
   },
   breakpoints: {

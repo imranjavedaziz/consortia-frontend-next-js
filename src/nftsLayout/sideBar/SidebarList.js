@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 const StyledListItem = styled(ListItem)({
+  paddingRight: "0px",
   "& .MuiTypography-root": {},
   "& .MuiListItemButton-root": {
     // borderRadius: "10px",
@@ -34,6 +35,9 @@ const StyledListItem = styled(ListItem)({
     background:
       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%) !important",
     color: "rgba(59,130,246,.5) !important",
+    borderLeft: "3px solid #FFFFFF",
+    paddingTop: "14px",
+    paddingBottom: "14px",
     // position: "relative",
     // marginRight: "6px",
     // height: "100%",
@@ -78,8 +82,8 @@ export default function SidebarList({ setopenForMobile }) {
   };
   React.useEffect(() => {
     // debugger;
-    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
-    if(profileInfo?.user?.role === 'practitioner'){
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    if (profileInfo?.user?.role === "practitioner") {
       if (route.includes("-nft")) {
         setParent(2);
       } else if (route.includes("practitioner")) {
@@ -91,7 +95,7 @@ export default function SidebarList({ setopenForMobile }) {
       } else if (route.includes("dashboard")) {
         setParent(1);
       }
-    }else{
+    } else {
       if (route.includes("dashboard")) {
         setParent(1);
       } else if (route.includes("credits")) {
@@ -102,7 +106,6 @@ export default function SidebarList({ setopenForMobile }) {
         setParent(-1);
       }
     }
-    
   }, [route]);
   console.log("parent", parent);
   return (
