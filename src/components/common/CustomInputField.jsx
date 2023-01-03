@@ -28,8 +28,14 @@ const GradiantTextField = styled(TextField)(({}) => ({
     },
   },
   "& input::placeholder": {
-    fontSize: "16px",
+    fontSize: "12px",
     fontWeight: 400,
+    fontFamily: "Poppins, sans-serif",
+  },
+  "& textarea::placeholder": {
+    fontSize: "12px",
+    fontWeight: 400,
+    fontFamily: "Poppins, sans-serif",
   },
 }));
 

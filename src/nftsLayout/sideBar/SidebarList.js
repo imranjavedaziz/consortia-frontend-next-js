@@ -87,12 +87,11 @@ export default function SidebarList({ setopenForMobile }) {
     }
   };
   React.useEffect(() => {
-    // debugger;
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (profileInfo?.user?.role === "practitioner") {
-      if (route.includes("-nft")) {
+      if (route.includes("property")) {
         setParent(2);
-      } else if (route.includes("practitioner")) {
+      } else if (route.includes("practitionerNfts")) {
         setParent(3);
       } else if (route.includes("credits")) {
         setParent(4);
@@ -106,7 +105,7 @@ export default function SidebarList({ setopenForMobile }) {
         setParent(1);
       } else if (route.includes("credits")) {
         setParent(3);
-      } else if (route.includes("-nft")) {
+      } else if (route.includes("property")) {
         setParent(2);
       } else if (route.includes("community")) {
         setParent(-1);

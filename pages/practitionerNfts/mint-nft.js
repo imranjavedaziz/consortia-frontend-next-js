@@ -1,4 +1,12 @@
-import { Box, Typography, styled, Button, Checkbox, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  styled,
+  Button,
+  Radio,
+  Checkbox,
+  Grid,
+} from "@mui/material";
 import React from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
@@ -36,94 +44,71 @@ const MintNFTS = () => {
   ];
   const propertyNftsForm = [
     {
-      name: "agent",
-      label: "Select agent:",
-      placeholder: "Select your agent",
-      options: agentsList,
-      select: true,
-    },
-    {
-      name: "title",
+      name: "name",
       label: "Title:",
-      placeholder: "Enter your Title",
+      placeholder: "Enter Your Name",
     },
     {
-      name: "price",
-      label: "Price:",
-      placeholder: "Enter your Price",
-    },
-    {
-      name: "description",
-      label: "Description:",
-      placeholder: "Enter Text Here",
-      multiline: true,
-      maxRows: 4,
+      name: "email",
+      label: "Email:",
+      placeholder: "Enter Your Email",
     },
     {
       name: "address",
       label: "Address:",
-      placeholder: "Enter your Address",
+      placeholder: "Enter Your Address",
     },
     {
-      name: "documents",
-      label: "Select Documents Categories:",
-      placeholder: "Select",
-      options: agentsList,
-      select: true,
+      name: "bio",
+      label: "Bio:",
+      placeholder: "Enter Text Here",
     },
   ];
 
-  const checkBoxList = [
-    { label: "Deed", name: "deed" },
-    { label: "Lien", name: "Lien" },
-    { label: "Photo", name: "photo" },
-    { label: "AWM", name: "AWM" },
-    { label: "Appraisal ", name: "appraisal " },
-    { label: "MLS Data ", name: "MLS Data " },
-    { label: "Floor Plan", name: "floor-plan" },
-    { label: "Assessor Data", name: "assessor-data" },
-    { label: "Lease Agreement ", name: "lease-agreement " },
-    { label: "Sellers Disclosure", name: "Sellers Disclosure" },
-    { label: "Preliminary Title Report", name: "Preliminary Title Report" },
-    { label: "Inspection Report ", name: "Inspection Report " },
-    { label: "Title Insurance Policy", name: "Title Insurance Policy" },
-    { label: "Settlement Statement ", name: "Settlement Statement" },
-    { label: "Land Use/Planning Report  ", name: "Land Use/Planning Report  " },
+  const radioBoxList = [
+    { label: "Realter", name: "realter" },
+    { label: "Loan Officer", name: "loan-officer" },
+    { label: "Title/Escrow", name: "titel-escrow" },
+    { label: "Appraiser", name: "appraiser" },
   ];
 
   return (
     <>
       <Box>
         <Box>
-          <Typography variant="h3">Mint Property NFT</Typography>
+          <Typography variant="h3">Mint Practitioner NFT</Typography>
         </Box>
         <GradientMintPropertyNfts>
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Mint Property NFTs
+                Mint Practitioner NFTs
               </Typography>
             </Box>
             <Box>
               <Formik
                 initialValues={{
-                  agent: "",
-                  title: "",
+                  name: "",
+                  email: "",
+                  address: "",
+                  bio: "",
                   price: "",
                   description: "",
-                  address: "",
                   documents: "",
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                   console.log("values", values);
                 }}
                 validationSchema={Yup.object().shape({
-                  agent: Yup.string().required("Agent is required"),
-                  title: Yup.string().required("title is required"),
+                  name: Yup.string().required("Name is required"),
+                  email: Yup.string().required("Email is required"),
+                  address: Yup.string().required("Address is required"),
+                  bio: Yup.string().required("Bio is required"),
                   price: Yup.string().required("Price is required"),
                   description: Yup.string().required("Description is required"),
-                  address: Yup.string().required("Address is required"),
-                  documents: Yup.string().required("Documents is required"),
+                  licenseNumber: Yup.string().required(
+                    "License number is required"
+                  ),
                 })}
               >
                 {(props) => {
@@ -166,27 +151,39 @@ const MintNFTS = () => {
                             )
                           )
                         )}
+                       
                         <Box pt={3}>
-                          <Typography variant='body1'>
-                          Upload each documents to a specific category:
-                          </Typography>
-                        </Box>
-                        <Grid container>
-                          {checkBoxList.map((item, i) => {
-                            return (
-                              <>
-                                <Grid
-                                  item
-                                  xs={6}
+                          <Typography variant="body1">License Type:</Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            {radioBoxList.map((item, i) => {
+                              return (
+                                <Box
                                   sx={{ display: "flex", alignItems: "center" }}
                                   key={item.name+i}
                                 >
-                                  <Checkbox /> <Typography>{item.label}</Typography>
-                                </Grid>
-                              </>
-                            );
-                          })}
-                        </Grid>
+                                  <Radio  color='success' size="small" />
+                                  <Typography variant='subtitle1'>{item.label}</Typography>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        </Box>
+                        <Box pt={3}>
+                          <CustomInputField
+                            name="licenseNumber"
+                            label="License Number:"
+                            placeholder="Enter Your License Number"
+                            // select={select}
+                            // options={options}
+                            // rows={maxRows}
+                            // multiline={multiline}
+                          />
+                        </Box>
                         <Box display="flex" pt={7}>
                           <Button
                             variant="gradient"
