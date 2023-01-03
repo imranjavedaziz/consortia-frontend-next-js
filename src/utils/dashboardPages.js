@@ -32,8 +32,8 @@ export const practitionarPages = [
     nested: true,
     icon: nft,
     children: [
-      { id: 3.1, icon: mintNFT,path:"/dashboard/practitioner-child/", title: "Practitioner 1" },
-      { id: 3.2, icon: tagNFT,path:"/dashboard/practitioner-child2/", title: "Practitioner 2" },
+      { id: 3.1, icon: mintNFT,path:"/practitionerNfts/mint-nft/", title: "Mint NFTs" },
+      { id: 3.2, icon: tagNFT,path:"/practitionerNfts/practitioner-child2/", title: "Practitioner 2" },
     ],
   },
   {

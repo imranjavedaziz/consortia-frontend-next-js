@@ -145,6 +145,9 @@ export const darkTheme = createTheme({
       default:
         "linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)",
     },
+    border: {
+      default: " linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+    },
     primary: {
       main: "#556cd6",
     },
