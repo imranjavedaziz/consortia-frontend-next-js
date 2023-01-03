@@ -142,7 +142,7 @@ const Header = () => {
           }}
         >
           {isLoggedIn ? (
-            <Link href="/dashboard/landing">
+            <Link href="/dashboard/landing" style={{textDecoration:'none'}}>
               <Button
                 variant="contained"
                 color="primary"
@@ -153,8 +153,8 @@ const Header = () => {
                   background:
                     "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                   borderRadius: "24px",
-                  width: { xs: "70px", md: "120px" },
-                  padding: { xs: "0px", md: "10px 0px" },
+                  width: { xs: "70px", md: "140px" },
+                  padding: { xs: "0px", md: "10px 10px" },
                   height: { xs: "25px", md: "33px", xl: "37px" },
                   fontSize: { xs: "13px", xl: "17px" },
                   textTransform: "capitalize",
