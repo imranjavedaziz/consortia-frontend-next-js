@@ -58,8 +58,15 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           background: "#313770",
-          // border: "1px solid rgba(255, 255, 255, 0.3)",
           borderRadius: "8px",
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          maxHeight: "300px !important",
+          border: "1px solid rgba(255, 255, 255, 0.3) !important",
         },
       },
     },
