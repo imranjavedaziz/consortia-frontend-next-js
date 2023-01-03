@@ -13,12 +13,14 @@ import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
 import { Toaster } from "react-hot-toast";
+import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
 
   const { push } = useRouter();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -41,8 +43,30 @@ function NftsLayout({ children }) {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+
+  useEffect(() => {
+    const profile_info = JSON.parse(localStorage.getItem("profile_info"));
+    console.log(profile_info);
+    if (
+      !!profile_info &&
+      profile_info?.user?.role == "practitioner" &&
+      !profile_info?.user?.bio
+    ) {
+      setCompleteProfileOpen(true);
+      console.log("not completed");
+    }
+  }, []);
+
   return (
     <>
+      <CompletePractitionerProfile
+        open={completeProfileOpen}
+        setOpen={setCompleteProfileOpen}
+        title="Complete Profile"
+        text="Please complete your practitioner profile to start minting NFTs"
+        btnText1="consumer"
+        btnText2="practitioner"
+      />
       <Box
         sx={{
           display: {

@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { styled } from "@mui/system";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const GradiantTextField = styled(TextField)(({}) => ({
+export const GradiantTextField = styled(TextField)(({}) => ({
   paddingRight: "20px",
 
   "& .MuiInput-root": {
