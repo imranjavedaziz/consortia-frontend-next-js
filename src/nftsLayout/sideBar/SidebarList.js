@@ -56,6 +56,12 @@ const StyledListItem = styled(ListItem)({
 
     // fontWeight: "900 !important",
   },
+  "& .MuiListItemIcon-root": {
+    minWidth:'0px'
+  },
+  "& .MuiListItemText-root":{
+    paddingLeft:'10px',
+  }
 });
 
 export default function SidebarList({ setopenForMobile }) {
@@ -152,6 +158,7 @@ export default function SidebarList({ setopenForMobile }) {
             </StyledListItem>
           ) : (
             <>
+            <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
               <ListItemButton
                 disableRipple
                 selected={route == item?.path}
@@ -172,6 +179,7 @@ export default function SidebarList({ setopenForMobile }) {
                   <KeyboardArrowRightIcon />
                 )}
               </ListItemButton>
+              </StyledListItem>
               <Collapse in={parent == item.id} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {item.children.map((subPage, ind) => (
@@ -185,10 +193,12 @@ export default function SidebarList({ setopenForMobile }) {
                           <Image src={subPage?.icon} height={22} width={22} />
                         </ListItemIcon>
                         <ListItemText
+                       
                           primary={
                             <Typography variant="body2">
                               {subPage.title}
                             </Typography>
+                            
                           }
                         />
                       </ListItemButton>
