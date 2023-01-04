@@ -16,6 +16,7 @@ export const practitionarPages = [
     //   { id: 1.2, icon: tagNFT,path:"/dashboard/tag-nft/", title: "Tag NFTs" },
     // ],
   },
+
   {
     id: 2,
     title: "Property",
@@ -38,9 +39,10 @@ export const practitionarPages = [
   },
   {
     id: 4,
-    title: "My Credits",
+    title: "Credits",
     icon: credits,
-    nested: true,
+    path:"/credits/credits",
+    nested: false,
 
     children: [
       { id: 4.1, icon: mintNFT,path:"/credits/credits-child/", title: "Credits 1" },
@@ -83,9 +85,10 @@ export const consumerPages = [
   // },
   {
     id: 3,
-    title: "My Credits",
+    title: "Credits",
     icon: credits,
-    nested: true,
+    path:"/credits/credits",
+    nested: false,
 
     children: [
       { id: 3.1, icon: mintNFT,path:"/credits/credits-child/", title: "Credits 1" },

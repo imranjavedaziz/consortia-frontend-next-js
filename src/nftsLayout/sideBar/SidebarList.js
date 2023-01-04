@@ -57,11 +57,11 @@ const StyledListItem = styled(ListItem)({
     // fontWeight: "900 !important",
   },
   "& .MuiListItemIcon-root": {
-    minWidth:'0px'
+    minWidth: "0px",
   },
-  "& .MuiListItemText-root":{
-    paddingLeft:'10px',
-  }
+  "& .MuiListItemText-root": {
+    paddingLeft: "10px",
+  },
 });
 
 export default function SidebarList({ setopenForMobile }) {
@@ -87,6 +87,7 @@ export default function SidebarList({ setopenForMobile }) {
     }
   };
   React.useEffect(() => {
+    // debugger
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (profileInfo?.user?.role === "practitioner") {
       if (route.includes("property")) {
@@ -139,7 +140,14 @@ export default function SidebarList({ setopenForMobile }) {
           : consumerPages
         ).map((item, index) =>
           !item.nested ? (
-            <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
+            <>
+             {console.log(
+                "route == item?.path",
+                route,
+                item,
+                route == item?.path
+              )}
+               <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
               <ListItemButton
                 disableRipple
                 selected={route == item?.path}
@@ -155,29 +163,31 @@ export default function SidebarList({ setopenForMobile }) {
                 />
               </ListItemButton>
             </StyledListItem>
+            </>
+           
           ) : (
             <>
-            <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
-              <ListItemButton
-                disableRipple
-                selected={route == item?.path}
-                onClick={() => handleClick(item?.id)}
-                key={index}
-              >
-                <ListItemIcon>
-                  <Image src={item?.icon} height={22} width={22} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography variant="body2">{item.title}</Typography>
-                  }
-                />
-                {parent == item?.id ? (
-                  <ExpandLess />
-                ) : (
-                  <KeyboardArrowRightIcon />
-                )}
-              </ListItemButton>
+              <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
+                <ListItemButton
+                  disableRipple
+                  selected={route == item?.path}
+                  onClick={() => handleClick(item?.id)}
+                  key={index}
+                >
+                  <ListItemIcon>
+                    <Image src={item?.icon} height={22} width={22} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body2">{item.title}</Typography>
+                    }
+                  />
+                  {parent == item?.id ? (
+                    <ExpandLess />
+                  ) : (
+                    <KeyboardArrowRightIcon />
+                  )}
+                </ListItemButton>
               </StyledListItem>
               <Collapse in={parent == item.id} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
@@ -192,12 +202,10 @@ export default function SidebarList({ setopenForMobile }) {
                           <Image src={subPage?.icon} height={22} width={22} />
                         </ListItemIcon>
                         <ListItemText
-                       
                           primary={
                             <Typography variant="body2">
                               {subPage.title}
                             </Typography>
-                            
                           }
                         />
                       </ListItemButton>
