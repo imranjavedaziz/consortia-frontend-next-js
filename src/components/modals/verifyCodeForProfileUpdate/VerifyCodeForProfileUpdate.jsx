@@ -42,15 +42,22 @@ function VerifyCodeForProfileUpdate({
   inputTypeCode,
   updatedUserData,
   fetchUpdatedData,
+  profileUpdate,
+  handleParentClose,
 }) {
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
 
   const handleClose = () => {
-    fetchUpdatedData();
-    setCode("");
-    setOpen(false);
+    if (profileUpdate) {
+      setCode("");
+      setOpen(false);
+    } else {
+      fetchUpdatedData();
+      setCode("");
+      setOpen(false);
+    }
   };
   const changePassword = async () => {
     try {
@@ -72,6 +79,46 @@ function VerifyCodeForProfileUpdate({
         console.log(res?.data?.message);
         toast.success(res?.data?.message);
         handleClose();
+      } else {
+        toast.error("Please enter OTP");
+      }
+    } catch (error) {
+      setFetching(false);
+      if (error?.data?.message) {
+        toast.error(error?.data?.message);
+      } else {
+        toast.error(error?.data?.err?.msg);
+      }
+    }
+  };
+  const updateDetails = async () => {
+    try {
+      if (code.length > 0) {
+        setFetching(true);
+        const res = await publicAxios.put(
+          "user/update",
+          {
+            ...updatedUserData,
+            verificationCode: code,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        setFetching(false);
+        debugger;
+        const user = res?.data?.data?.user;
+        toast.success(res?.data?.message);
+        const profile_info = JSON.parse(localStorage.getItem("profile_info"));
+        const newProfileData = {
+          ...profile_info,
+          user,
+        };
+        localStorage.setItem("profile_info", JSON.stringify(newProfileData));
+        handleClose();
+        handleParentClose();
       } else {
         toast.error("Please enter OTP");
       }
@@ -189,7 +236,7 @@ function VerifyCodeForProfileUpdate({
                 width: "100%",
                 padding: "10px 0px",
               }}
-              onClick={() => changePassword()}
+              onClick={profileUpdate ? updateDetails : changePassword}
             >
               {btnText}
             </LoadingButton>
