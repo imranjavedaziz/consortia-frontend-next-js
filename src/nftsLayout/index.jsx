@@ -122,6 +122,7 @@ function NftsLayout({ children }) {
           <Box>{children}</Box>
         </Box>
       </Box>
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 }

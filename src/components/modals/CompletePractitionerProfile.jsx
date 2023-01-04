@@ -24,6 +24,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
 import { LoadingButton } from "@mui/lab";
+import { publicAxios } from "../../api";
+import toast from "react-hot-toast";
+import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -57,13 +60,45 @@ function CompletePractitionerProfile({
   crossButtonEbable,
 }) {
   const [date, setDate] = useState(dayjs(new Date()));
-  const [bio, setBio] = useState();
+  const [bio, setBio] = useState("");
   const [headShot, setHeadshot] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
+  const [updatedUserData, setUpdatedUserData] = useState({});
   const handleClose = (e) => {
     setOpen(false);
   };
-  const completeDetails = async (values) => {
-    console.log(values);
+
+  const completePractitionerDetails = async () => {
+    setIsLoading(true);
+    try {
+      const res = await publicAxios.put(
+        "user/update",
+        {
+          bio,
+          headShot,
+          licenseSince: dayjs(date).unix(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      console.log(res);
+      setIsLoading(false);
+      toast.success("Verification code has been sent to your email");
+      setUpdatedUserData({
+        bio,
+        headShot,
+        licenseSince: dayjs(date).unix(),
+      });
+      setVerifyCodeOpen(true);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+      toast.error(error?.data?.message);
+    }
   };
   return (
     <>
@@ -142,14 +177,13 @@ function CompletePractitionerProfile({
                   />
                 </div>
               </Box>
-              {console.log(date, bio, headShot)}
               <Box>
                 <InputLabel shrink>Headshot:</InputLabel>
                 <Typography
                   variant="subtitle1"
                   sx={{ color: "#FAFBFC", opacity: 0.5 }}
                 >
-                  Files types supported: JPG, PNG, GIF, SVG
+                  Files types supported: JPG, PNG, GIF, SVG, Max Size: 5MB
                 </Typography>
                 <CustomFileUpload s3Url={headShot} setS3Url={setHeadshot} />
               </Box>
@@ -193,6 +227,9 @@ function CompletePractitionerProfile({
               </Box>
               <Box display="flex" flexDirection="column" mt={4}>
                 <LoadingButton
+                  onClick={completePractitionerDetails}
+                  loading={isLoading}
+                  disabled={!(headShot.length > 1 && bio.length > 1)}
                   variant="gradient"
                   size="large"
                   sx={{
@@ -207,6 +244,17 @@ function CompletePractitionerProfile({
           </Box>
         </DialogContent>
       </Dialog>
+      <VerifyCodeForProfileUpdate
+        open={verifyCodeOpen}
+        setOpen={setVerifyCodeOpen}
+        title="Verification Code"
+        text="Verification code has been sent to your email"
+        btnText="Submit"
+        placeholder="Enter your verification code"
+        updatedUserData={updatedUserData}
+        profileUpdate={true}
+        handleParentClose={handleClose}
+      />
     </>
   );
 }
