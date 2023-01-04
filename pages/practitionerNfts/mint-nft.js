@@ -7,13 +7,15 @@ import {
   Checkbox,
   Grid,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
+import { publicAxios } from "../../src/api";
+import toast from "react-hot-toast";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -38,6 +40,13 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+
+  const [profileInfo, setProfileInfo] = useState({});
+  const [headShot, setHeadshot] = useState('');
+  useEffect(() => {
+    setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
+  }, []);
+  
   const agentsList = [
     { value: "agent-1", label: "Agent 1" },
     { value: "agent-2", label: "Agent 2" },
@@ -59,11 +68,6 @@ const MintNFTS = () => {
       label: "Address:",
       placeholder: "Enter Your Address",
     },
-    // {
-    //   name: "bio",
-    //   label: "Bio:",
-    //   placeholder: "Enter Text Here",
-    // },
   ];
 
   const radioBoxList = [
@@ -72,7 +76,42 @@ const MintNFTS = () => {
     { label: "Title/Escrow", name: "titel-escrow" },
     { label: "Appraiser", name: "appraiser" },
   ];
+// console.log('profileInfo.user.email', profileInfo.user.email)
 
+const signup = async ({
+  name,
+  email,
+  address,
+  image,
+  bio,
+  licenseNumber
+}) => {
+  try {
+    const res = await publicAxios.post("nft/practitioner", {
+      name,
+      email,
+      address,
+      image,
+      bio,
+      // role: profileInfo.user.role ? "practitioner" : "consumer",
+      licenseNumber
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    toast.success("Welcome to Consortia! Please verify your email");
+    // setEmail(email);
+    // setEmailVerificationOpen(true);
+  } catch (error) {
+    if (error?.data?.message) {
+      toast.error(error?.data?.message);
+    } else {
+      toast.error(error?.data?.err?.msg);
+    }
+  }
+};
   return (
     <>
       <Box>
@@ -90,26 +129,23 @@ const MintNFTS = () => {
               <Formik
                 initialValues={{
                   name: "",
-                  email: "",
+                  email: profileInfo?.user?.email,
                   address: "",
                   bio: "",
-                  price: "",
-                  description: "",
-                  documents: "",
+                  licenseNumber: profileInfo?.user?.licenseNumber
                 }}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={ async(values, { setSubmitting }) => {
                   console.log("values", values);
+                  setSubmitting(true);
+                  await signup(values);
+                  setSubmitting(false);
                 }}
                 validationSchema={Yup.object().shape({
                   name: Yup.string().required("Name is required"),
                   email: Yup.string().required("Email is required"),
                   address: Yup.string().required("Address is required"),
                   bio: Yup.string().required("Bio is required"),
-                  price: Yup.string().required("Price is required"),
-                  description: Yup.string().required("Description is required"),
-                  licenseNumber: Yup.string().required(
-                    "License number is required"
-                  ),
+                  licenseNumber: Yup.string().required("License Number is required")
                 })}
               >
                 {(props) => {
@@ -162,6 +198,7 @@ const MintNFTS = () => {
                             </Typography>
                           </Box>
                           <CustomFileUpload
+                          s3Url={headShot} setS3Url={setHeadshot}
                           borderRadius='24px'
                           width='100%'
                            
