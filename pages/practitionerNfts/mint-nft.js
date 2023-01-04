@@ -163,7 +163,7 @@ const MintNFTS = () => {
                           </Box>
                           <CustomFileUpload
                           borderRadius='24px'
-                          width='50vw'
+                          width='100%'
                            
                           />
                         </Box>
