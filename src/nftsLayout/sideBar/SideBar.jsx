@@ -19,7 +19,7 @@ const SideBarParent = styled(Box)(({ theme }) => ({
 }));
 const Sidebar = ({ setopenForMobile }) => {
   const { push } = useRouter();
-  const { setChoosePractitionerOpen } = useAuthContext();
+  const { setChoosePractitionerOpen, setShowSecondForm } = useAuthContext();
 
   return (
     <Box
@@ -39,6 +39,7 @@ const Sidebar = ({ setopenForMobile }) => {
               cursor: "pointer",
             }}
             onClick={() => {
+              setShowSecondForm(false);
               setChoosePractitionerOpen(true);
               localStorage.removeItem("access_token");
               localStorage.removeItem("profile_info");

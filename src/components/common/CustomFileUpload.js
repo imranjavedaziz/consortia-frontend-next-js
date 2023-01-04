@@ -6,6 +6,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useState } from "react";
 import AWS from "aws-sdk";
+import toast from "react-hot-toast";
 
 const S3_BUCKET = "consortiamedia";
 const REGION = "us-east-1";
@@ -20,27 +21,37 @@ const myBucket = new AWS.S3({
   region: REGION,
 });
 
+const validImage = (img) =>
+  ["jpg", "png", "gif", "svg"].some((char) => img.endsWith(char));
+
 const CustomFileUpload = ({ s3Url, setS3Url }) => {
   const [file, setFile] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
   const handleChange = (e) => {
-    setFile(URL.createObjectURL(e.target.files[0]));
-    console.log("file", e.target.files[0]);
-    myBucket.upload(
-      {
-        Bucket: S3_BUCKET,
-        Key: e.target.files[0].name,
-        Body: e.target.files[0],
-      },
-      async (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          setS3Url(data?.Location);
-        }
+    if (validImage(e.target.files[0].name)) {
+      if (e.target.files[0].size < 5242880) {
+        setFile(URL.createObjectURL(e.target.files[0]));
+        myBucket.upload(
+          {
+            Bucket: S3_BUCKET,
+            Key: e.target.files[0].name,
+            Body: e.target.files[0],
+          },
+          async (err, data) => {
+            if (err) {
+              console.log(err);
+            } else {
+              setS3Url(data?.Location);
+            }
+          }
+        );
+      } else {
+        toast.error("Image size should be less than 5MB");
       }
-    );
+    } else {
+      toast.error("Only jpg, png, gif and svg files are allowed");
+    }
   };
 
   const handleClick = (e) => {
