@@ -24,7 +24,7 @@ const myBucket = new AWS.S3({
 const validImage = (img) =>
   ["jpg", "png", "gif", "svg"].some((char) => img.endsWith(char));
 
-const CustomFileUpload = ({ s3Url, setS3Url }) => {
+const CustomFileUpload = ({ s3Url, setS3Url,borderRadius,width }) => {
   const [file, setFile] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
@@ -62,10 +62,10 @@ const CustomFileUpload = ({ s3Url, setS3Url }) => {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Box
         sx={{
-          width: isMobile ? "100%" : "40vw",
+          width: isMobile ? "100%" : width ?? "40vw",
           height: isMobile ? "30vh" : "150px",
           border: "2px dashed #B731FF",
-          borderRadius: "4px",
+          borderRadius: borderRadius ?? "4px",
         }}
       >
         <Box
@@ -81,7 +81,7 @@ const CustomFileUpload = ({ s3Url, setS3Url }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: "4px",
+            borderRadius: borderRadius ?? "4px",
             cursor: "pointer",
           }}
           onClick={handleClick}

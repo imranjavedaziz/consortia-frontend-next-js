@@ -13,6 +13,7 @@ import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
+import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -45,7 +46,7 @@ const MintNFTS = () => {
   const propertyNftsForm = [
     {
       name: "name",
-      label: "Title:",
+      label: "Name:",
       placeholder: "Enter Your Name",
     },
     {
@@ -58,11 +59,11 @@ const MintNFTS = () => {
       label: "Address:",
       placeholder: "Enter Your Address",
     },
-    {
-      name: "bio",
-      label: "Bio:",
-      placeholder: "Enter Text Here",
-    },
+    // {
+    //   name: "bio",
+    //   label: "Bio:",
+    //   placeholder: "Enter Text Here",
+    // },
   ];
 
   const radioBoxList = [
@@ -151,7 +152,32 @@ const MintNFTS = () => {
                             )
                           )
                         )}
-                       
+                        <Box pt={3}>
+                          <Box>  
+                            <Typography variant="body1">
+                            Upload a photo of the house:
+                            </Typography>
+                            <Typography variant="subtitle1" color="secondary.gray" pt={1} pb={1}>
+                            File types supported: JPG, PNG, GIF, SVG, Max size: 5 MB
+                            </Typography>
+                          </Box>
+                          <CustomFileUpload
+                          borderRadius='24px'
+                          width='50vw'
+                           
+                          />
+                        </Box>
+                       <Box pt={3}>
+                          <CustomInputField
+                            name="bio"
+                            label="Bio:"
+                            placeholder="Enter Your Bio"
+                            // select={select}
+                            // options={options}
+                            // rows={maxRows}
+                            // multiline={multiline}
+                          />
+                        </Box>
                         <Box pt={3}>
                           <Typography variant="body1">License Type:</Typography>
                           <Box
