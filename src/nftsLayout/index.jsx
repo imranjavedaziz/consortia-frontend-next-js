@@ -44,18 +44,18 @@ function NftsLayout({ children }) {
     backgroundSize: "cover",
   };
 
-  // useEffect(() => {
-  //   const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-  //   console.log(profile_info);
-  //   if (
-  //     !!profile_info &&
-  //     profile_info?.user?.role == "practitioner" &&
-  //     !profile_info?.user?.bio
-  //   ) {
-  //     setCompleteProfileOpen(true);
-  //     console.log("not completed");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const profile_info = JSON.parse(localStorage.getItem("profile_info"));
+    console.log(profile_info);
+    if (
+      !!profile_info &&
+      profile_info?.user?.role == "practitioner" &&
+      !profile_info?.user?.bio
+    ) {
+      setCompleteProfileOpen(true);
+      console.log("not completed");
+    }
+  }, []);
 
   return (
     <>
