@@ -105,7 +105,7 @@ const MintNFTS = () => {
           image: headShot,
           bio,
           // role: profileInfo.user.role ? "practitioner" : "consumer",
-          licenseType,
+          licenseType:licenseTypeValue,
           licenseNumber,
         },
         {
