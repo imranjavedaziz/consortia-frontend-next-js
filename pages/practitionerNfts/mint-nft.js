@@ -204,8 +204,8 @@ const MintNFTS = () => {
                             multiline,
                             disabled,
                             maxRows,
-                          }) => (
-                            <Box pt={3}>
+                          },i) => (
+                            <Box pt={3} key={name+i}>
                               <CustomInputField
                                 key={name}
                                 name={name}
