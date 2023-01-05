@@ -76,7 +76,6 @@ function VerifyCodeForProfileUpdate({
           }
         );
         setFetching(false);
-        console.log(res?.data?.message);
         toast.success(res?.data?.message);
         handleClose();
       } else {

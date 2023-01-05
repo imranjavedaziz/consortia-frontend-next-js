@@ -18,7 +18,7 @@ const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "1px",
   marginTop: "40px",
-  marginBottom:'120px'
+  marginBottom: "120px",
 }));
 const MintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -35,8 +35,6 @@ const Credits = () => {
   useEffect(() => {
     setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
   }, []);
-
-  console.log("profileInfo", profileInfo);
   return (
     <>
       <Box>
@@ -76,7 +74,7 @@ const Credits = () => {
                   flexWrap: "wrap",
                 }}
               >
-                {[1, 2, 3,4].map((item, i) => (
+                {[1, 2, 3, 4].map((item, i) => (
                   <NftCard key={i} />
                 ))}
               </Box>
@@ -89,7 +87,7 @@ const Credits = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginTop:'40px'
+                    marginTop: "40px",
                   }}
                 >
                   <Typography variant="h4" fontWeight={600}>
@@ -116,7 +114,7 @@ const Credits = () => {
                       flexWrap: "wrap",
                     }}
                   >
-                    {[1, 2, 3,4].map((item, i) => (
+                    {[1, 2, 3, 4].map((item, i) => (
                       <NftCard key={i} />
                     ))}
                   </Box>

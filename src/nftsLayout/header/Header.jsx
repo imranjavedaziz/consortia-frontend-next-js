@@ -54,7 +54,7 @@ export default function Header() {
     {
       name: "Profile",
       path: "/assets/icons/profile.svg",
-      rel: "edit-profile" ,
+      rel: "/dashboard/edit-profile" ,
     },
     // { name: "Edit Profile", path: "", rel: "edit-profile" },
     { name: "Change Password", path: "/assets/icons/changePassword.svg", rel: "change-password" },

@@ -61,7 +61,6 @@ function DialogResetPassword({
           email,
         });
         setFetching(false);
-        console.log(res);
         toast.success(res?.data?.message);
   
         handleClose();

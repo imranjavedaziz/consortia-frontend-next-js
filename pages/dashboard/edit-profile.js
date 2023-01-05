@@ -96,8 +96,6 @@ const EditProfile = () => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-
-      console.log(res?.data?.data?.user);
       setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);
@@ -117,8 +115,6 @@ const EditProfile = () => {
       }
     });
     if (Object.keys(valuesToSend).length > 0) {
-      console.log("in if");
-
       setUpdatedUserData(valuesToSend);
       try {
         const res = await publicAxios.put("user/update", valuesToSend, {
@@ -126,7 +122,6 @@ const EditProfile = () => {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
-        console.log(res?.data?.message);
         toast.success(res?.data?.message);
         setOpenVerificationModal(true);
       } catch (error) {
@@ -137,7 +132,6 @@ const EditProfile = () => {
         }
       }
     } else {
-      console.log("in else");
       toast.error("No changes detected");
     }
   };

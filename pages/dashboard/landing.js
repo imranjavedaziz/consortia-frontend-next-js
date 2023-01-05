@@ -9,7 +9,6 @@ function Landing() {
   const [profileInfo, setProfileInfo] = useState({});
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log("profile_info", profile_info);
     setProfileInfo(profile_info);
   }, []);
 

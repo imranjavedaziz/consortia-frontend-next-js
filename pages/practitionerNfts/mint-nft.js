@@ -6,6 +6,9 @@ import {
   Radio,
   Checkbox,
   Grid,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
@@ -16,6 +19,7 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
+import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -40,13 +44,20 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+  const [profileInfo, setProfileInfo] = useState();
+  const [headShot, setHeadshot] = useState("");
+  const [licenseTypeValue,setLicenseTypeValue] = useState('')
 
-  const [profileInfo, setProfileInfo] = useState({});
-  const [headShot, setHeadshot] = useState('');
   useEffect(() => {
-    setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
+    if (typeof window !== "undefined") {
+      const localData = JSON.parse(localStorage.getItem("profile_info"));
+      setProfileInfo(localData);
+    }
   }, []);
-  
+  const handleChange = (event) => {
+    setLicenseTypeValue(event.target.value);
+  };
+
   const agentsList = [
     { value: "agent-1", label: "Agent 1" },
     { value: "agent-2", label: "Agent 2" },
@@ -76,42 +87,44 @@ const MintNFTS = () => {
     { label: "Title/Escrow", name: "titel-escrow" },
     { label: "Appraiser", name: "appraiser" },
   ];
-// console.log('profileInfo.user.email', profileInfo.user.email)
-
-const signup = async ({
-  name,
-  email,
-  address,
-  image,
-  bio,
-  licenseNumber
-}) => {
-  try {
-    const res = await publicAxios.post("nft/practitioner", {
-      name,
-      email,
-      address,
-      image,
-      bio,
-      // role: profileInfo.user.role ? "practitioner" : "consumer",
-      licenseNumber
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-    toast.success("Welcome to Consortia! Please verify your email");
-    // setEmail(email);
-    // setEmailVerificationOpen(true);
-  } catch (error) {
-    if (error?.data?.message) {
-      toast.error(error?.data?.message);
-    } else {
-      toast.error(error?.data?.err?.msg);
+  const mintPractitionarNfts = async ({
+    name,
+    email,
+    address,
+    bio,
+    licenseType,
+    licenseNumber,
+  }) => {
+    try {
+      const res = await publicAxios.post(
+        `${NFT_PRACTITIONER}`,
+        {
+          name,
+          email,
+          address,
+          image: headShot,
+          bio,
+          // role: profileInfo.user.role ? "practitioner" : "consumer",
+          licenseType,
+          licenseNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      toast.success("practitionar nft is minted successfully");
+      // setEmail(email);
+      // setEmailVerificationOpen(true);
+    } catch (error) {
+      if (error?.data?.message) {
+        toast.error(error?.data?.message);
+      } else {
+        toast.error(error?.data?.err?.msg);
+      }
     }
-  }
-};
+  };
   return (
     <>
       <Box>
@@ -132,12 +145,12 @@ const signup = async ({
                   email: profileInfo?.user?.email,
                   address: "",
                   bio: "",
-                  licenseNumber: profileInfo?.user?.licenseNumber
+                  licenseNumber: profileInfo?.user?.licenseNumber,
                 }}
-                onSubmit={ async(values, { setSubmitting }) => {
+                onSubmit={async (values, { setSubmitting }) => {
                   console.log("values", values);
                   setSubmitting(true);
-                  await signup(values);
+                  await mintPractitionarNfts(values);
                   setSubmitting(false);
                 }}
                 validationSchema={Yup.object().shape({
@@ -145,7 +158,9 @@ const signup = async ({
                   email: Yup.string().required("Email is required"),
                   address: Yup.string().required("Address is required"),
                   bio: Yup.string().required("Bio is required"),
-                  licenseNumber: Yup.string().required("License Number is required")
+                  licenseNumber: Yup.string().required(
+                    "License Number is required"
+                  ),
                 })}
               >
                 {(props) => {
@@ -167,44 +182,43 @@ const signup = async ({
                             multiline,
                             maxRows,
                           }) => (
-                            console.log(
-                              "multiline,maxRows",
-                              multiline,
-                              maxRows
-                            ),
-                            (
-                              <Box pt={3}>
-                                <CustomInputField
-                                  key={name}
-                                  name={name}
-                                  label={label}
-                                  placeholder={placeholder}
-                                  select={select}
-                                  options={options}
-                                  rows={maxRows}
-                                  multiline={multiline}
-                                />
-                              </Box>
-                            )
+                            <Box pt={3}>
+                              <CustomInputField
+                                key={name}
+                                name={name}
+                                label={label}
+                                placeholder={placeholder}
+                                select={select}
+                                options={options}
+                                rows={maxRows}
+                                multiline={multiline}
+                              />
+                            </Box>
                           )
                         )}
                         <Box pt={3}>
-                          <Box>  
+                          <Box>
                             <Typography variant="body1">
-                            Upload a photo of the house:
+                              Upload a photo of the house:
                             </Typography>
-                            <Typography variant="subtitle1" color="secondary.gray" pt={1} pb={1}>
-                            File types supported: JPG, PNG, GIF, SVG, Max size: 5 MB
+                            <Typography
+                              variant="subtitle1"
+                              color="secondary.gray"
+                              pt={1}
+                              pb={1}
+                            >
+                              File types supported: JPG, PNG, GIF, SVG, Max
+                              size: 5 MB
                             </Typography>
                           </Box>
                           <CustomFileUpload
-                          s3Url={headShot} setS3Url={setHeadshot}
-                          borderRadius='24px'
-                          width='100%'
-                           
+                            s3Url={headShot}
+                            setS3Url={setHeadshot}
+                            borderRadius="24px"
+                            width="100%"
                           />
                         </Box>
-                       <Box pt={3}>
+                        <Box pt={3}>
                           <CustomInputField
                             name="bio"
                             label="Bio:"
@@ -227,10 +241,28 @@ const signup = async ({
                               return (
                                 <Box
                                   sx={{ display: "flex", alignItems: "center" }}
-                                  key={item.name+i}
+                                  key={item.name + i}
                                 >
-                                  <Radio  color='success' size="small" />
-                                  <Typography variant='subtitle1'>{item.label}</Typography>
+                                  <FormControl>
+                                    <RadioGroup
+                                      aria-labelledby="demo-controlled-radio-buttons-group"
+                                      name="controlled-radio-buttons-group"
+                                      value={licenseTypeValue}
+                                      onChange={handleChange}
+                                    >
+                                      <FormControlLabel
+                                        value={item.name}
+                                        control={
+                                          <Radio color="success" size="small" />
+                                        }
+                                        label={
+                                          <Typography variant="subtitle1">
+                                            {item.label}
+                                          </Typography>
+                                        }
+                                      />
+                                    </RadioGroup>
+                                  </FormControl>
                                 </Box>
                               );
                             })}

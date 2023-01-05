@@ -70,7 +70,6 @@ export default function SidebarList({ setopenForMobile }) {
   const profile_info = JSON.parse(localStorage.getItem("profile_info"));
 
   const { route, push } = useRouter();
-  console.log("route", route);
 
   const handleListItemClick = (page) => {
     setSelectedIndex(page?.id);
@@ -113,7 +112,7 @@ export default function SidebarList({ setopenForMobile }) {
       }
     }
   }, [route]);
-  console.log("parent", parent);
+
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
       <Box
@@ -141,30 +140,23 @@ export default function SidebarList({ setopenForMobile }) {
         ).map((item, index) =>
           !item.nested ? (
             <>
-             {console.log(
-                "route == item?.path",
-                route,
-                item,
-                route == item?.path
-              )}
-               <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
-              <ListItemButton
-                disableRipple
-                selected={route == item?.path}
-                onClick={() => handleListItemClick(item, item?.id)}
-              >
-                <ListItemIcon>
-                  <Image src={item?.icon} height={22} width={22} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography variant="body2">{item.title}</Typography>
-                  }
-                />
-              </ListItemButton>
-            </StyledListItem>
+              <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>
+                <ListItemButton
+                  disableRipple
+                  selected={route == item?.path}
+                  onClick={() => handleListItemClick(item, item?.id)}
+                >
+                  <ListItemIcon>
+                    <Image src={item?.icon} height={22} width={22} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body2">{item.title}</Typography>
+                    }
+                  />
+                </ListItemButton>
+              </StyledListItem>
             </>
-           
           ) : (
             <>
               <StyledListItem key={index} sx={{ paddingLeft: "0px" }}>

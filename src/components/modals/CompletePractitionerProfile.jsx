@@ -85,7 +85,7 @@ function CompletePractitionerProfile({
           },
         }
       );
-      console.log(res);
+
       setIsLoading(false);
       toast.success("Verification code has been sent to your email");
       setUpdatedUserData({

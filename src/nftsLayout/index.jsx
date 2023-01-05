@@ -25,10 +25,8 @@ function NftsLayout({ children }) {
   const isLaptop = useMediaQuery("(min-width:900px)");
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  console.log("isLaptop", isLaptop);
   const [openForMobile, setopenForMobile] = useState(false);
   const openSidebar = () => {
-    console.log("opening");
     setopenForMobile(true);
   };
   const theme = useTheme();
@@ -46,14 +44,12 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log(profile_info);
     if (
       !!profile_info &&
       profile_info?.user?.role == "practitioner" &&
       !profile_info?.user?.bio
     ) {
       setCompleteProfileOpen(true);
-      console.log("not completed");
     }
   }, []);
 

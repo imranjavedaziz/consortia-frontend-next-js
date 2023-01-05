@@ -42,23 +42,23 @@ const MintNFTS = () => {
       options: agentsList,
       select: true,
     },
-    {
-      name: "title",
-      label: "Title:",
-      placeholder: "Enter your Title",
-    },
+    // {
+    //   name: "title",
+    //   label: "Title:",
+    //   placeholder: "Enter your Title",
+    // },
     {
       name: "price",
       label: "Price:",
       placeholder: "Enter your Price",
     },
-    {
-      name: "description",
-      label: "Description:",
-      placeholder: "Enter Text Here",
-      multiline: true,
-      maxRows: 4,
-    },
+    // {
+    //   name: "description",
+    //   label: "Description:",
+    //   placeholder: "Enter Text Here",
+    //   multiline: true,
+    //   maxRows: 4,
+    // },
     {
       name: "address",
       label: "Address:",
@@ -145,30 +145,23 @@ const MintNFTS = () => {
                             multiline,
                             maxRows,
                           }) => (
-                            console.log(
-                              "multiline,maxRows",
-                              multiline,
-                              maxRows
-                            ),
-                            (
-                              <Box pt={3}>
-                                <CustomInputField
-                                  key={name}
-                                  name={name}
-                                  label={label}
-                                  placeholder={placeholder}
-                                  select={select}
-                                  options={options}
-                                  rows={maxRows}
-                                  multiline={multiline}
-                                />
-                              </Box>
-                            )
+                            <Box pt={3}>
+                              <CustomInputField
+                                key={name}
+                                name={name}
+                                label={label}
+                                placeholder={placeholder}
+                                select={select}
+                                options={options}
+                                rows={maxRows}
+                                multiline={multiline}
+                              />
+                            </Box>
                           )
                         )}
                         <Box pt={3}>
-                          <Typography variant='body1'>
-                          Upload each documents to a specific category:
+                          <Typography variant="body1">
+                            Upload each documents to a specific category:
                           </Typography>
                         </Box>
                         <Grid container>
@@ -179,9 +172,10 @@ const MintNFTS = () => {
                                   item
                                   xs={6}
                                   sx={{ display: "flex", alignItems: "center" }}
-                                  key={item.name+i}
+                                  key={item.name + i}
                                 >
-                                  <Checkbox /> <Typography>{item.label}</Typography>
+                                  <Checkbox />{" "}
+                                  <Typography>{item.label}</Typography>
                                 </Grid>
                               </>
                             );
