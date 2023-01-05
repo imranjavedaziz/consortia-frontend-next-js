@@ -38,7 +38,7 @@ function Landing() {
         sx={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
       >
         {profileInfo?.user?.role === "practitioner" && (
-          <Box width={230} mr={5}>
+          <Box width={230} mr={5} onClick={() => push("/practitionerNfts/mint-nft")}>
             <Button variant="gradient" size="large" sx={{ fontSize: "20px" }}>
               Mint Practitioner
             </Button>

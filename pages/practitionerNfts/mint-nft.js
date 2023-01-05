@@ -27,6 +27,7 @@ const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "1px",
   marginTop: "40px",
+  marginBottom:'120px'
 }));
 const MintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -52,6 +53,7 @@ const MintNFTS = () => {
     if (typeof window !== "undefined") {
       const localData = JSON.parse(localStorage.getItem("profile_info"));
       setProfileInfo(localData);
+      setLicenseTypeValue(localData?.user?.practitionerType)
     }
   }, []);
   const handleChange = (event) => {
@@ -73,57 +75,74 @@ const MintNFTS = () => {
       name: "email",
       label: "Email:",
       placeholder: "Enter Your Email",
+      disabled:true
     },
     {
       name: "address",
       label: "Address:",
       placeholder: "Enter Your Address",
+      
     },
   ];
+  console.log({profileInfo})
 
   const radioBoxList = [
-    { label: "Realter", name: "realter" },
-    { label: "Loan Officer", name: "loan-officer" },
-    { label: "Title/Escrow", name: "titel-escrow" },
-    { label: "Appraiser", name: "appraiser" },
+    { value: "agent/broker", label: "Real Estate Agent/Broker" },
+    { value: "loan officer", label: "Loan Officer / Lender" },
+    { value: "title/escrow", label: "Title / Settlement" },
+    { value: "mortgage broker", label: "Mortgage Broker" },
+    { value: "appraiser", label: "Appraiser" },
   ];
+  // const radioBoxList = [
+  //   { label: "Realter", name: "realter" },
+  //   { label: "Loan Officer", name: "loan-officer" },
+  //   { label: "Title/Escrow", name: "titel-escrow" },
+  //   { label: "Appraiser", name: "appraiser" },
+  // ];
   const mintPractitionarNfts = async ({
     name,
     email,
     address,
     bio,
-    licenseType,
+    // image,
+    // licenseType,
     licenseNumber,
   }) => {
-    try {
-      const res = await publicAxios.post(
-        `${NFT_PRACTITIONER}`,
-        {
-          name,
-          email,
-          address,
-          image: headShot,
-          bio,
-          // role: profileInfo.user.role ? "practitioner" : "consumer",
-          licenseType:licenseTypeValue,
-          licenseNumber,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    // debugger
+    if(headShot.length == 0){
+      toast.error('Please upload profile');
+    }else{
+      try {
+        const res = await publicAxios.post(
+          `${NFT_PRACTITIONER}`,
+          {
+            name,
+            email,
+            address,
+            image:headShot,
+            bio,
+            // role: profileInfo.user.role ? "practitioner" : "consumer",
+            licenseType:licenseTypeValue,
+            licenseNumber,
           },
+          {
+            headers: {
+              Authorization: `Bearer ${(localStorage.getItem("access_token"))}`,
+            },
+          }
+        );
+        toast.success("practitionar nft is minted successfully");
+        // setEmail(email);
+        // setEmailVerificationOpen(true);
+      } catch (error) {
+        if (error?.data?.message) {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(error?.data?.err?.msg);
         }
-      );
-      toast.success("practitionar nft is minted successfully");
-      // setEmail(email);
-      // setEmailVerificationOpen(true);
-    } catch (error) {
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
-      } else {
-        toast.error(error?.data?.err?.msg);
       }
     }
+    
   };
   return (
     <>
@@ -142,11 +161,13 @@ const MintNFTS = () => {
               <Formik
                 initialValues={{
                   name: "",
-                  email: profileInfo?.user?.email,
+                  email: profileInfo && profileInfo?.user?.email,
                   address: "",
-                  bio: "",
+                  // image: "",
+                  bio: profileInfo?.user?.bio,
                   licenseNumber: profileInfo?.user?.licenseNumber,
                 }}
+                enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
                   console.log("values", values);
                   setSubmitting(true);
@@ -157,6 +178,7 @@ const MintNFTS = () => {
                   name: Yup.string().required("Name is required"),
                   email: Yup.string().required("Email is required"),
                   address: Yup.string().required("Address is required"),
+                  // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
                   licenseNumber: Yup.string().required(
                     "License Number is required"
@@ -180,6 +202,7 @@ const MintNFTS = () => {
                             select,
                             options,
                             multiline,
+                            disabled,
                             maxRows,
                           }) => (
                             <Box pt={3}>
@@ -192,6 +215,7 @@ const MintNFTS = () => {
                                 options={options}
                                 rows={maxRows}
                                 multiline={multiline}
+                                disabled={disabled}
                               />
                             </Box>
                           )
@@ -199,7 +223,7 @@ const MintNFTS = () => {
                         <Box pt={3}>
                           <Box>
                             <Typography variant="body1">
-                              Upload a photo of the house:
+                              Upload a Profile Photo:
                             </Typography>
                             <Typography
                               variant="subtitle1"
@@ -223,6 +247,7 @@ const MintNFTS = () => {
                             name="bio"
                             label="Bio:"
                             placeholder="Enter Your Bio"
+                            disabled={true}
                             // select={select}
                             // options={options}
                             // rows={maxRows}
@@ -251,9 +276,9 @@ const MintNFTS = () => {
                                       onChange={handleChange}
                                     >
                                       <FormControlLabel
-                                        value={item.name}
+                                        value={item.value}
                                         control={
-                                          <Radio color="success" size="small" />
+                                          <Radio color="success" size="small" checked={item.value === licenseTypeValue} disabled={item.value !== licenseTypeValue}/>
                                         }
                                         label={
                                           <Typography variant="subtitle1">
@@ -273,6 +298,7 @@ const MintNFTS = () => {
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
+                            disabled={true}
                             // select={select}
                             // options={options}
                             // rows={maxRows}
