@@ -17,7 +17,7 @@ function Landing() {
 
   return (
     <>
-      <Box sx={{ marginBottom: "40px" }}>
+      <Box sx={{ marginBottom: { xs: "10px", md: "40px" } }}>
         <Typography variant="h3">
           {profileInfo?.user?.role === "practitioner"
             ? "Practitioner"
@@ -34,26 +34,39 @@ function Landing() {
           image="https://www.youtube.com/embed/A16G29d0dQ0"
           autoPlay
           allow="autoPlay"
-          sx={{ height: "373px", border: "none" }}
+          sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
         />
       </Box>
       <Box
-        sx={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "40px",
+          columnGap: { xs: 2, md: 5 },
+        }}
       >
         {profileInfo?.user?.role === "practitioner" && (
           <Box
             width={230}
-            mr={5}
+            // mr={5}
             onClick={() => push("/practitionerNfts/mint-nft")}
           >
-            <Button variant="gradient" size="large" sx={{ fontSize: "20px" }}>
+            <Button
+              variant="gradient"
+              size="large"
+              sx={{ fontSize: { xs: "10px", md: "20px" } }}
+            >
               Mint Practitioner
             </Button>
           </Box>
         )}
 
         <Box width={230} onClick={() => push("/property/mint-nft")}>
-          <Button variant="gradient" size="large" sx={{ fontSize: "20px" }}>
+          <Button
+            variant="gradient"
+            size="large"
+            sx={{ fontSize: { xs: "10px", md: "20px" } }}
+          >
             Mint Property NFT
           </Button>
         </Box>

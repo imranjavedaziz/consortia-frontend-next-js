@@ -103,7 +103,7 @@ function CompletePractitionerProfile({
   return (
     <>
       <Dialog
-        open={open}
+        open={true}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
@@ -113,7 +113,7 @@ function CompletePractitionerProfile({
             borderRadius: "24px",
             width: "571px",
             height: height,
-            padding: "20px 30px",
+            padding: { xs: "10px 15px", md: "20px 30px" },
           },
         }}
       >
@@ -230,6 +230,7 @@ function CompletePractitionerProfile({
                       renderInput={(params) => (
                         <GradiantTextField
                           variant="standard"
+                          onKeyDown={(e) => e.preventDefault()}
                           fullWidth
                           style={{
                             background: "rgba(29, 6, 104, 1)",
@@ -243,17 +244,14 @@ function CompletePractitionerProfile({
                   </LocalizationProvider>
                 </div>
               </Box>
-              <Box display="flex" flexDirection="column" mt={4}>
+              <Box display="flex" flexDirection="column" mt={{ md: 4 }}>
                 <LoadingButton
                   onClick={completePractitionerDetails}
                   loading={isLoading}
                   disabled={!(headShot.length > 1 && bio.length > 1)}
                   variant="gradient"
                   size="large"
-                  sx={{
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
+                  sx={{ fontSize: { xs: "10px", md: "20px" } }}
                 >
                   Complete Profile
                 </LoadingButton>

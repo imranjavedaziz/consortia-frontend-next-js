@@ -98,8 +98,9 @@ function NftsLayout({ children }) {
         ) : (
           <Box
             sx={{
-              minWidth: "310px",
+              minWidth: { xs: "200px", sm: "310px" },
               minHeight: "100vh",
+              height: "100%",
               background: theme.palette.background.default,
               position: "absolute",
               zIndex: 1,
@@ -110,7 +111,7 @@ function NftsLayout({ children }) {
         )}
         <Box
           sx={{
-            paddingX: { xs: "40px" },
+            paddingX: { xs: "10px", md: "40px" },
             width: "100%",
           }}
         >

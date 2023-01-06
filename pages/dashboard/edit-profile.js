@@ -2,7 +2,14 @@ import NftsLayout from "../../src/nftsLayout";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid, InputLabel, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  InputLabel,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import { publicAxios } from "../../src/api";
 
@@ -73,6 +80,7 @@ const consumerInputField = [
 
 const EditProfile = () => {
   useTitle("Edit Profile");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [userData, setUserData] = useState({});
   const [updatedUserData, setUpdatedUserData] = useState({});
@@ -136,13 +144,13 @@ const EditProfile = () => {
     }
   };
   return (
-    <Box marginY={5}>
-      <Typography variant="h3" marginY={5}>
+    <Box marginY={{ xs: 0, md: 5 }}>
+      <Typography variant="h3" marginY={{ md: 5 }}>
         Settings
       </Typography>
       <Box
         display="flex"
-        paddingY={4}
+        paddingY={{ xs: 1, md: 4 }}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
@@ -153,7 +161,7 @@ const EditProfile = () => {
         }}
       >
         <Box>
-          <Typography variant="h4">Profile Details</Typography>
+          <Typography variant="h3">Profile Details</Typography>
         </Box>
         {profileInfo?.user?.role === "practitioner"
           ? Object.keys(userData).length > 0 && (
@@ -229,13 +237,16 @@ const EditProfile = () => {
                     <form
                       onSubmit={handleSubmit}
                       autoComplete="off"
-                      style={{ width: "80%", maxWidth: "800px" }}
+                      style={{
+                        width: isMobile ? "100%" : "80%",
+                        maxWidth: "800px",
+                      }}
                     >
                       <Box
                         display="flex"
                         flexDirection="column"
                         boxSizing="border-box"
-                        width="80%"
+                        width={{ xs: "90%", sm: "80%" }}
                         margin="auto"
                         // paddingX={2}
                         rowGap={3}
