@@ -5,6 +5,7 @@ import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
+import { useTitle } from "../../src/utils/Title";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -29,6 +30,8 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+  useTitle("Mint NFTs");
+
   const agentsList = [
     { value: "agent-1", label: "Agent 1" },
     { value: "agent-2", label: "Agent 2" },
@@ -136,16 +139,19 @@ const MintNFTS = () => {
                     >
                       <Box>
                         {propertyNftsForm.map(
-                          ({
-                            name,
-                            label,
-                            placeholder,
-                            select,
-                            options,
-                            multiline,
-                            maxRows,
-                          },i) => (
-                            <Box pt={3} key={name+i}>
+                          (
+                            {
+                              name,
+                              label,
+                              placeholder,
+                              select,
+                              options,
+                              multiline,
+                              maxRows,
+                            },
+                            i
+                          ) => (
+                            <Box pt={3} key={name + i}>
                               <CustomInputField
                                 key={name}
                                 name={name}
