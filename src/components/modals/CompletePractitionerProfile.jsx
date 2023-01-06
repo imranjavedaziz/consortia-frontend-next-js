@@ -125,12 +125,25 @@ function CompletePractitionerProfile({
               alignItems: "center",
             }}
           >
-            <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            <Typography variant="h4" sx={{ fontWeight: 400 }}>
               {title}
             </Typography>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{ padding: "16px 0px" }}>
+        <DialogContent
+          sx={{
+            padding: "16px 0px",
+            "&::-webkit-scrollbar": {
+              width: "6px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#9f9dc9",
+            },
+          }}
+        >
           <DialogContentText id="alert-dialog-slide-description">
             <Typography variant="body1">{text}</Typography>
           </DialogContentText>
@@ -181,11 +194,15 @@ function CompletePractitionerProfile({
                 <InputLabel shrink>Headshot:</InputLabel>
                 <Typography
                   variant="subtitle1"
-                  sx={{ color: "#FAFBFC", opacity: 0.5 }}
+                  sx={{ color: "#FAFBFC", opacity: 0.5, marginBottom: 1 }}
                 >
                   Files types supported: JPG, PNG, GIF, SVG, Max Size: 5MB
                 </Typography>
-                <CustomFileUpload s3Url={headShot} setS3Url={setHeadshot} />
+                <CustomFileUpload
+                  s3Url={headShot}
+                  setS3Url={setHeadshot}
+                  width="100%"
+                />
               </Box>
               <Box>
                 <InputLabel shrink>License Since Date:</InputLabel>
@@ -213,6 +230,7 @@ function CompletePractitionerProfile({
                       renderInput={(params) => (
                         <GradiantTextField
                           variant="standard"
+                          fullWidth
                           style={{
                             background: "rgba(29, 6, 104, 1)",
                             margin: "2px 2px 2px 2px",

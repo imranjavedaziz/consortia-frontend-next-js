@@ -24,7 +24,7 @@ const myBucket = new AWS.S3({
 const validImage = (img) =>
   ["jpg", "png", "gif", "svg"].some((char) => img.endsWith(char));
 
-const CustomFileUpload = ({ s3Url, setS3Url,borderRadius,width }) => {
+const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
   const [file, setFile] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
@@ -100,7 +100,7 @@ const CustomFileUpload = ({ s3Url, setS3Url,borderRadius,width }) => {
               </Typography>
             </Stack>
           ) : (
-            <img src={file} width="100%" height={"100%"} />
+            <img src={file} width="auto" height="100%" />
           )}
         </Box>
         <input
