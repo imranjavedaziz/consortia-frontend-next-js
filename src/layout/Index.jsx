@@ -22,19 +22,18 @@ export default function Index({ children }) {
 
   return (
     <>
-     <Head>
-      <title>{router.pathname.slice(1)}</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-      <Paper
-        style={sectionStyle}
-      >
-        <Box sx={{
-          paddingX: { xs: "24px",sm:"40px",lg:"120px", },
-          width:'100%'
-        }}>
-        <Header />
-        {children}
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Paper style={sectionStyle}>
+        <Box
+          sx={{
+            paddingX: { xs: "20px", md: "30", lg: "120px" },
+            width: "100%",
+          }}
+        >
+          <Header />
+          {children}
         </Box>
         <Box
           sx={{
@@ -42,7 +41,7 @@ export default function Index({ children }) {
             width: "100%",
             background: "rgba(255, 255, 255, 0.1)",
             backdropFilter: "blur(10px)",
-            marginTop:'120px'
+            marginTop: "120px",
           }}
         >
           <Footer />

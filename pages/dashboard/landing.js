@@ -3,8 +3,11 @@ import { Box, Button, CardMedia, Typography } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import GradientButton from "../../src/components/common/GradientButton";
 import { useRouter } from "next/router";
+import { useTitle } from "../../src/utils/Title";
 
 function Landing() {
+  useTitle("Dasboard");
+
   const { push } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
   useEffect(() => {
@@ -38,7 +41,11 @@ function Landing() {
         sx={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
       >
         {profileInfo?.user?.role === "practitioner" && (
-          <Box width={230} mr={5} onClick={() => push("/practitionerNfts/mint-nft")}>
+          <Box
+            width={230}
+            mr={5}
+            onClick={() => push("/practitionerNfts/mint-nft")}
+          >
             <Button variant="gradient" size="large" sx={{ fontSize: "20px" }}>
               Mint Practitioner
             </Button>

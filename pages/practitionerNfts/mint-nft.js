@@ -20,6 +20,7 @@ import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
 import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
+import { useTitle } from "../../src/utils/Title";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -27,7 +28,7 @@ const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "1px",
   marginTop: "40px",
-  marginBottom:'120px'
+  marginBottom: "120px",
 }));
 const MintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -45,15 +46,17 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+  useTitle("Mint NFTs");
+
   const [profileInfo, setProfileInfo] = useState();
   const [headShot, setHeadshot] = useState("");
-  const [licenseTypeValue,setLicenseTypeValue] = useState('')
+  const [licenseTypeValue, setLicenseTypeValue] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const localData = JSON.parse(localStorage.getItem("profile_info"));
       setProfileInfo(localData);
-      setLicenseTypeValue(localData?.user?.practitionerType)
+      setLicenseTypeValue(localData?.user?.practitionerType);
     }
   }, []);
   const handleChange = (event) => {
@@ -75,16 +78,15 @@ const MintNFTS = () => {
       name: "email",
       label: "Email:",
       placeholder: "Enter Your Email",
-      disabled:true
+      disabled: true,
     },
     {
       name: "address",
       label: "Address:",
       placeholder: "Enter Your Address",
-      
     },
   ];
-  console.log({profileInfo})
+  console.log({ profileInfo });
 
   const radioBoxList = [
     { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -109,9 +111,9 @@ const MintNFTS = () => {
     licenseNumber,
   }) => {
     // debugger
-    if(headShot.length == 0){
-      toast.error('Please upload profile');
-    }else{
+    if (headShot.length == 0) {
+      toast.error("Please upload profile");
+    } else {
       try {
         const res = await publicAxios.post(
           `${NFT_PRACTITIONER}`,
@@ -119,15 +121,15 @@ const MintNFTS = () => {
             name,
             email,
             address,
-            image:headShot,
+            image: headShot,
             bio,
             // role: profileInfo.user.role ? "practitioner" : "consumer",
-            licenseType:licenseTypeValue,
+            licenseType: licenseTypeValue,
             licenseNumber,
           },
           {
             headers: {
-              Authorization: `Bearer ${(localStorage.getItem("access_token"))}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           }
         );
@@ -142,7 +144,6 @@ const MintNFTS = () => {
         }
       }
     }
-    
   };
   return (
     <>
@@ -195,17 +196,20 @@ const MintNFTS = () => {
                     >
                       <Box>
                         {propertyNftsForm.map(
-                          ({
-                            name,
-                            label,
-                            placeholder,
-                            select,
-                            options,
-                            multiline,
-                            disabled,
-                            maxRows,
-                          },i) => (
-                            <Box pt={3} key={name+i}>
+                          (
+                            {
+                              name,
+                              label,
+                              placeholder,
+                              select,
+                              options,
+                              multiline,
+                              disabled,
+                              maxRows,
+                            },
+                            i
+                          ) => (
+                            <Box pt={3} key={name + i}>
                               <CustomInputField
                                 key={name}
                                 name={name}
@@ -278,7 +282,16 @@ const MintNFTS = () => {
                                       <FormControlLabel
                                         value={item.value}
                                         control={
-                                          <Radio color="success" size="small" checked={item.value === licenseTypeValue} disabled={item.value !== licenseTypeValue}/>
+                                          <Radio
+                                            color="success"
+                                            size="small"
+                                            checked={
+                                              item.value === licenseTypeValue
+                                            }
+                                            disabled={
+                                              item.value !== licenseTypeValue
+                                            }
+                                          />
                                         }
                                         label={
                                           <Typography variant="subtitle1">

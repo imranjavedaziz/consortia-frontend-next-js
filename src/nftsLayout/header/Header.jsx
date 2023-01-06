@@ -54,12 +54,16 @@ export default function Header() {
     {
       name: "Profile",
       path: "/assets/icons/profile.svg",
-      rel: "/dashboard/edit-profile" ,
+      rel: "/dashboard/edit-profile",
     },
     // { name: "Edit Profile", path: "", rel: "edit-profile" },
-    { name: "Change Password", path: "/assets/icons/changePassword.svg", rel: "change-password" },
-    { name: "NFT Wallet", path: "/assets/icons/wallet.svg",  },
-    { name: "Night Mode", path: "/assets/icons/nightMode.svg",  },
+    {
+      name: "Change Password",
+      path: "/assets/icons/changePassword.svg",
+      rel: "/dashboard/change-password",
+    },
+    { name: "NFT Wallet", path: "/assets/icons/wallet.svg" },
+    { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
   ];
   return (
     <>
@@ -79,11 +83,7 @@ export default function Header() {
             sx={{
               padding: "0px !important",
               display: "flex",
-              justifyContent: isMobile
-                ? "end"
-                : isTablet
-                ? "end"
-                : "end",
+              justifyContent: isMobile ? "end" : isTablet ? "end" : "end",
             }}
           >
             {/* <Typography sx={{ flexGrow: 1 }}>News</Typography>
@@ -127,7 +127,7 @@ export default function Header() {
               }}
             >
               {icons.map((item, i) => (
-                <IconButton key={item.name + i} onClick={handleClick} >
+                <IconButton key={item.name + i} onClick={handleClick}>
                   <Image
                     src={item.path}
                     height={isMobile ? 20 : 33}
@@ -160,7 +160,7 @@ export default function Header() {
             <>
               <MenuItem
                 onClick={() => {
-                  item?.rel &&  push(item?.rel);
+                  item?.rel && push(item?.rel);
                   handleClose();
                 }}
               >
