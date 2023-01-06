@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import { Grid, Paper } from "@mui/material";
@@ -15,6 +15,10 @@ export default function Index({ children }) {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+  const [openForMobile, setopenForMobile] = useState(false);
+  const openSidebar = () => {
+    setopenForMobile(true);
+  };
 
   return (
     <>
@@ -26,7 +30,7 @@ export default function Index({ children }) {
         style={sectionStyle}
       >
         <Box sx={{
-          paddingX: { xs: "20px",md:"30",lg:"120px", },
+          paddingX: { xs: "24px",sm:"40px",lg:"120px", },
           width:'100%'
         }}>
         <Header />
@@ -34,7 +38,7 @@ export default function Index({ children }) {
         </Box>
         <Box
           sx={{
-            paddingX: { xs: "120px" },
+            paddingX: { xs: "24px",sm:"40px",lg:"120px", },
             width: "100%",
             background: "rgba(255, 255, 255, 0.1)",
             backdropFilter: "blur(10px)",

@@ -4,7 +4,7 @@ import NftSection from "./common/NftSection";
 
 const NftLandingPageSection = () => {
   return (
-    <Stack gap={3} marginY={3}>
+    <Stack gap={{lg:3,sm:2}} marginY={{lg:3,xs:2}}>
       <Typography variant="h3" textAlign="center">
         BLOCKCHAIN FOR REAL ESTATE
       </Typography>

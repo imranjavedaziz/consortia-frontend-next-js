@@ -81,18 +81,42 @@ export const darkTheme = createTheme({
 
     h2: {
       fontWeight: 600,
-      fontSize: "48px",
       lineHeight: "75px",
       letterSpacing: "0.04em",
       color: "#fff",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: "48px",
+        fontWeight: 600,
+      },
+      [theme.breakpoints.between('sm', 'lg')]: {
+        fontSize: "24px",
+        fontWeight: 600,
+        lineHeight: "160%",
+      },
+      [theme.breakpoints.between('xs', 'sm')]: {
+        fontSize: "20px",
+        fontWeight: 600,
+        lineHeight: "160%",
+      },
     },
 
     h3: {
       fontFamily: "Graphik, sans-serif",
-      fontWeight: 600,
-      fontSize: "40px",
       lineHeight: "44px",
       letterSpacing: "0.04em",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: "40px !important",
+        fontWeight: 600,
+      },
+      [theme.breakpoints.between('sm', 'lg')]: {
+        fontSize: "20px",
+        fontWeight: 500,
+      },
+      [theme.breakpoints.between('xs', 'sm')]: {
+        fontSize: "16px",
+        fontWeight: 600,
+        lineHeight: "18px",
+      },
     },
 
     h4: {
@@ -103,16 +127,28 @@ export const darkTheme = createTheme({
     },
 
     h5: {
-      fontWeight: 500,
-      fontSize: "24px",
+      
       lineHeight: "30px",
       color: "#fff",
+      [theme.breakpoints.up("lg")]: {
+        fontWeight: 600,
+        fontSize: "24px",
+      },
+      [theme.breakpoints.between('xs', 'lg')]: {
+        fontWeight: 500,
+        fontSize: "12px",
+      },
     },
     h6: {
       fontWeight: 600,
-      fontSize: "18px",
       lineHeight: "28px",
       color: "#fff",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: "18px",
+      },
+      [theme.breakpoints.between('sm', 'lg')]: {
+        fontSize: "12px",
+      },
     },
 
     body1: {
@@ -125,12 +161,27 @@ export const darkTheme = createTheme({
       [theme.breakpoints.up("md")]: {
         fontSize: "20px !important",
       },
+      [theme.breakpoints.between('xs', 'sm')]: {
+        fontSize: "10px",
+        fontWeight: 300,
+        lineHeight: "15px",
+      },
     },
     body2: {
       fontWeight: 400,
-      fontSize: "16px",
       lineHeight: "16px",
       color: "#fff",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: "14px",
+      },
+      [theme.breakpoints.between('sm', 'lg')]: {
+        fontSize: "8px",
+      },
+      [theme.breakpoints.between('xs', 'sm')]: {
+        fontSize: "8px",
+        fontWeight: 500,
+        lineHeight: "160%",
+      },
     },
     subtitle1: {
       fontWeight: 400,
@@ -139,11 +190,23 @@ export const darkTheme = createTheme({
       color: "#fff",
     },
     subtitle2: {
-      fontWeight: 600,
-      fontSize: "14px",
       lineHeight: "17px",
       color: "#fff",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: "14px",
+        fontWeight: 600,
+      },
+      [theme.breakpoints.between('sm', 'lg')]: {
+        fontSize: "8px",
+        fontWeight: 500,
+      },
+      [theme.breakpoints.between('xs', 'sm')]: {
+        fontSize: "7px",
+        fontWeight: 500,
+        lineHeight: "6px",
+      },
     },
+    
   },
 
   palette: {
