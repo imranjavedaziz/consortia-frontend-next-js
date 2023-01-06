@@ -22,6 +22,9 @@ const Header = () => {
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
 
   const isNotLap = useMediaQuery("(max-width:900px)");
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   const isActive = (path) => {
     return route == path;
@@ -61,151 +64,250 @@ const Header = () => {
   ];
   return (
     <>
-      <Grid
-        container
-        alignItems={"center"}
-        sx={{ padding: "50px 0px 80px 0px" }}
-      >
-        <Grid item xs={2}>
-          <ImageLogo>
-            <Image
-              src="/assets/images/consortiaLogo.svg"
-              width={isNotLap ? 100 : 180}
-              height={29}
-              alt="Logo"
-            />
-          </ImageLogo>
-        </Grid>
-        <Grid item xs={7}>
-          <NavigationList
+      {!belowSm ? (
+        <Grid
+          container
+          alignItems={"center"}
+          sx={{ padding: "50px 0px 80px 0px" }}
+        >
+          <Grid item xs={2}>
+            <ImageLogo>
+              <Image
+                src="/assets/images/consortiaLogo.svg"
+                width={isNotLap ? 100 : 180}
+                height={29}
+                alt="Logo"
+              />
+            </ImageLogo>
+          </Grid>
+          <Grid item xs={7}>
+            <NavigationList
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: { xs: 1, md: 2, lg: 4 },
+              }}
+            >
+              {navigationItems.map((item, i) => {
+                return (
+                  <Link
+                    key={i}
+                    href={item.path}
+                    passHref={true}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {isActive(item.path) ? (
+                      <Typography
+                        varaint="h6"
+                        fontWeight={500}
+                        sx={{
+                          // textDecoration: "underline",
+
+                          position: "relative",
+                          "::after": {
+                            content: "''",
+                            width: "100%",
+                            position: "absolute",
+                            left: "0",
+                            bottom: "-1px",
+                            height: "3px",
+                            background:
+                              "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
+                          },
+                          textDecorationColor:
+                            "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                    ) : (
+                      <Typography
+                        varaint="h6"
+                        fontWeight={500}
+                        sx={{ opacity: 0.5 }}
+                      >
+                        {item.name}
+                      </Typography>
+                    )}
+                  </Link>
+                );
+              })}
+            </NavigationList>
+          </Grid>
+
+          <Grid
+            item
+            xs={3}
             sx={{
               display: "flex",
-              justifyContent: "center",
-              gap: { xs: 1, md: 2, lg: 4 },
+              alignItems: "center",
+              justifyContent: "end",
+              gap: { xs: 1, lg: 3, xl: 4 },
             }}
           >
-            {navigationItems.map((item, i) => {
-              return (
-                <Link
-                  key={i}
-                  href={item.path}
-                  passHref={true}
-                  style={{ textDecoration: "none" }}
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard/landing"
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    push("/dashboard/landing");
+                  }}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
+                    width: { xs: "70px", md: "140px" },
+                    padding: { xs: "0px", md: "10px 10px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "17px" },
+                    textTransform: "capitalize",
+                  }}
                 >
-                  {isActive(item.path) ? (
-                    <Typography
-                      varaint="h6"
-                      fontWeight={500}
-                      sx={{
-                        // textDecoration: "underline",
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => push("/auth/signup")}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
+                    width: { xs: "70px", md: "120px" },
+                    padding: { xs: "0px", md: "10px 0px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "17px" },
+                    fontWeight: 700,
+                  }}
+                >
+                  Signup
+                </Button>
 
-                        position: "relative",
-                        "::after": {
-                          content: "''",
-                          width: "100%",
-                          position: "absolute",
-                          left: "0",
-                          bottom: "-1px",
-                          height: "3px",
-                          background:
-                            "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                        },
-                        textDecorationColor:
-                          "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      varaint="h6"
-                      fontWeight={500}
-                      sx={{ opacity: 0.5 }}
-                    >
-                      {item.name}
-                    </Typography>
-                  )}
-                </Link>
-              );
-            })}
-          </NavigationList>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => push("/auth/login")}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
+
+                    width: { xs: "70px", md: "120px" },
+                    padding: { xs: "0px", xl: "10px 0px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "16px" },
+                    fontWeight: 700,
+                  }}
+                  // onClick={handleClose}
+                >
+                  Login
+                </Button>
+              </>
+            )}
+          </Grid>
         </Grid>
-
-        <Grid
-          item
-          xs={3}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "end",
-            gap: { xs: 1, lg: 3, xl: 4 },
-          }}
-        >
-          {isLoggedIn ? (
-            <Link href="/dashboard/landing" style={{textDecoration:'none'}}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  push("/dashboard/landing");
-                }}
-                sx={{
-                  background:
-                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                  borderRadius: "24px",
-                  width: { xs: "70px", md: "140px" },
-                  padding: { xs: "0px", md: "10px 10px" },
-                  height: { xs: "25px", md: "33px", xl: "37px" },
-                  fontSize: { xs: "13px", xl: "17px" },
-                  textTransform: "capitalize",
-                }}
+      ) : <><Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "30px 0px",
+      }}
+    >
+      <Box>
+        {/* <ImageLogo> */}
+        <Image
+          src="/assets/icons/hamburger.svg"
+          width={24}
+          height={24}
+          alt="Logo"
+        />
+        {/* </ImageLogo> */}
+      </Box>
+      <Box>
+        <ImageLogo>
+          <Image
+            src="/assets/images/consortiaLogo.svg"
+            width={isNotLap ? 100 : 180}
+            height={29}
+            alt="Logo"
+          />
+        </ImageLogo>
+      </Box>
+      {isLoggedIn ? (
+              <Link
+                href="/dashboard/landing"
+                style={{ textDecoration: "none" }}
               >
-                Dashboard
-              </Button>
-            </Link>
-          ) : (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => push("/auth/signup")}
-                sx={{
-                  background:
-                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                  borderRadius: "24px",
-                  width: { xs: "70px", md: "120px" },
-                  padding: { xs: "0px", md: "10px 0px" },
-                  height: { xs: "25px", md: "33px", xl: "37px" },
-                  fontSize: { xs: "13px", xl: "17px" },
-                  fontWeight: 700,
-                }}
-              >
-                Signup
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    push("/dashboard/landing");
+                  }}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
+                    width: { xs: "100px", md: "140px" },
+                    padding: { xs: "10px 10px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "17px" },
+                    textTransform: "capitalize",
+                  }}
+                >
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => push("/auth/signup")}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
+                    width: { xs: "70px", md: "120px" },
+                    padding: { xs: "0px", md: "10px 0px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "17px" },
+                    fontWeight: 700,
+                  }}
+                >
+                  Signup
+                </Button> */}
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => push("/auth/login")}
-                sx={{
-                  background:
-                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                  borderRadius: "24px",
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => push("/auth/login")}
+                  sx={{
+                    background:
+                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                    borderRadius: "24px",
 
-                  width: { xs: "70px", md: "120px" },
-                  padding: { xs: "0px", xl: "10px 0px" },
-                  height: { xs: "25px", md: "33px", xl: "37px" },
-                  fontSize: { xs: "13px", xl: "16px" },
-                  fontWeight: 700,
-                }}
-                // onClick={handleClose}
-              >
-                Login
-              </Button>
-            </>
-          )}
-        </Grid>
-      </Grid>
+                    width: { xs: "70px", md: "120px" },
+                    padding: { xs: "0px", xl: "10px 0px" },
+                    height: { xs: "25px", md: "33px", xl: "37px" },
+                    fontSize: { xs: "13px", xl: "16px" },
+                    fontWeight: 700,
+                  }}
+                  // onClick={handleClose}
+                >
+                  Login
+                </Button>
+              </>
+            )}
+    </Box></>}
+      
       {/* <GradientBorderButton btnText='login' /> */}
     </>
   );

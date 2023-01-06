@@ -161,7 +161,7 @@ function Footer() {
           </Box>
         </Box>
       )}
-      {belowSm && <Box sx={{display:'flex',width:'100%',}}>
+      {belowSm && <Box sx={{display:'flex',justifyContent:'center',width:'100%',}}>
         {footerContent.map((item, i) => {
           return (
             <Box key={item.name + i} sx={{paddingRight:'12px'}}>

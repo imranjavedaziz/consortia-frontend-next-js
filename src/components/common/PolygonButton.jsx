@@ -9,8 +9,8 @@ const PolygonButton = () => {
         display: "inline-block",
         position: "relative",
         // width: "310px",
-        width: {lg:"310px", sm: '183px'},
-        height: {lg:"75px", sm: '45px'},
+        width: {lg:"310px", xs: '183px'},
+        height: {lg:"75px", xs: '45px'},
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -24,8 +24,8 @@ const PolygonButton = () => {
           position: "absolute",
           top: "2px" /* equal to border thickness */,
           left: "2.5px",
-          width: {lg:"305px", sm: '178px'},
-          height: {lg:"71px", sm: '41px'},
+          width: {lg:"305px", xs: '178px'},
+          height: {lg:"71px", xs: '41px'},
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -37,8 +37,8 @@ const PolygonButton = () => {
       >
         <CardMedia
           sx={{
-            width: "30px",
-            height: "30px",
+            width: {xs:"20px",sm:"30px"},
+            height: {xs:"20px",sm:"30px"},
           }}
           component="img"
           image="/assets/icons/rocket.svg"
