@@ -50,7 +50,15 @@ export const darkTheme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          fontSize: "25px !important",
+          [theme.breakpoints.up("lg")]: {
+            fontSize: "25px !important",
+          },
+          [theme.breakpoints.between("sm", "lg")]: {
+            fontSize: "20px !important",
+          },
+          [theme.breakpoints.down("sm")]: {
+            fontSize: "12px !important",
+          },
         },
       },
     },
@@ -88,12 +96,12 @@ export const darkTheme = createTheme({
         fontSize: "48px",
         fontWeight: 600,
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "24px",
         fontWeight: 600,
         lineHeight: "160%",
       },
-      [theme.breakpoints.between('xs', 'sm')]: {
+      [theme.breakpoints.between("xs", "sm")]: {
         fontSize: "20px",
         fontWeight: 600,
         lineHeight: "160%",
@@ -108,11 +116,11 @@ export const darkTheme = createTheme({
         fontSize: "40px !important",
         fontWeight: 600,
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "20px",
         fontWeight: 500,
       },
-      [theme.breakpoints.between('xs', 'sm')]: {
+      [theme.breakpoints.between("xs", "sm")]: {
         fontSize: "16px",
         fontWeight: 600,
         lineHeight: "18px",
@@ -120,21 +128,29 @@ export const darkTheme = createTheme({
     },
 
     h4: {
-      fontWeight: 400,
-      fontSize: "32px",
-      lineHeight: "45px",
+      [theme.breakpoints.up("md")]: {
+        fontSize: "40px !important",
+        fontWeight: 600,
+      },
+      [theme.breakpoints.between("sm", "md")]: {
+        fontSize: "20px",
+        fontWeight: 400,
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "16px",
+        fontWeight: 400,
+      },
       color: "#fff",
     },
 
     h5: {
-      
       lineHeight: "30px",
       color: "#fff",
       [theme.breakpoints.up("lg")]: {
         fontWeight: 600,
         fontSize: "24px",
       },
-      [theme.breakpoints.between('xs', 'lg')]: {
+      [theme.breakpoints.between("xs", "lg")]: {
         fontWeight: 500,
         fontSize: "12px",
       },
@@ -146,7 +162,7 @@ export const darkTheme = createTheme({
       [theme.breakpoints.up("lg")]: {
         fontSize: "18px",
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "12px",
       },
     },
@@ -161,7 +177,7 @@ export const darkTheme = createTheme({
       [theme.breakpoints.up("md")]: {
         fontSize: "20px !important",
       },
-      [theme.breakpoints.between('xs', 'sm')]: {
+      [theme.breakpoints.between("xs", "sm")]: {
         fontSize: "10px",
         fontWeight: 300,
         lineHeight: "15px",
@@ -174,10 +190,10 @@ export const darkTheme = createTheme({
       [theme.breakpoints.up("lg")]: {
         fontSize: "14px",
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "8px",
       },
-      [theme.breakpoints.between('xs', 'sm')]: {
+      [theme.breakpoints.between("xs", "sm")]: {
         fontSize: "8px",
         fontWeight: 500,
         lineHeight: "160%",
@@ -188,6 +204,10 @@ export const darkTheme = createTheme({
       fontSize: "12px",
       lineHeight: "18px",
       color: "#fff",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "8px",
+        fontWeight: 300,
+      },
     },
     subtitle2: {
       lineHeight: "17px",
@@ -196,17 +216,16 @@ export const darkTheme = createTheme({
         fontSize: "14px",
         fontWeight: 600,
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "8px",
         fontWeight: 500,
       },
-      [theme.breakpoints.between('xs', 'sm')]: {
+      [theme.breakpoints.between("xs", "sm")]: {
         fontSize: "7px",
         fontWeight: 500,
         lineHeight: "6px",
       },
     },
-    
   },
 
   palette: {
@@ -226,7 +245,7 @@ export const darkTheme = createTheme({
       purpleGray: "#313770",
       yellow: "#FAE94D",
       darkGray: "#454470",
-      gray:'#FAFBFC'
+      gray: "#FAFBFC",
     },
   },
   breakpoints: {

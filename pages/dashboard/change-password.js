@@ -1,4 +1,4 @@
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import NftsLayout from "../../src/nftsLayout";
 import { Formik } from "formik";
@@ -32,6 +32,7 @@ const inputFields = [
 
 const ChangePassword = () => {
   useTitle("Change Password");
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const changePassword = async ({ current_password, password }) => {
@@ -59,13 +60,13 @@ const ChangePassword = () => {
     }
   };
   return (
-    <Box marginY={5}>
-      <Typography variant="h3" marginY={5}>
+    <Box marginY={{ xs: 0, md: 5 }}>
+      <Typography variant="h3" marginY={{ md: 5 }}>
         Settings
       </Typography>
       <Box
         display="flex"
-        paddingY={4}
+        paddingY={{ xs: 1, md: 4 }}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
@@ -77,7 +78,7 @@ const ChangePassword = () => {
         }}
       >
         <Box>
-          <Typography variant="h4">Password</Typography>
+          <Typography variant="h3">Password</Typography>
         </Box>
         <Formik
           initialValues={{
@@ -112,13 +113,13 @@ const ChangePassword = () => {
               <form
                 onSubmit={handleSubmit}
                 autoComplete="off"
-                style={{ width: "80%", maxWidth: "800px" }}
+                style={{ width: isMobile ? "100%" : "80%", maxWidth: "800px" }}
               >
                 <Box
                   display="flex"
                   flexDirection="column"
                   boxSizing="border-box"
-                  width="80%"
+                  width={{ xs: "90%", sm: "80%" }}
                   margin="auto"
                   // paddingX={2}
                   rowGap={3}
@@ -135,7 +136,11 @@ const ChangePassword = () => {
                     )
                   )}
 
-                  <Box display="flex" flexDirection="column" mt={7}>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    mt={{ xs: 2, sm: 7 }}
+                  >
                     <Button
                       variant="gradient"
                       size="large"

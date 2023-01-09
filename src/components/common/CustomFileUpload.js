@@ -47,9 +47,11 @@ const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
           }
         );
       } else {
+        e.target.value = null;
         toast.error("Image size should be less than 5MB");
       }
     } else {
+      e.target.value = null;
       toast.error("Only jpg, png, gif and svg files are allowed");
     }
   };
@@ -63,7 +65,7 @@ const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
       <Box
         sx={{
           width: isMobile ? "100%" : width ?? "40vw",
-          height: isMobile ? "30vh" : "150px",
+          height: isMobile ? "20vh" : "150px",
           border: "2px dashed #B731FF",
           borderRadius: borderRadius ?? "4px",
         }}

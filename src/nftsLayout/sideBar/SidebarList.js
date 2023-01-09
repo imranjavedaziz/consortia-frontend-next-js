@@ -67,6 +67,7 @@ const StyledListItem = styled(ListItem)({
 export default function SidebarList({ setopenForMobile }) {
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const isLaptop = useMediaQuery("(min-width:1000px)");
+  const isXs = useMediaQuery("(max-width:450px)");
   const profile_info = JSON.parse(localStorage.getItem("profile_info"));
 
   const { route, push } = useRouter();
@@ -123,8 +124,8 @@ export default function SidebarList({ setopenForMobile }) {
           py: 3,
         }}
       >
-        <Link href="/">
-          <Image src={sidebarLogo} height={34} width={"100%"} />
+        <Link href="/" style={{ verticalAlign: "middle" }}>
+          <Image src={sidebarLogo} height={32} width={"100%"} />
         </Link>
         {!isLaptop && (
           <IconButton color="primary" onClick={() => setopenForMobile(false)}>

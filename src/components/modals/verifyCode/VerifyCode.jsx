@@ -100,14 +100,14 @@ function VerifyCodeModal({
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: "24px",
+            borderRadius: { xs: "12px", md: "24px" },
             width: "571px",
             // height: "397px",
-            padding: "40px",
+            padding: { xs: "10px 15px", sm: "20px", md: "40px" },
           },
         }}
       >
-        <DialogTitle sx={{ padding: "0px 0px 16px 0px" }}>
+        <DialogTitle sx={{ padding: { xs: "0px", md: "0px 0px 16px 0px" } }}>
           <Box
             sx={{
               display: "flex",
@@ -115,7 +115,7 @@ function VerifyCodeModal({
               alignItems: "center",
             }}
           >
-            <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            <Typography variant="h4" sx={{ fontWeight: { xs: 400, md: 600 } }}>
               {title}
             </Typography>
             <Box
@@ -131,7 +131,7 @@ function VerifyCodeModal({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{padding:'16px 0px'}}>
+        <DialogContent sx={{ padding: "16px 0px" }}>
           <Typography variant="body1">{text}</Typography>
           <Box>
             {/* <TextFieldWrapper> */}
@@ -152,7 +152,7 @@ function VerifyCodeModal({
                 display: "flex",
                 justifyContent: "center",
                 borderRadius: "24px",
-                marginTop: "40px",
+                marginTop: { xs: "5px", md: "40px" },
               }}
             >
               <GradiantTextField
@@ -185,7 +185,7 @@ function VerifyCodeModal({
                 borderRadius: "24px",
                 width: "100%",
                 padding: "10px 0px",
-                textTransform:'capitalize'
+                textTransform: "capitalize",
               }}
               onClick={() => changePassword()}
             >
