@@ -103,7 +103,7 @@ function CompletePractitionerProfile({
   return (
     <>
       <Dialog
-        open={true}
+        open={open}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
