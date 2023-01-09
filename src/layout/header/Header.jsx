@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Button, Grid, Typography, useMediaQuery } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Button, Divider, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Typography, useMediaQuery } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,14 +17,41 @@ const NavigationList = styled(ImageLogo)({
   padding: { xs: "unset", md: "0px 100px" },
 });
 
+const StyledListItem = styled(ListItem)({
+  paddingRight: "0px",
+  "& .MuiTypography-root": {},
+  "& .MuiListItemButton-root": {
+    // borderRadius: "10px",
+    color: "#616161",
+  },
+  "& .Mui-selected": {
+    background:
+      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%) !important",
+    color: "rgba(59,130,246,.5) !important",
+    borderLeft: "3px solid #FFFFFF",
+  },
+  "& .MuiListItemIcon-root": {
+    minWidth: "0px",
+  },
+  "& .MuiListItemText-root": {
+    paddingLeft: "10px",
+  },
+});
+
 const Header = () => {
   const { route, push } = useRouter();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+
+  const [drawer, setDrawer] = useState(false);
 
   const isNotLap = useMediaQuery("(max-width:900px)");
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
+  useEffect(() => {
+    if(!belowSm)setDrawer(false)
+  }, [belowSm])
+  
 
   const isActive = (path) => {
     return route == path;
@@ -62,6 +89,33 @@ const Header = () => {
       path: "/contact-us",
     },
   ];
+ 
+  const list = (anchor) => (
+    <Box
+      sx={{ width:250 }}
+      role="presentation"
+     
+      // onKeyDown={() => setDrawer(false)}
+    >
+      <List>
+        {navigationItems.map((text, index) => (
+          <StyledListItem key={text.name} disablePadding  onClick={() => {setDrawer(false),push(text.path)}}>
+            <ListItemButton selected={text.path === route}>
+              {/* <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon> */}
+              <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {text.name}
+                            </Typography>
+                          }
+                        />
+            </ListItemButton>
+          </StyledListItem>
+        ))}
+      </List>
+    </Box>);
   return (
     <>
       {!belowSm ? (
@@ -220,7 +274,7 @@ const Header = () => {
         padding: "30px 0px",
       }}
     >
-      <Box>
+      <Box onClick={() => setDrawer(true)}>
         {/* <ImageLogo> */}
         <Image
           src="/assets/icons/hamburger.svg"
@@ -307,7 +361,14 @@ const Header = () => {
               </>
             )}
     </Box></>}
-      
+    <SwipeableDrawer
+            // anchor={anchor}
+            open={drawer}
+            onClose={() => setDrawer(false)}
+            onOpen={() => setDrawer(true)}
+          >
+            {list()}
+          </SwipeableDrawer>
       {/* <GradientBorderButton btnText='login' /> */}
     </>
   );

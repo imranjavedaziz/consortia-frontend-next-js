@@ -59,7 +59,7 @@ export default function Home() {
             </Box>
           </Box>
         </Box>
-        {belowSm && <Box >
+        {!belowSm && <Box >
           <Box sx={{ display: { xs: "none", md: "block" } }}>
             <Image
               src="/assets/images/landingPageBuilding.svg"
