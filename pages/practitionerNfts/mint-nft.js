@@ -6,6 +6,8 @@ import {
   Radio,
   Checkbox,
   Grid,
+  TextField,
+  Autocomplete,
   FormControl,
   RadioGroup,
   FormControlLabel,
@@ -21,6 +23,7 @@ import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
 import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
+import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -51,6 +54,16 @@ const MintNFTS = () => {
   const [profileInfo, setProfileInfo] = useState();
   const [headShot, setHeadshot] = useState("");
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
+  const [value, setValue] = useState("");
+
+  const {
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  });
+  console.log('placePredictions', placePredictions)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
