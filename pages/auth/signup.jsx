@@ -261,7 +261,7 @@ const SignUp = () => {
                   ),
                 confirm_password: Yup.string()
                   .required("Confirm Password is required")
-                  .oneOf([Yup.ref("password"), null], "Passwords must match"),
+                  .oneOf([Yup.ref("password"), null], "Password must match"),
               })}
             >
               {(props) => {

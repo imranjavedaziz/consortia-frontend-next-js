@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
 import { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
+import axios from "axios";
+import { publicAxios } from "../api";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
@@ -44,6 +46,23 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
+    console.log(profile_info);
+    if (!!profile_info && !profile_info?.user?.onBoarded) {
+      publicAxios
+        .get("kyc", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        })
+        .then((data) => {
+          console.log(data);
+          localStorage.clear();
+          push(data?.data?.data?.accountLink?.url);
+        })
+        .catch((err) => console.log(err));
+      return;
+    }
+
     if (
       !!profile_info &&
       profile_info?.user?.role == "practitioner" &&
