@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   IconButton,
@@ -61,6 +61,8 @@ function CompletePractitionerProfile({
 }) {
   const [date, setDate] = useState(dayjs(new Date()));
   const [bio, setBio] = useState("");
+  const [email, setEmail] = useState("");
+
   const [headShot, setHeadshot] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
@@ -100,10 +102,16 @@ function CompletePractitionerProfile({
       toast.error(error?.data?.message);
     }
   };
+  useEffect(() => {
+    const {
+      user: { email },
+    } = JSON.parse(localStorage.getItem("profile_info"));
+    setEmail(email);
+  }, []);
   return (
     <>
       <Dialog
-        open={true}
+        open={open}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
@@ -270,6 +278,8 @@ function CompletePractitionerProfile({
         updatedUserData={updatedUserData}
         profileUpdate={true}
         handleParentClose={handleClose}
+        email={email}
+        inputTypeCode
       />
     </>
   );

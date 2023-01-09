@@ -43,6 +43,7 @@ function VerifyCodeForProfileUpdate({
   updatedUserData,
   fetchUpdatedData,
   profileUpdate,
+  email,
   handleParentClose,
 }) {
   const [code, setCode] = useState("");
@@ -107,7 +108,6 @@ function VerifyCodeForProfileUpdate({
           }
         );
         setFetching(false);
-        debugger;
         const user = res?.data?.data?.user;
         toast.success(res?.data?.message);
         const profile_info = JSON.parse(localStorage.getItem("profile_info"));
@@ -211,6 +211,25 @@ function VerifyCodeForProfileUpdate({
                 onChange={(e) => setCode(e.target.value)}
                 InputProps={{
                   disableUnderline: true,
+                  endAdornment: inputTypeCode && (
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => resendCode(email)}
+                      // onClick={handleClickShowPassword}
+                      // onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      <Box>
+                        <Typography
+                          variant="subtitle1"
+                          color="secondary.yellow"
+                          sx={{ paddingRight: "20px" }}
+                        >
+                          Resend Code
+                        </Typography>
+                      </Box>
+                    </IconButton>
+                  ),
                 }}
                 fullWidth
                 sx={{
