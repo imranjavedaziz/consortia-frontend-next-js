@@ -92,11 +92,21 @@ const Header = () => {
  
   const list = (anchor) => (
     <Box
-      sx={{ width:250 }}
-      role="presentation"
+      sx={{ width:250 ,height:'100%',background:'linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)'}}
+      // role="presentation"
      
       // onKeyDown={() => setDrawer(false)}
     >
+      <Box sx={{display:'flex',justifyContent:"center", padding:"24px"}}>
+      <ImageLogo>
+              <Image
+                src="/assets/images/consortiaLogo.svg"
+                width={152}
+                height={29}
+                alt="Logo"
+              />
+            </ImageLogo>
+      </Box>
       <List>
         {navigationItems.map((text, index) => (
           <StyledListItem key={text.name} disablePadding  onClick={() => {setDrawer(false),push(text.path)}}>
