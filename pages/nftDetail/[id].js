@@ -1,3 +1,14 @@
+// import React from 'react'
+// import ComingSoon from '../../src/components/common/comingSoon/ComingSoon'
+
+// function DetailPage() {
+//   return (
+//     <><ComingSoon /></>
+//   )
+// }
+
+// export default DetailPage
+
 import React, { useEffect, useState } from "react";
 import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
@@ -32,7 +43,7 @@ const NftsCards = styled(Box)(({ theme }) => ({
   marginBottom: "120px",
 }));
 
-const Practitioner2 = () => {
+const DetailPage = () => {
   return (
     <>
       <Box>
@@ -133,7 +144,7 @@ const Practitioner2 = () => {
                 <Box>
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
-                <Box sx={{paddingTop:'40px'}}>
+                <Box sx={{ paddingTop: "40px" }}>
                   <TransactiionHistoryTable />
                 </Box>
               </Grid>
@@ -177,7 +188,7 @@ const Practitioner2 = () => {
   );
 };
 
-export default Practitioner2;
-Practitioner2.getLayout = function (page) {
+export default DetailPage;
+DetailPage.getLayout = function (page) {
   return <NftsLayout>{page}</NftsLayout>;
 };

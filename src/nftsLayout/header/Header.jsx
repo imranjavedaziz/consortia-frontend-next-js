@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../../context/AuthContext";
 
 const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
   borderRadius: "16px",
@@ -35,6 +36,9 @@ export default function Header() {
   const isMobile = useMediaQuery("(max-width:600px)");
   const isTablet = useMediaQuery("(max-width:1000px)");
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const { setChoosePractitionerOpen, setShowSecondForm } = useAuthContext();
+
   const open = Boolean(anchorEl);
   const icons = [
     { path: "/assets/icons/setting.svg", name: "setting" },
@@ -64,6 +68,7 @@ export default function Header() {
     },
     { name: "NFT Wallet", path: "/assets/icons/wallet.svg" },
     { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
+    { name: "Logout", path: "/assets/icons/logout.svg" },
   ];
   return (
     <>
@@ -160,6 +165,13 @@ export default function Header() {
             <>
               <MenuItem
                 onClick={() => {
+                  if (item.name === "Logout") {
+                    setShowSecondForm(false);
+                    setChoosePractitionerOpen(true);
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("profile_info");
+                    push("/");
+                  }
                   item?.rel && push(item?.rel);
                   handleClose();
                 }}

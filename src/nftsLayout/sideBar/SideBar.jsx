@@ -30,7 +30,7 @@ const Sidebar = ({ setopenForMobile }) => {
     >
       <SideBarParent>
         <SidebarList setopenForMobile={setopenForMobile} />
-        <Box>
+        {/* <Box>
           <Box
             sx={{
               display: "flex",
@@ -57,7 +57,7 @@ const Sidebar = ({ setopenForMobile }) => {
               Logout
             </Typography>
           </Box>
-        </Box>
+        </Box> */}
       </SideBarParent>
     </Box>
   );

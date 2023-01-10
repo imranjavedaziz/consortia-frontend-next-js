@@ -23,7 +23,7 @@ import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
 import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
-import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
+import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -54,16 +54,6 @@ const MintNFTS = () => {
   const [profileInfo, setProfileInfo] = useState();
   const [headShot, setHeadshot] = useState("");
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
-  const [value, setValue] = useState("");
-
-  const {
-    placePredictions,
-    getPlacePredictions,
-    isPlacePredictionsLoading,
-  } = usePlacesService({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  });
-  console.log('placePredictions', placePredictions)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -81,25 +71,30 @@ const MintNFTS = () => {
     { value: "agent-2", label: "Agent 2" },
     { value: "no-agent", label: "No Agent" },
   ];
-  const propertyNftsForm = [
-    {
-      name: "name",
-      label: "Name:",
-      placeholder: "Enter Your Name",
-    },
-    {
-      name: "email",
-      label: "Email:",
-      placeholder: "Enter Your Email",
-      disabled: true,
-    },
-    {
-      name: "address",
-      label: "Address:",
-      placeholder: "Enter Your Address",
-    },
-  ];
-  console.log({ profileInfo });
+  const itemsFunction = (setFieldValue) => {
+    const propertyNftsForm = [
+      {
+        name: "name",
+        label: "Name:",
+        placeholder: "Enter Your Name",
+      },
+      {
+        name: "email",
+        label: "Email:",
+        placeholder: "Enter Your Email",
+        disabled: true,
+      },
+      {
+        // name: "address",
+        // label: "Address:",
+        // placeholder: "Enter Your Address",
+        component:<GoogleMapAutoComplete setFieldValue={setFieldValue}/>
+      },
+    ];
+    return propertyNftsForm
+  }
+
+
 
   const radioBoxList = [
     { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -200,7 +195,7 @@ const MintNFTS = () => {
                 })}
               >
                 {(props) => {
-                  const { isSubmitting, handleSubmit } = props;
+                  const { isSubmitting, handleSubmit,setFieldValue } = props;
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -208,7 +203,7 @@ const MintNFTS = () => {
                       // style={{ width: "80%" }}
                     >
                       <Box>
-                        {propertyNftsForm.map(
+                        {itemsFunction(setFieldValue).map(
                           (
                             {
                               name,
@@ -219,21 +214,26 @@ const MintNFTS = () => {
                               multiline,
                               disabled,
                               maxRows,
+                              component,
                             },
                             i
                           ) => (
                             <Box pt={3} key={name + i}>
-                              <CustomInputField
-                                key={name}
-                                name={name}
-                                label={label}
-                                placeholder={placeholder}
-                                select={select}
-                                options={options}
-                                rows={maxRows}
-                                multiline={multiline}
-                                disabled={disabled}
-                              />
+                              {component ? (
+                                component
+                              ) : (
+                                <CustomInputField
+                                  key={name}
+                                  name={name}
+                                  label={label}
+                                  placeholder={placeholder}
+                                  select={select}
+                                  options={options}
+                                  rows={maxRows}
+                                  multiline={multiline}
+                                  disabled={disabled}
+                                />
+                              )}
                             </Box>
                           )
                         )}

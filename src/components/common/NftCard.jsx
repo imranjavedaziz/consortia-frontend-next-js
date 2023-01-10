@@ -9,8 +9,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
 
 const NftCard = ({ title, address }) => {
+  const {push } = useRouter()
   return (
     <Card
       sx={{
@@ -23,6 +25,8 @@ const NftCard = ({ title, address }) => {
       }}
     >
       <CardMedia
+       onClick={() => {const token = localStorage.getItem("access_token");
+       if(true)push('/nftDetail/card')}}
         component="img"
         height="220px"
         // width="250px"
@@ -78,6 +82,7 @@ const NftCard = ({ title, address }) => {
             borderRadius: "8px",
             width: "80px",
           }}
+          onClick={() => push('/comingSoon')}
         >
           Buy
         </Button>

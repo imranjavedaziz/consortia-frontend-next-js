@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { useTitle } from "../../src/utils/Title";
+import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -37,44 +38,51 @@ const MintNFTS = () => {
     { value: "agent-2", label: "Agent 2" },
     { value: "no-agent", label: "No Agent" },
   ];
-  const propertyNftsForm = [
-    {
-      name: "agent",
-      label: "Select agent:",
-      placeholder: "Select your agent",
-      options: agentsList,
-      select: true,
-    },
-    // {
-    //   name: "title",
-    //   label: "Title:",
-    //   placeholder: "Enter your Title",
-    // },
-    {
-      name: "price",
-      label: "Price:",
-      placeholder: "Enter your Price",
-    },
-    // {
-    //   name: "description",
-    //   label: "Description:",
-    //   placeholder: "Enter Text Here",
-    //   multiline: true,
-    //   maxRows: 4,
-    // },
-    {
-      name: "address",
-      label: "Address:",
-      placeholder: "Enter your Address",
-    },
-    {
-      name: "documents",
-      label: "Select Documents Categories:",
-      placeholder: "Select",
-      options: agentsList,
-      select: true,
-    },
-  ];
+
+
+ 
+  const itemsFunction = (setFieldValue) => {
+    const propertyNftsForm = [
+      {
+        name: "agent",
+        label: "Select agent:",
+        placeholder: "Select your agent",
+        options: agentsList,
+        select: true,
+      },
+      // {
+      //   name: "title",
+      //   label: "Title:",
+      //   placeholder: "Enter your Title",
+      // },
+      {
+        name: "price",
+        label: "Price:",
+        placeholder: "Enter your Price",
+      },
+      // {
+      //   name: "description",
+      //   label: "Description:",
+      //   placeholder: "Enter Text Here",
+      //   multiline: true,
+      //   maxRows: 4,
+      // },
+      {
+        // name: "address",
+        // label: "Address:",
+        // placeholder: "Enter Your Address",
+        component:<GoogleMapAutoComplete setFieldValue={setFieldValue}/>
+      },
+      {
+        name: "documents",
+        label: "Select Documents Categories:",
+        placeholder: "Select",
+        options: agentsList,
+        select: true,
+      },
+    ];
+    return propertyNftsForm
+  }
 
   const checkBoxList = [
     { label: "Deed", name: "deed" },
@@ -130,7 +138,7 @@ const MintNFTS = () => {
                 })}
               >
                 {(props) => {
-                  const { isSubmitting, handleSubmit } = props;
+                  const { isSubmitting, handleSubmit,setFieldValue } = props;
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -138,7 +146,7 @@ const MintNFTS = () => {
                       // style={{ width: "80%" }}
                     >
                       <Box>
-                        {propertyNftsForm.map(
+                        {itemsFunction(setFieldValue).map(
                           (
                             {
                               name,
@@ -148,11 +156,12 @@ const MintNFTS = () => {
                               options,
                               multiline,
                               maxRows,
+                              component
                             },
                             i
                           ) => (
                             <Box pt={3} key={name + i}>
-                              <CustomInputField
+                              {component ? component : <CustomInputField
                                 key={name}
                                 name={name}
                                 label={label}
@@ -161,7 +170,8 @@ const MintNFTS = () => {
                                 options={options}
                                 rows={maxRows}
                                 multiline={multiline}
-                              />
+                              />}
+                              
                             </Box>
                           )
                         )}
