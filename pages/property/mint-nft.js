@@ -219,7 +219,7 @@ const MintNFTS = () => {
                             </Box>
                           )
                         )}
-                        </Box>
+                        
                         {/* <Box pt={3}>
                           <Typography variant="body1">
                             Upload each documents to a specific category: */}
@@ -306,6 +306,7 @@ const MintNFTS = () => {
                             Mint
                           </LoadingButton>
                         </Box>
+                      </Box>
                       </Box>
                     </form>
                   );
