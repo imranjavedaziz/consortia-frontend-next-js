@@ -149,307 +149,320 @@ const EditProfile = () => {
         Settings
       </Typography>
       <Box
-        display="flex"
-        paddingY={{ xs: 1, md: 4 }}
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
         sx={{
           background:
-            "linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)",
+            "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
+          padding: "1px",
           borderRadius: "24px",
+          boxShadow: 2,
         }}
       >
-        <Box>
-          <Typography variant="h3">Profile Details</Typography>
+        <Box
+          display="flex"
+          paddingY={{ xs: 1, md: 4 }}
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            background:
+              "linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)",
+            borderRadius: "24px",
+          }}
+        >
+          <Box>
+            <Typography variant="h3">Profile Details</Typography>
+          </Box>
+          {profileInfo?.user?.role === "practitioner"
+            ? Object.keys(userData).length > 0 && (
+                <Formik
+                  enableReinitialize={true}
+                  initialValues={{
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    email: userData.email,
+                    phoneNumber: userData.phoneNumber,
+                    practitionerType: userData.practitionerType,
+                    companyName: userData.companyName,
+                    country: userData.country,
+                    state: userData.state,
+                    licenseNumber: userData.licenseNumber,
+                  }}
+                  onSubmit={async (values, { setSubmitting }) => {
+                    setSubmitting(true);
+                    await updateUserData(values);
+                    setSubmitting(false);
+                  }}
+                  validationSchema={Yup.object().shape({
+                    firstName: Yup.string()
+                      .required("First Name is required")
+                      .matches(
+                        /^[A-Za-z]+$/,
+                        "First Name can only contain alphabets"
+                      ),
+                    lastName: Yup.string()
+                      .required("Last Name is required")
+                      .matches(
+                        /^[A-Za-z]+$/,
+                        "Last Name can only contain alphabets"
+                      ),
+                    email: Yup.string()
+                      .email("Email Should be a valid email")
+                      .required("Email is required"),
+                    phoneNumber: Yup.string()
+                      .required("Phone number is required")
+                      .matches(
+                        /^\+([0-9]){11,12}$/gm,
+                        "Please enter a valid phone number"
+                      ),
+                    practitionerType: Yup.string().required(
+                      "Practitioner type is required"
+                    ),
+                    companyName: Yup.string().required(
+                      "Business Name is required"
+                    ),
+                    country: Yup.string().required("Country is required"),
+                    state: Yup.string().required(
+                      "Province / State is required"
+                    ),
+                    licenseNumber: Yup.string().when(
+                      ["practitionerType", "country"],
+                      {
+                        is: (practitionerType, country) =>
+                          (practitionerType == "agent/broker" ||
+                            practitionerType == "loan officer") &&
+                          country == "United States",
+                        then: Yup.string().required("This field is required"),
+                        otherwise: Yup.string().optional(),
+                      }
+                    ),
+                  })}
+                >
+                  {(props) => {
+                    const {
+                      isSubmitting,
+                      handleSubmit,
+                      initialValues,
+                      resetForm,
+                    } = props;
+                    return (
+                      <form
+                        onSubmit={handleSubmit}
+                        autoComplete="off"
+                        style={{
+                          width: isMobile ? "100%" : "80%",
+                          maxWidth: "800px",
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          boxSizing="border-box"
+                          width={{ xs: "90%", sm: "80%" }}
+                          margin="auto"
+                          // paddingX={2}
+                          rowGap={3}
+                        >
+                          <Box>
+                            <InputLabel shrink htmlFor="firstName">
+                              Name
+                            </InputLabel>
+                            <Box
+                              display="flex"
+                              alignItems="start"
+                              columnGap={3}
+                              justifyContent="space-between"
+                            >
+                              <CustomInputField
+                                name="firstName"
+                                placeholder="First Name"
+                              />
+                              <CustomInputField
+                                name="lastName"
+                                placeholder="Last Name"
+                              />
+                            </Box>
+                          </Box>
+                          {inputFields.map(
+                            ({
+                              name,
+                              label,
+                              placeholder,
+                              sensitive,
+                              disabled,
+                              select,
+                              options,
+                            }) => (
+                              <CustomInputField
+                                options={options}
+                                select={select}
+                                disabled={disabled}
+                                key={name}
+                                name={name}
+                                label={label}
+                                placeholder={placeholder}
+                                sensitive={sensitive}
+                              />
+                            )
+                          )}
+
+                          <Box display="flex" flexDirection="column">
+                            <Button
+                              variant="gradient"
+                              size="large"
+                              type="submit"
+                              disabled={isSubmitting}
+                            >
+                              Save Settings
+                            </Button>
+                          </Box>
+                        </Box>
+                        <VerifyCodeForProfileUpdate
+                          open={openVerificationModal}
+                          setOpen={setOpenVerificationModal}
+                          title="Verification Code"
+                          text="Verification code has been sent to your email"
+                          btnText="Submit"
+                          placeholder="Enter your verification code"
+                          updatedUserData={updatedUserData}
+                          fetchUpdatedData={fetchUpdatedData}
+                        />
+                      </form>
+                    );
+                  }}
+                </Formik>
+              )
+            : Object.keys(userData).length > 0 && (
+                <Formik
+                  enableReinitialize={true}
+                  initialValues={{
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    email: userData.email,
+                    phoneNumber: userData.phoneNumber,
+                  }}
+                  onSubmit={async (values, { setSubmitting }) => {
+                    setSubmitting(true);
+                    await updateUserData(values);
+                    setSubmitting(false);
+                  }}
+                  validationSchema={Yup.object().shape({
+                    firstName: Yup.string()
+                      .required("First Name is required")
+                      .matches(
+                        /^[A-Za-z]+$/,
+                        "First Name can only contain alphabets"
+                      ),
+                    lastName: Yup.string()
+                      .required("Last Name is required")
+                      .matches(
+                        /^[A-Za-z]+$/,
+                        "Last Name can only contain alphabets"
+                      ),
+                    email: Yup.string()
+                      .email("Email Should be a valid email")
+                      .required("Email is required"),
+                    phoneNumber: Yup.string()
+                      .required("Phone number is required")
+                      .matches(
+                        /^\+([0-9]){11,12}$/gm,
+                        "Please enter a valid phone number"
+                      ),
+                  })}
+                >
+                  {(props) => {
+                    const {
+                      isSubmitting,
+                      handleSubmit,
+                      initialValues,
+                      resetForm,
+                    } = props;
+                    return (
+                      <form
+                        onSubmit={handleSubmit}
+                        autoComplete="off"
+                        style={{ width: "80%", maxWidth: "800px" }}
+                      >
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          boxSizing="border-box"
+                          width="80%"
+                          margin="auto"
+                          // paddingX={2}
+                          rowGap={3}
+                        >
+                          <Box>
+                            <InputLabel shrink htmlFor="firstName">
+                              Name
+                            </InputLabel>
+                            <Box
+                              display="flex"
+                              alignItems="start"
+                              columnGap={3}
+                              justifyContent="space-between"
+                            >
+                              <CustomInputField
+                                name="firstName"
+                                placeholder="First Name"
+                              />
+                              <CustomInputField
+                                name="lastName"
+                                placeholder="Last Name"
+                              />
+                            </Box>
+                          </Box>
+                          {consumerInputField.map(
+                            ({
+                              name,
+                              label,
+                              placeholder,
+                              sensitive,
+                              disabled,
+                              select,
+                              options,
+                            }) => (
+                              <CustomInputField
+                                options={options}
+                                select={select}
+                                disabled={disabled}
+                                key={name}
+                                name={name}
+                                label={label}
+                                placeholder={placeholder}
+                                sensitive={sensitive}
+                              />
+                            )
+                          )}
+
+                          <Box display="flex" flexDirection="column">
+                            <Button
+                              variant="gradient"
+                              size="large"
+                              type="submit"
+                              disabled={isSubmitting}
+                            >
+                              Save Settings
+                            </Button>
+                          </Box>
+                        </Box>
+                        <VerifyCodeForProfileUpdate
+                          open={openVerificationModal}
+                          setOpen={setOpenVerificationModal}
+                          title="Verification Code"
+                          text="Verification code has been sent to your email"
+                          btnText="Submit"
+                          placeholder="Enter your verification code"
+                          updatedUserData={updatedUserData}
+                          fetchUpdatedData={fetchUpdatedData}
+                        />
+                      </form>
+                    );
+                  }}
+                </Formik>
+              )}
         </Box>
-        {profileInfo?.user?.role === "practitioner"
-          ? Object.keys(userData).length > 0 && (
-              <Formik
-                enableReinitialize={true}
-                initialValues={{
-                  firstName: userData.firstName,
-                  lastName: userData.lastName,
-                  email: userData.email,
-                  phoneNumber: userData.phoneNumber,
-                  practitionerType: userData.practitionerType,
-                  companyName: userData.companyName,
-                  country: userData.country,
-                  state: userData.state,
-                  licenseNumber: userData.licenseNumber,
-                }}
-                onSubmit={async (values, { setSubmitting }) => {
-                  setSubmitting(true);
-                  await updateUserData(values);
-                  setSubmitting(false);
-                }}
-                validationSchema={Yup.object().shape({
-                  firstName: Yup.string()
-                    .required("First Name is required")
-                    .matches(
-                      /^[A-Za-z]+$/,
-                      "First Name can only contain alphabets"
-                    ),
-                  lastName: Yup.string()
-                    .required("Last Name is required")
-                    .matches(
-                      /^[A-Za-z]+$/,
-                      "Last Name can only contain alphabets"
-                    ),
-                  email: Yup.string()
-                    .email("Email Should be a valid email")
-                    .required("Email is required"),
-                  phoneNumber: Yup.string()
-                    .required("Phone number is required")
-                    .matches(
-                      /^\+([0-9]){11,12}$/gm,
-                      "Please enter a valid phone number"
-                    ),
-                  practitionerType: Yup.string().required(
-                    "Practitioner type is required"
-                  ),
-                  companyName: Yup.string().required(
-                    "Business Name is required"
-                  ),
-                  country: Yup.string().required("Country is required"),
-                  state: Yup.string().required("Province / State is required"),
-                  licenseNumber: Yup.string().when(
-                    ["practitionerType", "country"],
-                    {
-                      is: (practitionerType, country) =>
-                        (practitionerType == "agent/broker" ||
-                          practitionerType == "loan officer") &&
-                        country == "United States",
-                      then: Yup.string().required("This field is required"),
-                      otherwise: Yup.string().optional(),
-                    }
-                  ),
-                })}
-              >
-                {(props) => {
-                  const {
-                    isSubmitting,
-                    handleSubmit,
-                    initialValues,
-                    resetForm,
-                  } = props;
-                  return (
-                    <form
-                      onSubmit={handleSubmit}
-                      autoComplete="off"
-                      style={{
-                        width: isMobile ? "100%" : "80%",
-                        maxWidth: "800px",
-                      }}
-                    >
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        boxSizing="border-box"
-                        width={{ xs: "90%", sm: "80%" }}
-                        margin="auto"
-                        // paddingX={2}
-                        rowGap={3}
-                      >
-                        <Box>
-                          <InputLabel shrink htmlFor="firstName">
-                            Name
-                          </InputLabel>
-                          <Box
-                            display="flex"
-                            alignItems="start"
-                            columnGap={3}
-                            justifyContent="space-between"
-                          >
-                            <CustomInputField
-                              name="firstName"
-                              placeholder="First Name"
-                            />
-                            <CustomInputField
-                              name="lastName"
-                              placeholder="Last Name"
-                            />
-                          </Box>
-                        </Box>
-                        {inputFields.map(
-                          ({
-                            name,
-                            label,
-                            placeholder,
-                            sensitive,
-                            disabled,
-                            select,
-                            options,
-                          }) => (
-                            <CustomInputField
-                              options={options}
-                              select={select}
-                              disabled={disabled}
-                              key={name}
-                              name={name}
-                              label={label}
-                              placeholder={placeholder}
-                              sensitive={sensitive}
-                            />
-                          )
-                        )}
-
-                        <Box display="flex" flexDirection="column">
-                          <Button
-                            variant="gradient"
-                            size="large"
-                            type="submit"
-                            disabled={isSubmitting}
-                          >
-                            Save Settings
-                          </Button>
-                        </Box>
-                      </Box>
-                      <VerifyCodeForProfileUpdate
-                        open={openVerificationModal}
-                        setOpen={setOpenVerificationModal}
-                        title="Verification Code"
-                        text="Verification code has been sent to your email"
-                        btnText="Submit"
-                        placeholder="Enter your verification code"
-                        updatedUserData={updatedUserData}
-                        fetchUpdatedData={fetchUpdatedData}
-                      />
-                    </form>
-                  );
-                }}
-              </Formik>
-            )
-          : Object.keys(userData).length > 0 && (
-              <Formik
-                enableReinitialize={true}
-                initialValues={{
-                  firstName: userData.firstName,
-                  lastName: userData.lastName,
-                  email: userData.email,
-                  phoneNumber: userData.phoneNumber,
-                }}
-                onSubmit={async (values, { setSubmitting }) => {
-                  setSubmitting(true);
-                  await updateUserData(values);
-                  setSubmitting(false);
-                }}
-                validationSchema={Yup.object().shape({
-                  firstName: Yup.string()
-                    .required("First Name is required")
-                    .matches(
-                      /^[A-Za-z]+$/,
-                      "First Name can only contain alphabets"
-                    ),
-                  lastName: Yup.string()
-                    .required("Last Name is required")
-                    .matches(
-                      /^[A-Za-z]+$/,
-                      "Last Name can only contain alphabets"
-                    ),
-                  email: Yup.string()
-                    .email("Email Should be a valid email")
-                    .required("Email is required"),
-                  phoneNumber: Yup.string()
-                    .required("Phone number is required")
-                    .matches(
-                      /^\+([0-9]){11,12}$/gm,
-                      "Please enter a valid phone number"
-                    ),
-                })}
-              >
-                {(props) => {
-                  const {
-                    isSubmitting,
-                    handleSubmit,
-                    initialValues,
-                    resetForm,
-                  } = props;
-                  return (
-                    <form
-                      onSubmit={handleSubmit}
-                      autoComplete="off"
-                      style={{ width: "80%", maxWidth: "800px" }}
-                    >
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        boxSizing="border-box"
-                        width="80%"
-                        margin="auto"
-                        // paddingX={2}
-                        rowGap={3}
-                      >
-                        <Box>
-                          <InputLabel shrink htmlFor="firstName">
-                            Name
-                          </InputLabel>
-                          <Box
-                            display="flex"
-                            alignItems="start"
-                            columnGap={3}
-                            justifyContent="space-between"
-                          >
-                            <CustomInputField
-                              name="firstName"
-                              placeholder="First Name"
-                            />
-                            <CustomInputField
-                              name="lastName"
-                              placeholder="Last Name"
-                            />
-                          </Box>
-                        </Box>
-                        {consumerInputField.map(
-                          ({
-                            name,
-                            label,
-                            placeholder,
-                            sensitive,
-                            disabled,
-                            select,
-                            options,
-                          }) => (
-                            <CustomInputField
-                              options={options}
-                              select={select}
-                              disabled={disabled}
-                              key={name}
-                              name={name}
-                              label={label}
-                              placeholder={placeholder}
-                              sensitive={sensitive}
-                            />
-                          )
-                        )}
-
-                        <Box display="flex" flexDirection="column">
-                          <Button
-                            variant="gradient"
-                            size="large"
-                            type="submit"
-                            disabled={isSubmitting}
-                          >
-                            Save Settings
-                          </Button>
-                        </Box>
-                      </Box>
-                      <VerifyCodeForProfileUpdate
-                        open={openVerificationModal}
-                        setOpen={setOpenVerificationModal}
-                        title="Verification Code"
-                        text="Verification code has been sent to your email"
-                        btnText="Submit"
-                        placeholder="Enter your verification code"
-                        updatedUserData={updatedUserData}
-                        fetchUpdatedData={fetchUpdatedData}
-                      />
-                    </form>
-                  );
-                }}
-              </Formik>
-            )}
       </Box>
+
       <Toaster position="top-center" reverseOrder={false} />
     </Box>
   );

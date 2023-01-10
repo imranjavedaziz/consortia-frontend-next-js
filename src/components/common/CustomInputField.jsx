@@ -37,6 +37,12 @@ export const GradiantTextField = styled(TextField)(({}) => ({
     fontWeight: 400,
     fontFamily: "Poppins, sans-serif",
   },
+  "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+    display: "none",
+  },
+  "& input[type=number]": {
+    MozAppearance: "textfield",
+  },
 }));
 
 const CustomInputField = ({

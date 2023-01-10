@@ -120,14 +120,14 @@ const SignUp = () => {
             validationSchema={Yup.object().shape({
               password: Yup.string()
                 .required("Password is required")
-                .min(8, "Password Should have a minimum of 8 characters")
+                .min(8, "Password should have a minimum of 8 characters")
                 .matches(
                   /(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$/,
                   "Must contain atleast one lowercase, one uppercase, a number, and a symbol"
                 ),
               confirm_password: Yup.string()
                 .required("Confirm Password is required")
-                .oneOf([Yup.ref("password"), null], "Passwords must match"),
+                .oneOf([Yup.ref("password"), null], "Password must match"),
             })}
           >
             {(props) => {

@@ -53,6 +53,11 @@ function VerifyCodeModal({
   const { push } = useRouter();
 
   const changePassword = async () => {
+    if (code.length < 1) {
+      toast.error("Please enter verification code");
+      return;
+    }
+
     try {
       setFetching(true);
 
