@@ -18,6 +18,7 @@ import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMa
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
+import { publicAxios } from "../../src/api";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -52,27 +53,25 @@ const MintNFTS = () => {
     { value: "no-agent", label: "No Agent" },
   ];
 
-
- 
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
-      {
-        name: "agent",
-        label: "Select agent:",
-        placeholder: "Select your agent",
-        options: agentsList,
-        select: true,
-      },
+      // {
+      //   name: "agent",
+      //   label: "Select agent:",
+      //   placeholder: "Select your agent",
+      //   options: agentsList,
+      //   select: true,
+      // },
       // {
       //   name: "title",
       //   label: "Title:",
       //   placeholder: "Enter your Title",
       // },
-      {
-        name: "price",
-        label: "Price:",
-        placeholder: "Enter your Price",
-      },
+      // {
+      //   name: "price",
+      //   label: "Price:",
+      //   placeholder: "Enter your Price",
+      // },
       // {
       //   name: "description",
       //   label: "Description:",
@@ -84,18 +83,20 @@ const MintNFTS = () => {
         // name: "address",
         // label: "Address:",
         // placeholder: "Enter Your Address",
-        component:<GoogleMapAutoComplete setFieldValue={setFieldValue}/>
+        component: (
+          <GoogleMapAutoComplete name="address" setFieldValue={setFieldValue} />
+        ),
       },
-      {
-        name: "documents",
-        label: "Select Documents Categories:",
-        placeholder: "Select",
-        options: agentsList,
-        select: true,
-      },
+      // {
+      //   name: "documents",
+      //   label: "Select Documents Categories:",
+      //   placeholder: "Select",
+      //   options: agentsList,
+      //   select: true,
+      // },
     ];
-    return propertyNftsForm
-  }
+    return propertyNftsForm;
+  };
 
   const checkBoxList = [
     { label: "Deed", name: "deed" },
@@ -130,10 +131,21 @@ const MintNFTS = () => {
       toast.error("Please upload the photo of category document");
       return;
     }
+    console.log(values);
+    debugger;
     try {
-      const res = await publicAxios.put(
-        "user/update",
-        {},
+      const res = await publicAxios.post(
+        "nft/mint",
+        {
+          title: "dasd",
+          price: 10,
+          image: housePhoto,
+          description: "description",
+          address: values.address,
+          document: categoryDocument,
+          docCategory: values.category,
+          agentId: 1,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -173,8 +185,8 @@ const MintNFTS = () => {
                   handleSubmit(values);
                 }}
                 validationSchema={Yup.object().shape({
-                  agent: Yup.string().required("Agent is required"),
-                  price: Yup.string().required("Price is required"),
+                  // agent: Yup.string().required("Agent is required"),
+                  // price: Yup.string().required("Price is required"),
                   address: Yup.string().required("Address is required"),
                   category: Yup.string().required(
                     "Please choose a document category"
@@ -182,7 +194,8 @@ const MintNFTS = () => {
                 })}
               >
                 {(props) => {
-                  const { isSubmitting, handleSubmit,setFieldValue, values } = props;
+                  const { isSubmitting, handleSubmit, setFieldValue, values } =
+                    props;
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -200,64 +213,41 @@ const MintNFTS = () => {
                               options,
                               multiline,
                               maxRows,
-                              component
+                              component,
                             },
                             i
                           ) => (
                             <Box pt={3} key={name + i}>
-                              {component ? component : <CustomInputField
-                                key={name}
-                                name={name}
-                                label={label}
-                                placeholder={placeholder}
-                                select={select}
-                                options={options}
-                                rows={maxRows}
-                                multiline={multiline}
-                              />}
-                              
+                              {component ? (
+                                component
+                              ) : (
+                                <CustomInputField
+                                  key={name}
+                                  name={name}
+                                  label={label}
+                                  placeholder={placeholder}
+                                  select={select}
+                                  options={options}
+                                  rows={maxRows}
+                                  multiline={multiline}
+                                />
+                              )}
                             </Box>
                           )
                         )}
-                        
+
                         {/* <Box pt={3}>
                           <Typography variant="body1">
                             Upload each documents to a specific category: */}
-                      <Box display="flex" flexDirection="column" rowGap={3} pt={3}>
-                        <Box>
-                          <InputLabel shrink>
-                            Upload a photo of the house:
-                          </InputLabel>
-                          <Typography
-                            variant="subtitle1"
-                            sx={{
-                              color: "#FAFBFC",
-                              opacity: 0.5,
-                              marginBottom: 1,
-                            }}
-                          >
-                            Files types supported: JPG, PNG, GIF, SVG, Max Size:
-                            5MB
-                          </Typography>
-                          <CustomFileUpload
-                            s3Url={housePhoto}
-                            setS3Url={setHousePhoto}
-                            borderRadius="24px"
-                            width="100%"
-                          />
-                        </Box>
-                        <CustomInputField
-                          name="category"
-                          label="Select Document Categories:"
-                          select
-                          options={documentOptions}
-                        />
-                        {values.category.length > 1 && (
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          rowGap={3}
+                          pt={3}
+                        >
                           <Box>
                             <InputLabel shrink>
-                              {values.category == "deed"
-                                ? "Upload a photo of the deed:"
-                                : "Upload a photo of the Settlement Statement"}
+                              Upload a photo of the house:
                             </InputLabel>
                             <Typography
                               variant="subtitle1"
@@ -271,29 +261,60 @@ const MintNFTS = () => {
                               Size: 5MB
                             </Typography>
                             <CustomFileUpload
-                              s3Url={categoryDocument}
-                              setS3Url={setCategoryDocument}
+                              s3Url={housePhoto}
+                              setS3Url={setHousePhoto}
                               borderRadius="24px"
                               width="100%"
                             />
                           </Box>
-                        )}
+                          <CustomInputField
+                            name="category"
+                            label="Select Document Categories:"
+                            select
+                            options={documentOptions}
+                          />
+                          {values.category.length > 1 && (
+                            <Box>
+                              <InputLabel shrink>
+                                {values.category == "deed"
+                                  ? "Upload a photo of the deed:"
+                                  : "Upload a photo of the Settlement Statement"}
+                              </InputLabel>
+                              <Typography
+                                variant="subtitle1"
+                                sx={{
+                                  color: "#FAFBFC",
+                                  opacity: 0.5,
+                                  marginBottom: 1,
+                                }}
+                              >
+                                Files types supported: JPG, PNG, GIF, SVG, Max
+                                Size: 5MB
+                              </Typography>
+                              <CustomFileUpload
+                                s3Url={categoryDocument}
+                                setS3Url={setCategoryDocument}
+                                borderRadius="24px"
+                                width="100%"
+                              />
+                            </Box>
+                          )}
 
-                        <Box display="flex" pt={4}>
-                          <LoadingButton
-                            variant="gradient"
-                            size="large"
-                            type="submit"
-                            // disabled={isSubmitting}
-                            sx={{
-                              fontSize: "20px",
-                              fontWeight: 600,
-                            }}
-                          >
-                            Mint
-                          </LoadingButton>
+                          <Box display="flex" pt={4}>
+                            <LoadingButton
+                              variant="gradient"
+                              size="large"
+                              type="submit"
+                              // disabled={isSubmitting}
+                              sx={{
+                                fontSize: "20px",
+                                fontWeight: 600,
+                              }}
+                            >
+                              Mint
+                            </LoadingButton>
+                          </Box>
                         </Box>
-                      </Box>
                       </Box>
                     </form>
                   );
