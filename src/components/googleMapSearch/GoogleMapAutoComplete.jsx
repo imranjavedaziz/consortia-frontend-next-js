@@ -71,7 +71,7 @@ export default function GoogleMapAutoComplete(props) {
   const [field, meta] = useField(props);
   const { placePredictions, getPlacePredictions, isPlacePredictionsLoading } =
     usePlacesService({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
     });
 //   console.log("placePredictions", placePredictions);
 //   console.log("isPlacePredictionsLoading", isPlacePredictionsLoading);

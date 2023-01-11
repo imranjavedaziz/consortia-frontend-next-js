@@ -258,7 +258,6 @@ const MintNFTS = () => {
                           label="Price"
                           type="number"
                         />
-                        <CustomInputField name="address" label="Address" />
                         <CustomInputField
                           name="category"
                           label="Select Document Categories:"
