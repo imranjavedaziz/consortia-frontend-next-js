@@ -11,30 +11,38 @@ import {
 } from "@mui/material";
 
 export default function TransactiionHistoryTable() {
-  const headerData = ["Token ID", "Product", "Date & Time ", "Document Type"];
+  const headerData = ["Token ID", "Action","From",  "To","Timestamp", "Document Type"];
   const rowData = [
     {
       token_id: "9XsaDc11234",
-      product: "Pract NFTs",
-      date: "Thu, 20 Dec 2022",
+      action: "Minted",
+      from:"0x929BEEE...",
+      to:"0xc69B056...",
+      date: "17:15 01/11/2022",
       category: "Deed",
     },
     {
         token_id: "9XsaDc11234",
-        product: "Pract NFTs",
-        date: "Thu, 20 Dec 2022",
+        action: "Listed",
+        from:"0x929BEEE...",
+      to:"0xc69B056...",
+        date: "17:15 01/11/2022",
         category: "Deed",
       },
       {
         token_id: "9XsaDc11234",
-        product: "Pract NFTs",
-        date: "Thu, 20 Dec 2022",
+        action: "Gifted",
+        from:"0x929BEEE...",
+      to:"0xc69B056...",
+        date: "17:15 01/11/2022",
         category: "Deed",
       },
       {
         token_id: "9XsaDc11234",
-        product: "Pract NFTs",
-        date: "Thu, 20 Dec 2022",
+        action: "NFTs Credits",
+        from:"0x929BEEE...",
+      to:"0xc69B056...",
+        date: "17:15 01/11/2022",
         category: "Deed",
       },
   ];
@@ -68,7 +76,17 @@ export default function TransactiionHistoryTable() {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.product}
+                      {row.action}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" color="secondary.gray">
+                      {row.from}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" color="secondary.gray">
+                      {row.to}
                     </Typography>
                   </TableCell>
                   <TableCell>

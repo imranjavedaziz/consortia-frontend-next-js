@@ -48,7 +48,7 @@ const DetailPage = () => {
     <>
       <Box>
         <Box>
-          <Typography variant="h3"> Detail page</Typography>
+          <Typography variant="h3">NFT Details</Typography>
         </Box>
         <GradientBorderContainer>
           <NftDetailPageContainer>
@@ -159,14 +159,14 @@ const DetailPage = () => {
           }}
         >
           <Typography variant="h4" fontWeight={600}>
-            Practitioner NFTs
+            Practitioner NFT
           </Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          {/* <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box sx={{ display: "flex", paddingRight: "10px" }}>
               <Image src="/assets/icons/viewAll.svg" height={20} width={20} />
             </Box>
             <Typography variant="body1">View All</Typography>
-          </Box>
+          </Box> */}
         </Box>
         <NftsCards>
           <Box
@@ -178,7 +178,7 @@ const DetailPage = () => {
               flexWrap: "wrap",
             }}
           >
-            {[1, 2, 3, 4].map((item, i) => (
+            {[1].map((item, i) => (
               <NftCard key={i} />
             ))}
           </Box>

@@ -88,7 +88,7 @@ const MintNFTS = () => {
         // name: "address",
         // label: "Address:",
         // placeholder: "Enter Your Address",
-        component:<GoogleMapAutoComplete setFieldValue={setFieldValue}/>
+        component:<GoogleMapAutoComplete name="address" setFieldValue={setFieldValue}/>
       },
     ];
     return propertyNftsForm

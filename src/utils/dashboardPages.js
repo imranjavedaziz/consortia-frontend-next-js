@@ -24,7 +24,7 @@ export const practitionarPages = [
     icon: '/assets/icons/mainProperty.svg',
     children: [
       { id: 2.1, icon: mintNFT,path:"/property/mint-nft/", title: "Mint NFTs" },
-      { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
+      // { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
     ],
   },
   {
@@ -34,21 +34,21 @@ export const practitionarPages = [
     icon: nft,
     children: [
       { id: 3.1, icon: mintNFT,path:"/practitionerNfts/mint-nft/", title: "Mint NFTs" },
-      { id: 3.2, icon: tagNFT,path:"/practitionerNfts/practitioner-child2/", title: "Practitioner 2" },
+      // { id: 3.2, icon: tagNFT,path:"/practitionerNfts/practitioner-child2/", title: "Practitioner 2" },
     ],
   },
-  {
-    id: 4,
-    title: "Credits",
-    icon: credits,
-    path:"/credits/credits",
-    nested: false,
+  // {
+  //   id: 4,
+  //   title: "Credits",
+  //   icon: credits,
+  //   path:"/credits/credits",
+  //   nested: false,
 
-    children: [
-      { id: 4.1, icon: mintNFT,path:"/credits/credits-child/", title: "Credits 1" },
-      { id: 4.2, icon: tagNFT,path:"/credits/credits-child2/", title: "Credits 2" },
-    ],
-  },
+  //   children: [
+  //     { id: 4.1, icon: mintNFT,path:"/credits/credits-child/", title: "Credits 1" },
+  //     { id: 4.2, icon: tagNFT,path:"/credits/credits-child2/", title: "Credits 2" },
+  //   ],
+  // },
 ];
 
 export const consumerPages = [
@@ -70,7 +70,7 @@ export const consumerPages = [
     icon: '/assets/icons/mainProperty.svg',
     children: [
       { id: 2.1, icon: mintNFT,path:"/property/mint-nft/", title: "Mint NFTs" },
-      { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
+      // { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
     ],
   },
   // {
