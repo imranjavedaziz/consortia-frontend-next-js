@@ -47,21 +47,21 @@ function NftsLayout({ children }) {
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     console.log(profile_info);
-    if (!!profile_info && !profile_info?.user?.onBoarded) {
-      publicAxios
-        .get("kyc", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        })
-        .then((data) => {
-          console.log(data);
-          localStorage.clear();
-          push(data?.data?.data?.accountLink?.url);
-        })
-        .catch((err) => console.log(err));
-      return;
-    }
+    // if (!!profile_info && !profile_info?.user?.onBoarded) {
+    //   publicAxios
+    //     .get("kyc", {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //       },
+    //     })
+    //     .then((data) => {
+    //       console.log(data);
+    //       localStorage.clear();
+    //       push(data?.data?.data?.accountLink?.url);
+    //     })
+    //     .catch((err) => console.log(err));
+    //   return;
+    // }
 
     if (
       !!profile_info &&
