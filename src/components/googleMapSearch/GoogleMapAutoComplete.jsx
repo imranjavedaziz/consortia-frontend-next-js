@@ -66,15 +66,14 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
   },
 }));
 
-const googleMapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
 
 export default function GoogleMapAutoComplete(props) {
   const [value, setValue] = useState("");
   const [field, meta] = useField(props);
-  console.log('googleMapApiKey', googleMapApiKey)
   const { placePredictions, getPlacePredictions, isPlacePredictionsLoading } =
     usePlacesService({
-      apiKey: googleMapApiKey,
+      apiKey: `${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
     });
 //   console.log("placePredictions", placePredictions);
 //   console.log("isPlacePredictionsLoading", isPlacePredictionsLoading);
