@@ -163,6 +163,7 @@ export default function Header() {
         {menuItems.map((item, i) => {
           return (
             <>
+            
               <MenuItem
                 onClick={() => {
                   if (item.name === "Logout") {
