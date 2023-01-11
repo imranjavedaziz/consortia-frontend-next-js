@@ -224,13 +224,6 @@ const MintNFTS = () => {
                           <Typography variant="body1">
                             Upload each documents to a specific category: */}
                       <Box display="flex" flexDirection="column" rowGap={3} pt={3}>
-                        <CustomInputField
-                          name="agent"
-                          label="Select agent"
-                          select
-                          options={agentsList}
-                        />
-
                         <Box>
                           <InputLabel shrink>
                             Upload a photo of the house:
