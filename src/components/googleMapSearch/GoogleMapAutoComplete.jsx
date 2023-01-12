@@ -3,19 +3,13 @@ import {
   Box,
   Typography,
   styled,
-  Button,
-  Radio,
-  Checkbox,
-  Grid,
   TextField,
   Autocomplete,
-  FormControl,
-  RadioGroup,
-  FormControlLabel,
   InputLabel,
 } from "@mui/material";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import { useField } from "formik";
+var OpenLocationCode = require("open-location-code").OpenLocationCode;
 
 export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
   // paddingRight: "20px",
@@ -66,15 +60,50 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
 }));
 
 export default function GoogleMapAutoComplete(props) {
-  const [value, setValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [open, setOpen] = React.useState(false);
+  const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [field, meta] = useField(props);
-  const { placePredictions, getPlacePredictions, isPlacePredictionsLoading } =
-    usePlacesService({
-      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    });
+  var openLocationCode = new OpenLocationCode();
+  const {
+    placesService,
+    placePredictions,
+    getPlacePredictions,
+    isPlacePredictionsLoading,
+    autocompleteRef,
+  } = usePlacesService({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  });
   //   console.log("placePredictions", placePredictions);
   //   console.log("isPlacePredictionsLoading", isPlacePredictionsLoading);
-
+  console.log(
+    "autocompleteRef",
+    placePredictions,
+    placePredictions.find((item) => item.description === selectedValue)
+  );
+console.log('placePredictions', placePredictions)
+console.log('openLocationCode', openLocationCode)
+  React.useEffect(() => {
+    // fetch place details for the first element in placePredictions array
+    if (placePredictions.length)
+      placesService?.getDetails(
+        {
+          placeId: placePredictions.find(
+            (item) => item.description === selectedValue
+          )?.place_id,
+        },
+        (placeDetails) =>
+          setLatLngPlusCode({
+            lat: placeDetails?.geometry?.location?.lat(),
+            lng: placeDetails?.geometry?.location?.lng(),
+            plusCode: openLocationCode?.encode(
+              placeDetails?.geometry?.location?.lat(),
+              placeDetails?.geometry?.location?.lng()
+            ),
+          })
+      );
+  }, [selectedValue]);
+  console.log('latLngPlusCode', latLngPlusCode)
   return (
     <>
       <InputLabel shrink>Address:</InputLabel>
@@ -94,9 +123,17 @@ export default function GoogleMapAutoComplete(props) {
           freeSolo
           // id="free-solo-2-demo"
           disableClearable
+          open={open}
+          onOpen={() => {
+            setOpen(true);
+          }}
+          onClose={() => {
+            setOpen(false);
+          }}
           name="address"
           onChange={(e, value) => {
             props.setFieldValue("address", value);
+            setSelectedValue(value);
           }}
           options={placePredictions.map((option) => option.description)}
           error={meta.touched && Boolean(meta.error)}
@@ -121,7 +158,7 @@ export default function GoogleMapAutoComplete(props) {
               onChange={(evt) => {
                 getPlacePredictions({ input: evt.target.value });
                 props.setFieldValue("address", evt.target.value);
-                // setValue(evt.target.value);
+                setSelectedValue(evt.target.value);
               }}
             />
           )}
