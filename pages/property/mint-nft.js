@@ -144,7 +144,7 @@ const MintNFTS = () => {
           address: values.address,
           document: categoryDocument,
           docCategory: values.category,
-          agentId: 1,
+          agentId: null,
         },
         {
           headers: {
