@@ -156,6 +156,9 @@ function Login() {
                       label="Password"
                       placeholder="Password"
                       sensitive
+                      onCutHandler={(e) => e.preventDefault()}
+                      onCopyHandler={(e) => e.preventDefault()}
+                      onPasteHandler={(e) => e.preventDefault()}
                     />
 
                     <Box display="flex" flexDirection="column">

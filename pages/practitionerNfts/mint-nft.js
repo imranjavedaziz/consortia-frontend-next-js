@@ -88,13 +88,13 @@ const MintNFTS = () => {
         // name: "address",
         // label: "Address:",
         // placeholder: "Enter Your Address",
-        component:<GoogleMapAutoComplete name="address" setFieldValue={setFieldValue}/>
+        component: (
+          <GoogleMapAutoComplete name="address" setFieldValue={setFieldValue} />
+        ),
       },
     ];
-    return propertyNftsForm
-  }
-
-
+    return propertyNftsForm;
+  };
 
   const radioBoxList = [
     { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -195,7 +195,7 @@ const MintNFTS = () => {
                 })}
               >
                 {(props) => {
-                  const { isSubmitting, handleSubmit,setFieldValue } = props;
+                  const { isSubmitting, handleSubmit, setFieldValue } = props;
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -244,9 +244,12 @@ const MintNFTS = () => {
                             </Typography>
                             <Typography
                               variant="subtitle1"
-                              color="secondary.gray"
                               pt={1}
                               pb={1}
+                              sx={{
+                                color: "#FAFBFC",
+                                opacity: 0.5,
+                              }}
                             >
                               File types supported: JPG, PNG, GIF, SVG, Max
                               size: 5 MB

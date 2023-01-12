@@ -15,18 +15,21 @@ const inputFields = [
     label: "Current Password",
     placeholder: "Enter Your Current Password",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
   {
     name: "password",
     label: "New Password",
     placeholder: "Enter Your New Password",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
   {
     name: "confirm_password",
     label: "Confirm New Password",
     placeholder: "Confirm Your New Password",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
 ];
 
@@ -137,13 +140,22 @@ const ChangePassword = () => {
                     rowGap={3}
                   >
                     {inputFields.map(
-                      ({ name, label, placeholder, sensitive }) => (
+                      ({
+                        name,
+                        label,
+                        placeholder,
+                        sensitive,
+                        onCutCopyPaste,
+                      }) => (
                         <CustomInputField
                           key={name}
                           name={name}
                           label={label}
                           placeholder={placeholder}
                           sensitive={sensitive}
+                          onCutHandler={onCutCopyPaste}
+                          onCopyHandler={onCutCopyPaste}
+                          onPasteHandler={onCutCopyPaste}
                         />
                       )
                     )}
