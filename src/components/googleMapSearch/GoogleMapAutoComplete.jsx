@@ -67,6 +67,7 @@ export default function GoogleMapAutoComplete(props) {
   var openLocationCode = new OpenLocationCode();
   const {
     placesService,
+    placesAutocompleteService,
     placePredictions,
     getPlacePredictions,
     isPlacePredictionsLoading,
@@ -81,6 +82,7 @@ export default function GoogleMapAutoComplete(props) {
     placePredictions,
     placePredictions.find((item) => item.description === selectedValue)
   );
+  console.log('placesAutocompleteService', placesAutocompleteService)
 console.log('placePredictions', placePredictions)
 console.log('openLocationCode', openLocationCode)
   React.useEffect(() => {
