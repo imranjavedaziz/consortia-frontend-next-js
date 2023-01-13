@@ -87,9 +87,9 @@ function VerifyCodeModal({
     }
   };
 
-  const resendCode = async (email) => {
+  const resendCode = async () => {
     const res = await publicAxios.post("auth/resend", {
-      email,
+      email: JSON.parse(localStorage.getItem("profile_info"))?.user?.email,
     });
     toast.success(res?.data?.message);
   };
@@ -136,8 +136,10 @@ function VerifyCodeModal({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{ padding: "16px 0px" }}>
-          <Typography variant="body1">{text}</Typography>
+        <DialogContent>
+          <Typography variant="body1" sx={{ padding: "16px 0px" }}>
+            {text}
+          </Typography>
           <Box>
             {/* <TextFieldWrapper> */}
 
@@ -167,6 +169,25 @@ function VerifyCodeModal({
                 onChange={(e) => setCode(e.target.value)}
                 InputProps={{
                   disableUnderline: true,
+                  endAdornment: (
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => resendCode()}
+                      // onClick={handleClickShowPassword}
+                      // onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      <Box>
+                        <Typography
+                          variant="subtitle1"
+                          color="secondary.yellow"
+                          sx={{ paddingRight: "20px" }}
+                        >
+                          Resend Code
+                        </Typography>
+                      </Box>
+                    </IconButton>
+                  ),
                 }}
                 fullWidth
                 sx={{
