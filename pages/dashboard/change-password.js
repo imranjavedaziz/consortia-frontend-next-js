@@ -113,6 +113,10 @@ const ChangePassword = () => {
                 .matches(
                   /(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$/,
                   "Must contain atleast one lowercase, one uppercase, a number, and a symbol"
+                )
+                .notOneOf(
+                  [Yup.ref("current_password"), null],
+                  "New password should be different from previous password"
                 ),
               confirm_password: Yup.string()
                 .required("Confirm Password is required")

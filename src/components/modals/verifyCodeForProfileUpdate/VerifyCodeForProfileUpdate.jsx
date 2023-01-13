@@ -131,9 +131,11 @@ function VerifyCodeForProfileUpdate({
     }
   };
 
-  const resendCode = async (email) => {
+  const resendCode = async (
+    email = JSON.parse(localStorage.getItem("profile_info"))?.user?.email
+  ) => {
     const res = await publicAxios.post("auth/resend", {
-      email,
+      email: email,
     });
     toast.success(res?.data?.message);
   };

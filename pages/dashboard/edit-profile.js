@@ -325,6 +325,7 @@ const EditProfile = () => {
                           placeholder="Enter your verification code"
                           updatedUserData={updatedUserData}
                           fetchUpdatedData={fetchUpdatedData}
+                          inputTypeCode
                         />
                       </form>
                     );
@@ -454,6 +455,7 @@ const EditProfile = () => {
                           placeholder="Enter your verification code"
                           updatedUserData={updatedUserData}
                           fetchUpdatedData={fetchUpdatedData}
+                          inputTypeCode
                         />
                       </form>
                     );
