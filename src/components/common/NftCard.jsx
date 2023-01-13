@@ -32,7 +32,7 @@ const NftCard = ({ title, address }) => {
         // width="250px"
         alt="nft card Icon"
         image="/assets/images/nftCard.png"
-        sx={{ borderRadius: "18px" }}
+        sx={{ borderRadius: "18px" ,cursor:'pointer'}}
       ></CardMedia>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">

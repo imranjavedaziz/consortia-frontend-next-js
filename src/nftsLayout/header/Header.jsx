@@ -66,7 +66,7 @@ export default function Header() {
       path: "/assets/icons/changePassword.svg",
       rel: "/dashboard/change-password",
     },
-    { name: "NFT Wallet", path: "/assets/icons/wallet.svg" },
+    { name: "NFT Wallet", path: "/assets/icons/wallet.svg", rel:"/nftWallet/NftWallet"},
     { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
     { name: "Logout", path: "/assets/icons/logout.svg" },
   ];
