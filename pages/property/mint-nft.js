@@ -132,7 +132,6 @@ const MintNFTS = () => {
       return;
     }
     console.log(values);
-    debugger;
     try {
       const res = await publicAxios.post(
         "nft/mint",
@@ -144,7 +143,7 @@ const MintNFTS = () => {
           address: values.address,
           document: categoryDocument,
           docCategory: values.category,
-          agentId: null,
+          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
         },
         {
           headers: {
