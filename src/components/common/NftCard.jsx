@@ -38,7 +38,7 @@ const NftCard = ({ title, address, image }) => {
       ></CardMedia>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" fontWeight={500} fontSize="16px">
+          <Typography variant="h6" fontWeight={500} fontSize="16px" width='190px' noWrap>
             {title ?? "US-06041-N"}
           </Typography>
           <Stack direction="row" gap={0.8} alignItems="center">

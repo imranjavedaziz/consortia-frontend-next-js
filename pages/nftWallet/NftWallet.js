@@ -59,7 +59,12 @@ function NftWallet() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      setPractitionerNftData([res?.data?.nfts]);
+      if(res?.data?.nfts){
+        setPractitionerNftData([res?.data?.nfts]);
+      }else{
+        setPractitionerNftData([]);
+
+      }
 
       console.log("res", res?.data?.nfts);
 
@@ -108,7 +113,7 @@ function NftWallet() {
                   flexWrap: "wrap",
                 }}
               >
-                {nftData.length > 1 &&
+                {nftData.length >= 1 &&
                   nftData.map(({ title, address, image }, i) => (
                     <NftCard
                       title={title}
@@ -154,7 +159,8 @@ function NftWallet() {
                       flexWrap: "wrap",
                     }}
                   >
-                    {practitionerNftData.map(({ name, address, image }, i) => (
+                    {console.log(practitionerNftData.length)}
+                    {practitionerNftData.length>=1 && practitionerNftData?.map(({ name, address, image }, i) => (
                       <NftCard
                         key={i}
                         title={name}

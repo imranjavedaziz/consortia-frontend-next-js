@@ -25,6 +25,7 @@ import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/router";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -50,8 +51,10 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
-  useTitle("Mint NFTs");
+  const { push } = useRouter();
 
+  useTitle("Mint NFTs");
+  const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [profileInfo, setProfileInfo] = useState();
   const [headShot, setHeadshot] = useState("");
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
@@ -90,7 +93,12 @@ const MintNFTS = () => {
         // label: "Address:",
         // placeholder: "Enter Your Address",
         component: (
-          <GoogleMapAutoComplete name="address" setFieldValue={setFieldValue} />
+          <GoogleMapAutoComplete
+            name="address"
+            setFieldValue={setFieldValue}
+            setLatLngPlusCode={setLatLngPlusCode}
+            latLngPlusCode={latLngPlusCode}
+          />
         ),
       },
     ];

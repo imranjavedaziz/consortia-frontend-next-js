@@ -129,14 +129,14 @@ const MintNFTS = () => {
     //   ...latLngPlusCode,
     //   plusCode:`${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`
     // })
-    // console.log(values);
+    console.log('building',values);
     try {
       const res = await publicAxios.post(
         "nft/mint",
         {
           title: values.propertyType === "building"
-          ? latLngPlusCode.plusCode
-          : `${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`,
+          ?`${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}` 
+          : latLngPlusCode.plusCode,
           price: 10,
           image: housePhoto,
           description: "description",
