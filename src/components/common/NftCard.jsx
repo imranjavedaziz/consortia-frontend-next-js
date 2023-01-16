@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 
-const NftCard = ({ title, address }) => {
-  const {push } = useRouter()
+const NftCard = ({ title, address, image }) => {
+  const { push } = useRouter();
   return (
     <Card
       sx={{
@@ -25,19 +25,21 @@ const NftCard = ({ title, address }) => {
       }}
     >
       <CardMedia
-       onClick={() => {const token = localStorage.getItem("access_token");
-       if(true)push('/nftDetail/card')}}
+        onClick={() => {
+          const token = localStorage.getItem("access_token");
+          if (true) push("/nftDetail/card");
+        }}
         component="img"
         height="220px"
-        // width="250px"
+        width="250px"
         alt="nft card Icon"
-        image="/assets/images/nftCard.png"
-        sx={{ borderRadius: "18px" ,cursor:'pointer'}}
+        image={image ?? "/assets/images/nftCard.png"}
+        sx={{ borderRadius: "18px", cursor: "pointer" }}
       ></CardMedia>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" fontWeight={500} fontSize="16px">
-            US-06041-N
+            {title ?? "US-06041-N"}
           </Typography>
           <Stack direction="row" gap={0.8} alignItems="center">
             <CardMedia
@@ -63,7 +65,7 @@ const NftCard = ({ title, address }) => {
             fontWeight={500}
             sx={{ color: "rgba(224, 224, 224, 0.8)" }}
           >
-            Address 1111 Stoney View Ln, St. Louis, MO 6...
+            {address ?? "Address 1111 Stoney View Ln, St. Louis, MO 6..."}
           </Typography>
         </Box>
       </CardContent>
@@ -82,7 +84,7 @@ const NftCard = ({ title, address }) => {
             borderRadius: "8px",
             width: "80px",
           }}
-          onClick={() => push('/comingSoon')}
+          onClick={() => push("/comingSoon")}
         >
           Buy
         </Button>

@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
+import { LoadingButton } from "@mui/lab";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -131,6 +132,8 @@ const MintNFTS = () => {
             address,
             image: headShot,
             bio,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+
             // role: profileInfo.user.role ? "practitioner" : "consumer",
             licenseType: licenseTypeValue,
             licenseNumber,
@@ -142,8 +145,7 @@ const MintNFTS = () => {
           }
         );
         toast.success("practitionar nft is minted successfully");
-        // setEmail(email);
-        // setEmailVerificationOpen(true);
+        push("/nftWallet/NftWallet");
       } catch (error) {
         if (error?.data?.message) {
           toast.error(error?.data?.message);
@@ -335,18 +337,19 @@ const MintNFTS = () => {
                           />
                         </Box>
                         <Box display="flex" pt={7}>
-                          <Button
+                          <LoadingButton
+                            loading={isSubmitting}
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={headShot.length < 1}
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,
                             }}
                           >
                             Mint
-                          </Button>
+                          </LoadingButton>
                         </Box>
                       </Box>
                     </form>

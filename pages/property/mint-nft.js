@@ -19,6 +19,7 @@ import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
+import { useRouter } from "next/router";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -43,6 +44,8 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+  const { push } = useRouter();
+
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
@@ -98,30 +101,12 @@ const MintNFTS = () => {
     return propertyNftsForm;
   };
 
-  const checkBoxList = [
-    { label: "Deed", name: "deed" },
-    { label: "Lien", name: "Lien" },
-    { label: "Photo", name: "photo" },
-    { label: "AWM", name: "AWM" },
-    { label: "Appraisal ", name: "appraisal " },
-    { label: "MLS Data ", name: "MLS Data " },
-    { label: "Floor Plan", name: "floor-plan" },
-    { label: "Assessor Data", name: "assessor-data" },
-    { label: "Lease Agreement ", name: "lease-agreement " },
-    { label: "Sellers Disclosure", name: "Sellers Disclosure" },
-    { label: "Preliminary Title Report", name: "Preliminary Title Report" },
-    { label: "Inspection Report ", name: "Inspection Report " },
-    { label: "Title Insurance Policy", name: "Title Insurance Policy" },
-    { label: "Settlement Statement ", name: "Settlement Statement" },
-    { label: "Land Use/Planning Report  ", name: "Land Use/Planning Report  " },
-  ];
-
   const documentOptions = [
     { value: "deed", label: "Deed" },
     { value: "settlement", label: "Settlement Statement" },
   ];
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, resetForm) => {
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");
       return;
@@ -131,7 +116,6 @@ const MintNFTS = () => {
       toast.error("Please upload the photo of category document");
       return;
     }
-    console.log(values);
     try {
       const res = await publicAxios.post(
         "nft/mint",
@@ -153,6 +137,9 @@ const MintNFTS = () => {
       );
 
       toast.success("NFT minted successfully");
+
+      resetForm();
+      push("/nftWallet/NftWallet");
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message);
@@ -180,8 +167,8 @@ const MintNFTS = () => {
                   address: "",
                   category: "",
                 }}
-                onSubmit={(values, { setSubmitting }) => {
-                  handleSubmit(values);
+                onSubmit={(values, { setSubmitting, resetForm }) => {
+                  handleSubmit(values, resetForm);
                 }}
                 validationSchema={Yup.object().shape({
                   // agent: Yup.string().required("Agent is required"),
@@ -304,7 +291,12 @@ const MintNFTS = () => {
                               variant="gradient"
                               size="large"
                               type="submit"
-                              // disabled={isSubmitting}
+                              disabled={
+                                !(
+                                  housePhoto.length > 1 &&
+                                  categoryDocument.length > 1
+                                )
+                              }
                               sx={{
                                 fontSize: "20px",
                                 fontWeight: 600,

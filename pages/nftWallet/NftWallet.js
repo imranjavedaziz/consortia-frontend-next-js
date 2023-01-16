@@ -1,94 +1,91 @@
 import React, { useEffect, useState } from "react";
-import {
-    Box,
-    Typography,
-    styled,
-  } from "@mui/material";
-  import Image from "next/image";
-import NftsLayout from '../../src/nftsLayout';
-import NftCard from '../../src/components/common/NftCard';
-
+import { Box, Typography, styled } from "@mui/material";
+import Image from "next/image";
+import NftsLayout from "../../src/nftsLayout";
+import NftCard from "../../src/components/common/NftCard";
+import { publicAxios } from "../../src/api";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
-    width: "100%",
-    background: theme.palette.border.default,
-    borderRadius: "24px",
-    padding: "1px",
-    marginTop: "40px",
-    marginBottom: "120px",
-  }));
-  const MintPropertyNfts = styled(Box)(({ theme }) => ({
-    width: "100%",
-    background: theme.palette.background.default,
-    borderRadius: "24px",
-    padding: "40px",
-  }));
-  const NftsCards = styled(Box)(({ theme }) => ({
-    marginTop: "48px",
-  }));
-
+  width: "100%",
+  background: theme.palette.border.default,
+  borderRadius: "24px",
+  padding: "1px",
+  marginTop: "40px",
+  marginBottom: "120px",
+}));
+const MintPropertyNfts = styled(Box)(({ theme }) => ({
+  width: "100%",
+  background: theme.palette.background.default,
+  borderRadius: "24px",
+  padding: "40px",
+}));
+const NftsCards = styled(Box)(({ theme }) => ({
+  marginTop: "48px",
+}));
 
 function NftWallet() {
-    const [profileInfo, setProfileInfo] = useState({});
-    useEffect(() => {
-      setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
-    }, []);
-  return (
-    <> <Box>
-    <Box>
-      <Typography variant="h3">My Wallet</Typography>
-    </Box>
-    <GradientMintPropertyNfts>
-      <MintPropertyNfts>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4" fontWeight={600}>
-            Mint Property NFTs
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box sx={{ display: "flex", paddingRight: "10px" }}>
-              <Image
-                src="/assets/icons/viewAll.svg"
-                height={20}
-                width={20}
-              />
-            </Box>
-            <Typography variant="body1">View All</Typography>
-          </Box>
-        </Box>
-        <NftsCards>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: { xs: "center", md: "space-between" },
-              rowGap: 2,
-              flexWrap: "wrap",
-            }}
-          >
-            {[1, 2, 3, 4].map((item, i) => (
-              <NftCard key={i} />
-            ))}
-          </Box>
-        </NftsCards>
+  const [profileInfo, setProfileInfo] = useState({});
+  const [nftData, setNftData] = useState([]);
+  const [practitionerNftData, setPractitionerNftData] = useState([]);
+  useEffect(() => {
+    setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
+    const isPractitioner =
+      JSON.parse(localStorage.getItem("profile_info"))?.user?.role ==
+      "practitioner";
+    isPractitioner && getPractitionerNftData();
+    getNftData();
+  }, []);
 
-        {profileInfo?.user?.role === "practitioner" && (
-          <>
+  const getNftData = async () => {
+    try {
+      const res = await publicAxios.get("/nft/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      setNftData(res?.data?.nfts);
+
+      console.log("res", res?.data?.nfts);
+
+      // setUserData(res?.data?.data?.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getPractitionerNftData = async () => {
+    try {
+      const res = await publicAxios.get("/nft/practitioner", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      setPractitionerNftData([res?.data?.nfts]);
+
+      console.log("res", res?.data?.nfts);
+
+      // setUserData(res?.data?.data?.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      <Box>
+        <Box>
+          <Typography variant="h3">My Wallet</Typography>
+        </Box>
+        <GradientMintPropertyNfts>
+          <MintPropertyNfts>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginTop: "40px",
               }}
             >
               <Typography variant="h4" fontWeight={600}>
-                Mint Practitioner NFTs
+                Mint Property NFTs
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box sx={{ display: "flex", paddingRight: "10px" }}>
@@ -111,20 +108,72 @@ function NftWallet() {
                   flexWrap: "wrap",
                 }}
               >
-                {[1].map((item, i) => (
-                  <NftCard key={i} />
-                ))}
+                {nftData.length > 1 &&
+                  nftData.map(({ title, address, image }, i) => (
+                    <NftCard
+                      title={title}
+                      address={address}
+                      image={image}
+                      key={i}
+                    />
+                  ))}
               </Box>
             </NftsCards>
-          </>
-        )}
-      </MintPropertyNfts>
-    </GradientMintPropertyNfts>
-  </Box></>
-  )
+
+            {profileInfo?.user?.role === "practitioner" && (
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "40px",
+                  }}
+                >
+                  <Typography variant="h4" fontWeight={600}>
+                    Mint Practitioner NFTs
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box sx={{ display: "flex", paddingRight: "10px" }}>
+                      <Image
+                        src="/assets/icons/viewAll.svg"
+                        height={20}
+                        width={20}
+                      />
+                    </Box>
+                    <Typography variant="body1">View All</Typography>
+                  </Box>
+                </Box>
+                <NftsCards>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: { xs: "center", md: "space-between" },
+                      rowGap: 2,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {practitionerNftData.map(({ name, address, image }, i) => (
+                      <NftCard
+                        key={i}
+                        title={name}
+                        address={address}
+                        image={image}
+                      />
+                    ))}
+                  </Box>
+                </NftsCards>
+              </>
+            )}
+          </MintPropertyNfts>
+        </GradientMintPropertyNfts>
+      </Box>
+    </>
+  );
 }
 
-export default NftWallet
+export default NftWallet;
 NftWallet.getLayout = function (page) {
-    return <NftsLayout>{page}</NftsLayout>;
-  };
+  return <NftsLayout>{page}</NftsLayout>;
+};
