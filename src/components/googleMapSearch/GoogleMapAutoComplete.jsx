@@ -62,7 +62,6 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
 export default function GoogleMapAutoComplete(props) {
   const [selectedValue, setSelectedValue] = useState("");
   const [open, setOpen] = React.useState(false);
-  const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [field, meta] = useField(props);
   var openLocationCode = new OpenLocationCode();
   const {
@@ -77,14 +76,14 @@ export default function GoogleMapAutoComplete(props) {
   });
   //   console.log("placePredictions", placePredictions);
   //   console.log("isPlacePredictionsLoading", isPlacePredictionsLoading);
-  console.log(
-    "autocompleteRef",
-    placePredictions,
-    placePredictions.find((item) => item.description === selectedValue)
-  );
-  console.log('placesAutocompleteService', placesAutocompleteService)
-console.log('placePredictions', placePredictions)
-console.log('openLocationCode', openLocationCode)
+//   console.log(
+//     "autocompleteRef",
+//     placePredictions,
+//     placePredictions.find((item) => item.description === selectedValue)
+//   );
+//   console.log('placesAutocompleteService', placesAutocompleteService)
+// console.log('placePredictions', placePredictions)
+// console.log('openLocationCode', openLocationCode)
   React.useEffect(() => {
     // fetch place details for the first element in placePredictions array
     if (placePredictions.length)
@@ -95,7 +94,7 @@ console.log('openLocationCode', openLocationCode)
           )?.place_id,
         },
         (placeDetails) =>
-          setLatLngPlusCode({
+          props.setLatLngPlusCode({
             lat: placeDetails?.geometry?.location?.lat(),
             lng: placeDetails?.geometry?.location?.lng(),
             plusCode: openLocationCode?.encode(
@@ -105,7 +104,7 @@ console.log('openLocationCode', openLocationCode)
           })
       );
   }, [selectedValue]);
-  console.log('latLngPlusCode', latLngPlusCode)
+  // console.log('latLngPlusCode', latLngPlusCode)
   return (
     <>
       <InputLabel shrink>Address:</InputLabel>

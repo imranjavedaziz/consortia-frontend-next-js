@@ -46,22 +46,24 @@ const MintNFTS = () => {
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
+  const [latLngPlusCode, setLatLngPlusCode] = useState({});
+  console.log("latLngPlusCode", latLngPlusCode);
 
-  const agentsList = [
-    { value: "agent-1", label: "Agent 1" },
-    { value: "agent-2", label: "Agent 2" },
-    { value: "no-agent", label: "No Agent" },
+  const propertyList = [
+    { value: "building", label: "Building" },
+    { value: "other", label: "Other" },
+    // { value: "no-agent", label: "No Agent" },
   ];
 
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
-      // {
-      //   name: "agent",
-      //   label: "Select agent:",
-      //   placeholder: "Select your agent",
-      //   options: agentsList,
-      //   select: true,
-      // },
+      {
+        name: "propertyType",
+        label: "Select property category:",
+        placeholder: "Select your property",
+        options: propertyList,
+        select: true,
+      },
       // {
       //   name: "title",
       //   label: "Title:",
@@ -84,9 +86,15 @@ const MintNFTS = () => {
         // label: "Address:",
         // placeholder: "Enter Your Address",
         component: (
-          <GoogleMapAutoComplete name="address" setFieldValue={setFieldValue} />
+          <GoogleMapAutoComplete
+            name="address"
+            setFieldValue={setFieldValue}
+            setLatLngPlusCode={setLatLngPlusCode}
+            latLngPlusCode={latLngPlusCode}
+          />
         ),
       },
+
       // {
       //   name: "documents",
       //   label: "Select Documents Categories:",
@@ -131,16 +139,23 @@ const MintNFTS = () => {
       toast.error("Please upload the photo of category document");
       return;
     }
-    console.log(values);
+    // console.log('`${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`', `${latLngPlusCode.plusCode}`)
+    // setLatLngPlusCode({
+    //   ...latLngPlusCode,
+    //   plusCode:`${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`
+    // })
+    // console.log(values);
     try {
       const res = await publicAxios.post(
         "nft/mint",
         {
-          title: "dasd",
+          title: values.propertyType === "building"
+          ? latLngPlusCode.plusCode
+          : `${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`,
           price: 10,
           image: housePhoto,
           description: "description",
-          address: values.address,
+          address:values.address,
           document: categoryDocument,
           docCategory: values.category,
           agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
@@ -175,8 +190,11 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
+                  propertyType: "",
                   agent: "",
                   price: "",
+                  apartmentNo: "",
+                  floorNo: "",
                   address: "",
                   category: "",
                 }}
@@ -186,6 +204,19 @@ const MintNFTS = () => {
                 validationSchema={Yup.object().shape({
                   // agent: Yup.string().required("Agent is required"),
                   // price: Yup.string().required("Price is required"),
+                  propertyType: Yup.string().required(
+                    "Property Type is required"
+                  ),
+                  floorNo: Yup.string().when(["propertyType"], {
+                    is: (propertyType) => propertyType == "building",
+                    then: Yup.string().required("This field is required"),
+                    otherwise: Yup.string().optional(),
+                  }),
+                  apartmentNo: Yup.string().when(["propertyType"], {
+                    is: (propertyType) => propertyType == "building",
+                    then: Yup.string().required("This field is required"),
+                    otherwise: Yup.string().optional(),
+                  }),
                   address: Yup.string().required("Address is required"),
                   category: Yup.string().required(
                     "Please choose a document category"
@@ -195,6 +226,7 @@ const MintNFTS = () => {
                 {(props) => {
                   const { isSubmitting, handleSubmit, setFieldValue, values } =
                     props;
+                  // console.log("values", values);
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -234,10 +266,41 @@ const MintNFTS = () => {
                             </Box>
                           )
                         )}
+                        {values.propertyType === "building" && (
+                          <>
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              rowGap={3}
+                              pt={3}
+                            >
+                              <Box>
+                                <CustomInputField
+                                  name="floorNo"
+                                  label="Floor No:"
+                                  placeholder="Enter floor no"
+                                  select={false}
+                                />
+                              </Box>
+                            </Box>
+                            <Box
+                              display="flex"
+                              flexDirection="column"
+                              rowGap={3}
+                              pt={3}
+                            >
+                              <Box>
+                                <CustomInputField
+                                  name="apartmentNo"
+                                  label="Apartment No:"
+                                  placeholder="Enter apartment no"
+                                  select={false}
+                                />
+                              </Box>
+                            </Box>
+                          </>
+                        )}
 
-                        {/* <Box pt={3}>
-                          <Typography variant="body1">
-                            Upload each documents to a specific category: */}
                         <Box
                           display="flex"
                           flexDirection="column"
