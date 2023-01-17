@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -34,14 +35,6 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "40px 281px",
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
-}));
 
 const MintNFTS = () => {
   const { push } = useRouter();
@@ -50,16 +43,21 @@ const MintNFTS = () => {
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
+  const [isSubmitting, setisSubmitting] = useState(false);
   console.log("latLngPlusCode", latLngPlusCode);
 
   const propertyList = [
     { value: "building", label: "Building" },
     { value: "other", label: "Other" },
-    // { value: "no-agent", label: "No Agent" },
   ];
 
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
+      {
+        name: "name",
+        label: "Exact Name as it appears on title",
+        placeholder: "Enter the exact name",
+      },
       {
         name: "propertyType",
         label: "Select property category:",
@@ -67,27 +65,8 @@ const MintNFTS = () => {
         options: propertyList,
         select: true,
       },
-      // {
-      //   name: "title",
-      //   label: "Title:",
-      //   placeholder: "Enter your Title",
-      // },
-      // {
-      //   name: "price",
-      //   label: "Price:",
-      //   placeholder: "Enter your Price",
-      // },
-      // {
-      //   name: "description",
-      //   label: "Description:",
-      //   placeholder: "Enter Text Here",
-      //   multiline: true,
-      //   maxRows: 4,
-      // },
+
       {
-        // name: "address",
-        // label: "Address:",
-        // placeholder: "Enter Your Address",
         component: (
           <GoogleMapAutoComplete
             name="address"
@@ -97,14 +76,6 @@ const MintNFTS = () => {
           />
         ),
       },
-
-      // {
-      //   name: "documents",
-      //   label: "Select Documents Categories:",
-      //   placeholder: "Select",
-      //   options: agentsList,
-      //   select: true,
-      // },
     ];
     return propertyNftsForm;
   };
@@ -124,23 +95,35 @@ const MintNFTS = () => {
       toast.error("Please upload the photo of category document");
       return;
     }
-    // console.log('`${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`', `${latLngPlusCode.plusCode}`)
-    // setLatLngPlusCode({
-    //   ...latLngPlusCode,
-    //   plusCode:`${latLngPlusCode.plusCode}@f${values.floorNo}_apt${values.apartmentNo}`
-    // })
-    console.log('building',values);
+
     try {
+      setisSubmitting(true);
+      const response = await axios.post(
+        "https://6qhuvhjahl.execute-api.us-east-1.amazonaws.com/ocr",
+        {
+          key: categoryDocument.split("/").at(-1),
+          title: values.name,
+          address: values.address,
+        }
+      );
+      console.log({ response });
+      if (response?.data?.status == "failed") {
+        toast.error(response?.data?.message);
+        setisSubmitting(false);
+        return;
+      }
       const res = await publicAxios.post(
         "nft/mint",
         {
-          title: values.propertyType === "building"
-          ?`${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}` 
-          : latLngPlusCode.plusCode,
+          name: values.name,
+          title:
+            values.propertyType === "building"
+              ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
+              : latLngPlusCode.plusCode,
           price: 10,
           image: housePhoto,
           description: "description",
-          address:values.address,
+          address: values.address,
           document: categoryDocument,
           docCategory: values.category,
           agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
@@ -153,10 +136,12 @@ const MintNFTS = () => {
       );
 
       toast.success("NFT minted successfully");
+      setisSubmitting(false);
 
       resetForm();
       push("/nftWallet/NftWallet");
     } catch (error) {
+      setisSubmitting(false);
       console.log(error);
       toast.error(error?.data?.message);
     }
@@ -178,6 +163,7 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
+                  name: "",
                   propertyType: "",
                   agent: "",
                   price: "",
@@ -212,8 +198,7 @@ const MintNFTS = () => {
                 })}
               >
                 {(props) => {
-                  const { isSubmitting, handleSubmit, setFieldValue, values } =
-                    props;
+                  const { handleSubmit, setFieldValue, values } = props;
                   // console.log("values", values);
                   return (
                     <form
@@ -342,6 +327,7 @@ const MintNFTS = () => {
                                 Size: 5MB
                               </Typography>
                               <CustomFileUpload
+                                allowPdf={true}
                                 s3Url={categoryDocument}
                                 setS3Url={setCategoryDocument}
                                 borderRadius="24px"
@@ -355,6 +341,7 @@ const MintNFTS = () => {
                               variant="gradient"
                               size="large"
                               type="submit"
+                              loading={isSubmitting}
                               disabled={
                                 !(
                                   housePhoto.length > 1 &&

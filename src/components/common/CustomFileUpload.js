@@ -21,16 +21,26 @@ const myBucket = new AWS.S3({
   region: REGION,
 });
 
-const validImage = (img) =>
-  ["jpg", "png", "gif", "svg"].some((char) => img.endsWith(char));
-
-const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
+const CustomFileUpload = ({
+  s3Url,
+  setS3Url,
+  borderRadius,
+  width,
+  allowPdf = false,
+}) => {
   const [file, setFile] = useState("");
+  const [fileType, setFileType] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
+  const validImage = (img) =>
+    allowPdf
+      ? ["jpg", "png", "pdf"].some((char) => img.endsWith(char))
+      : ["jpg", "png"].some((char) => img.endsWith(char));
+
   const handleChange = (e) => {
     if (validImage(e.target.files[0].name)) {
       if (e.target.files[0].size < 5242880) {
+        setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
         myBucket.upload(
           {
@@ -48,11 +58,15 @@ const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
         );
       } else {
         e.target.value = null;
-        toast.error("Image size should be less than 5MB");
+        allowPdf
+          ? toast.error("Image/File size should be less than 5MB")
+          : toast.error("Image size should be less than 5MB");
       }
     } else {
       e.target.value = null;
-      toast.error("Only jpg, png, gif and svg files are allowed");
+      allowPdf
+        ? toast.error("Only pdf,jpg and png files are allowed")
+        : toast.error("Only jpg and png  files are allowed");
     }
   };
 
@@ -71,7 +85,6 @@ const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
         }}
       >
         <Box
-          // component="label"
           fullWidth
           sx={{
             height: "100%",
@@ -101,6 +114,8 @@ const CustomFileUpload = ({ s3Url, setS3Url, borderRadius, width }) => {
                 Click to upload photo
               </Typography>
             </Stack>
+          ) : fileType == "application/pdf" ? (
+            <iframe src={file} width="auto" height="100%"></iframe>
           ) : (
             <img src={file} width="auto" height="100%" />
           )}
