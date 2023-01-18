@@ -47,6 +47,7 @@ export const GradiantTextField = styled(TextField)(({}) => ({
 
 const CustomInputField = ({
   label,
+  sublabel,
   options,
   sensitive,
   placeholder,
@@ -67,7 +68,18 @@ const CustomInputField = ({
           {label}
         </InputLabel>
       )}
-
+      {sublabel && (
+        <Typography
+          variant="subtitle1"
+          sx={{
+            color: "#FAFBFC",
+            opacity: 0.5,
+            marginBottom: 1,
+          }}
+        >
+          {sublabel}
+        </Typography>
+      )}
       <div
         style={{
           background: Boolean(meta.touched && meta.error)

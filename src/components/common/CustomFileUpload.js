@@ -39,7 +39,7 @@ const CustomFileUpload = ({
 
   const handleChange = (e) => {
     if (validImage(e.target.files[0].name)) {
-      if (e.target.files[0].size < 5242880) {
+      if (e.target.files[0].size < 1048576) {
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
         myBucket.upload(
@@ -59,8 +59,8 @@ const CustomFileUpload = ({
       } else {
         e.target.value = null;
         allowPdf
-          ? toast.error("Image/File size should be less than 5MB")
-          : toast.error("Image size should be less than 5MB");
+          ? toast.error("Image/File size should be less than 1MB")
+          : toast.error("Image size should be less than 1MB");
       }
     } else {
       e.target.value = null;

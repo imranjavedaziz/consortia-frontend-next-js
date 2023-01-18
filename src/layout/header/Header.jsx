@@ -138,8 +138,8 @@ const Header = () => {
             <ImageLogo>
               <Image
                 src="/assets/images/consortiaLogo.svg"
-                width={isNotLap ? 100 : 180}
-                height={29}
+                width={isNotLap ? 100 : 111}
+                height={58}
                 alt="Logo"
               />
             </ImageLogo>

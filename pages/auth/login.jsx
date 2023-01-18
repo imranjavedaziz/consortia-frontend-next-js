@@ -111,8 +111,8 @@ function Login() {
           >
             <Image
               src="/assets/images/consortiaLogo.svg"
-              width={390}
-              height={89}
+              width={217}
+              height={125}
               alt="Logo"
             />
           </ImageLogo>

@@ -17,7 +17,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import sidebarLogo from "../../../public/assets/icons/sidebarLogo.svg";
+import sidebarLogo from "../../../public/assets/images/consortiaLogo.svg";
 import CloseIcon from "@mui/icons-material/Close";
 import { practitionarPages, consumerPages } from "../../utils/dashboardPages";
 import Image from "next/image";
@@ -125,7 +125,7 @@ export default function SidebarList({ setopenForMobile }) {
         }}
       >
         <Link href="/" style={{ verticalAlign: "middle" }}>
-          <Image src={sidebarLogo} height={32} width={"100%"} />
+          <Image src={sidebarLogo} height={74} width={"100%"} />
         </Link>
         {!isLaptop && (
           <IconButton color="primary" onClick={() => setopenForMobile(false)}>

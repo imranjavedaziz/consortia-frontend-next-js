@@ -55,7 +55,8 @@ const MintNFTS = () => {
     const propertyNftsForm = [
       {
         name: "name",
-        label: "Exact Name as it appears on title",
+        label: "Name",
+        sublabel: "Exact Name as it appears on title",
         placeholder: "Enter the exact name",
       },
       {
@@ -183,12 +184,12 @@ const MintNFTS = () => {
                   ),
                   floorNo: Yup.string().when(["propertyType"], {
                     is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("This field is required"),
+                    then: Yup.string().required("Floor No. is required"),
                     otherwise: Yup.string().optional(),
                   }),
                   apartmentNo: Yup.string().when(["propertyType"], {
                     is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("This field is required"),
+                    then: Yup.string().required("Apartment No. is required"),
                     otherwise: Yup.string().optional(),
                   }),
                   address: Yup.string().required("Address is required"),
@@ -212,6 +213,7 @@ const MintNFTS = () => {
                             {
                               name,
                               label,
+                              sublabel,
                               placeholder,
                               select,
                               options,
@@ -228,6 +230,7 @@ const MintNFTS = () => {
                                 <CustomInputField
                                   key={name}
                                   name={name}
+                                  sublabel={sublabel}
                                   label={label}
                                   placeholder={placeholder}
                                   select={select}
@@ -293,7 +296,7 @@ const MintNFTS = () => {
                               }}
                             >
                               Files types supported: JPG, PNG, GIF, SVG, Max
-                              Size: 5MB
+                              Size: 1MB
                             </Typography>
                             <CustomFileUpload
                               s3Url={housePhoto}
@@ -324,7 +327,7 @@ const MintNFTS = () => {
                                 }}
                               >
                                 Files types supported: JPG, PNG, GIF, SVG, Max
-                                Size: 5MB
+                                Size: 1MB
                               </Typography>
                               <CustomFileUpload
                                 allowPdf={true}

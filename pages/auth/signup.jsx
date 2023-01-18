@@ -197,8 +197,8 @@ const SignUp = () => {
               <Image
                 onClick={() => push("/")}
                 src="/assets/images/consortiaLogo.svg"
-                width={390}
-                height={89}
+                width={320}
+                height={178}
                 alt="Logo"
               />
             </Box>
