@@ -6,6 +6,8 @@ import {
   Checkbox,
   Grid,
   InputLabel,
+  Dialog,
+  CircularProgress,
 } from "@mui/material";
 import React, { useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
@@ -44,6 +46,7 @@ const MintNFTS = () => {
   const [categoryDocument, setCategoryDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [isSubmitting, setisSubmitting] = useState(false);
+  const [verifyModalOpen, setVerifyModalOpen] = useState(false)
   console.log("latLngPlusCode", latLngPlusCode);
 
   const propertyList = [
@@ -98,7 +101,7 @@ const MintNFTS = () => {
     }
 
     try {
-      setisSubmitting(true);
+      setVerifyModalOpen(true);
       const response = await axios.post(
         "https://6qhuvhjahl.execute-api.us-east-1.amazonaws.com/ocr",
         {
@@ -110,7 +113,7 @@ const MintNFTS = () => {
       console.log({ response });
       if (response?.data?.status == "failed") {
         toast.error(response?.data?.message);
-        setisSubmitting(false);
+        setVerifyModalOpen(false);
         return;
       }
       const res = await publicAxios.post(
@@ -137,12 +140,12 @@ const MintNFTS = () => {
       );
 
       toast.success("NFT minted successfully");
-      setisSubmitting(false);
+      setVerifyModalOpen(false);
 
       resetForm();
       push("/nftWallet/NftWallet");
     } catch (error) {
-      setisSubmitting(false);
+      setVerifyModalOpen(false);
       console.log(error);
       toast.error(error?.data?.message);
     }
@@ -369,6 +372,26 @@ const MintNFTS = () => {
           </MintPropertyNfts>
         </GradientMintPropertyNfts>
       </Box>
+      <Dialog
+        open={verifyModalOpen}
+        // TransitionComponent={Transition}
+        keepMounted
+        // onClose={handleClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: "secondary.purpleGray",
+            borderRadius: "24px",
+            width: "650px",
+            height: "400px",
+            padding: { xs: "10px 15px", md: "20px 30px" },
+          },
+        }}
+      >
+        <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' gap={3}>
+          <Typography variant="h5">Verifying your document</Typography>
+          <CircularProgress size={200}/>
+        </Box>
+        </Dialog>
     </>
   );
 };
