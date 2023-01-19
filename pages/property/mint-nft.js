@@ -23,7 +23,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
+// import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -47,17 +47,13 @@ const MintNFTS = () => {
   const [categoryDocument, setCategoryDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [isSubmitting, setisSubmitting] = useState(false);
-  const [verifyModalOpen, setVerifyModalOpen] = useState(false)
-  console.log("latLngPlusCode", latLngPlusCode);
+  const [verifyModalOpen, setVerifyModalOpen] = useState(false);
 
   const propertyList = [
     { value: "building", label: "Building" },
     { value: "other", label: "Other" },
   ];
-  // console.log('value', 
-  // getSubLocationsFromLocation(["street-address", "locality", "region", "country-name"],latLngPlusCode.detailedAddress)
-  
-  // )
+
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -111,10 +107,19 @@ const MintNFTS = () => {
         {
           key: categoryDocument.split("/").at(-1),
           title: values.name,
-          address: getSubLocationsFromLocation(["street-address", "locality", "region", "postal-code", "country-name"],latLngPlusCode.detailedAddress),
+          place_id: latLngPlusCode.place_id,
+          // address: getSubLocationsFromLocation(
+          //   [
+          //     "street-address",
+          //     "locality",
+          //     "region",
+          //     "postal-code",
+          //     "country-name",
+          //   ],
+          //   latLngPlusCode.detailedAddress
+          // ),
         }
       );
-      console.log({ response });
       if (response?.data?.status == "failed") {
         toast.error(response?.data?.message);
         setVerifyModalOpen(false);
@@ -203,6 +208,7 @@ const MintNFTS = () => {
                   category: Yup.string().required(
                     "Please choose a document category"
                   ),
+                  name: Yup.string().required("Please enter a name"),
                 })}
               >
                 {(props) => {
@@ -302,8 +308,7 @@ const MintNFTS = () => {
                                 marginBottom: 1,
                               }}
                             >
-                              Files types supported: JPG, PNG, GIF, SVG, Max
-                              Size: 1MB
+                              Files types supported: JPG, PNG Max Size: 1MB
                             </Typography>
                             <CustomFileUpload
                               s3Url={housePhoto}
@@ -333,8 +338,8 @@ const MintNFTS = () => {
                                   marginBottom: 1,
                                 }}
                               >
-                                Files types supported: JPG, PNG, GIF, SVG, Max
-                                Size: 1MB
+                                Files types supported: JPG, PNG, PDF, Max Size:
+                                1MB
                               </Typography>
                               <CustomFileUpload
                                 allowPdf={true}
@@ -385,17 +390,25 @@ const MintNFTS = () => {
           sx: {
             backgroundColor: "secondary.purpleGray",
             borderRadius: "24px",
-            width: "650px",
-            height: "400px",
-            padding: { xs: "10px 15px", md: "20px 30px" },
+            width: "400px",
+            height: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           },
         }}
       >
-        <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' gap={3}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={3}
+        >
           <Typography variant="h5">Verifying your document</Typography>
-          <CircularProgress size={200}/>
+          <CircularProgress size={70} />
         </Box>
-        </Dialog>
+      </Dialog>
     </>
   );
 };

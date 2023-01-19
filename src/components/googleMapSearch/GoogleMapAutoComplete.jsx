@@ -60,13 +60,13 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
 }));
 
 export default function GoogleMapAutoComplete(props) {
-  const ref = useRef(null)
+  const ref = useRef(null);
   const [selectedValue, setSelectedValue] = useState("");
   const [open, setOpen] = React.useState(false);
-  const [adrString, setAdrString] = useState("")
+  const [adrString, setAdrString] = useState("");
 
   const [field, meta] = useField(props);
-  const [htmlText, setHtmlText] = useState({})
+  const [htmlText, setHtmlText] = useState({});
   var openLocationCode = new OpenLocationCode();
   // var options = {
   //   types: ['(cities)'],
@@ -80,7 +80,7 @@ export default function GoogleMapAutoComplete(props) {
     isPlacePredictionsLoading,
     autocompleteRef,
   } = usePlacesService({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
   React.useEffect(() => {
@@ -92,20 +92,20 @@ export default function GoogleMapAutoComplete(props) {
             (item) => item.description === selectedValue
           )?.place_id,
         },
-        (placeDetails) =>
-        {
-          setAdrString(placeDetails?.adr_address)
-          console.log("placeDetails",placeDetails?.adr_address)
-           return  props.setLatLngPlusCode({
-              lat: placeDetails?.geometry?.location?.lat(),
-              lng: placeDetails?.geometry?.location?.lng(),
-              plusCode: openLocationCode?.encode(
-                placeDetails?.geometry?.location?.lat(),
-                placeDetails?.geometry?.location?.lng()
-              ),
-              detailedAddress:placeDetails?.adr_address
-            })
-
+        (placeDetails) => {
+          setAdrString(placeDetails?.adr_address);
+          // console.log("placeDetails", placeDetails?.adr_address);
+          console.log("placeDetails", placeDetails?.place_id);
+          return props.setLatLngPlusCode({
+            lat: placeDetails?.geometry?.location?.lat(),
+            lng: placeDetails?.geometry?.location?.lng(),
+            plusCode: openLocationCode?.encode(
+              placeDetails?.geometry?.location?.lat(),
+              placeDetails?.geometry?.location?.lng()
+            ),
+            place_id: placeDetails?.place_id,
+            // detailedAddress: placeDetails?.adr_address,
+          });
         }
       );
   }, [selectedValue]);
@@ -156,7 +156,7 @@ export default function GoogleMapAutoComplete(props) {
             <TextField
               {...params}
               // label="Search input"
-             
+
               placeholder="Search address"
               InputProps={{
                 ...params.InputProps,

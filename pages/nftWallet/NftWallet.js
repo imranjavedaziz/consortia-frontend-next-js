@@ -65,10 +65,6 @@ function NftWallet() {
         setPractitionerNftData([]);
 
       }
-
-      console.log("res", res?.data?.nfts);
-
-      // setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);
     }
@@ -159,7 +155,6 @@ function NftWallet() {
                       flexWrap: "wrap",
                     }}
                   >
-                    {console.log(practitionerNftData.length)}
                     {practitionerNftData.length>=1 && practitionerNftData?.map(({ name, address, image }, i) => (
                       <NftCard
                         key={i}

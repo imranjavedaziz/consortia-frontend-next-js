@@ -51,7 +51,6 @@ const SignUp = () => {
   useTitle("Reset Password");
 
   const resetPassword = async ({ password }) => {
-
     try {
       const res = await publicAxios.post("auth/reset-password", {
         newPassword: password,

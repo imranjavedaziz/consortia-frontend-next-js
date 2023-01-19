@@ -143,7 +143,7 @@ function VerifyCodeForProfileUpdate({
     <>
       <Dialog
         open={open}
-        onBackdropClick="false"
+        // onBackdropClick="false"
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}

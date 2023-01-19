@@ -49,7 +49,6 @@ const DetailPage = () => {
   useEffect(() => {
    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
    setLocalData(profileInfo)
-   console.log('profileInfo', profileInfo)
   }, [])
   
   return (

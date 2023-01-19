@@ -34,11 +34,12 @@ const CustomFileUpload = ({
   const ref = useRef();
   const validImage = (img) =>
     allowPdf
-      ? ["jpg", "png", "pdf"].some((char) => img.endsWith(char))
-      : ["jpg", "png"].some((char) => img.endsWith(char));
+      ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
+      : ["jpg", "png"].some((char) => img?.endsWith(char));
 
   const handleChange = (e) => {
-    if (validImage(e.target.files[0].name)) {
+    debugger;
+    if (validImage(e.target.files[0]?.name)) {
       if (e.target.files[0].size < 1048576) {
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
@@ -73,6 +74,24 @@ const CustomFileUpload = ({
   const handleClick = (e) => {
     ref.current.click();
   };
+  const handleDrop = (event) => {
+    debugger;
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    console.log({ files });
+    handleChange({
+      target: {
+        files: files,
+      },
+    });
+    // setFiles(files);
+    console.log(event.dataTransfer);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy"; // Show "copy" cursor
+  };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -86,6 +105,10 @@ const CustomFileUpload = ({
       >
         <Box
           fullWidth
+          // onDragOver={(e) => console.log(e.target)}
+          // onDrop={(e) => console.log(e)}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
           sx={{
             height: "100%",
             width: "100%",

@@ -188,7 +188,6 @@ const MintNFTS = () => {
                 }}
                 enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
-                  console.log("values", values);
                   setSubmitting(true);
                   await mintPractitionarNfts(values);
                   setSubmitting(false);
@@ -261,8 +260,7 @@ const MintNFTS = () => {
                                 opacity: 0.5,
                               }}
                             >
-                              File types supported: JPG, PNG, GIF, SVG, Max
-                              size: 5 MB
+                              File types supported: JPG, PNG, Max size: 1 MB
                             </Typography>
                           </Box>
                           <CustomFileUpload
