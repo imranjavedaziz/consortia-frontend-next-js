@@ -54,15 +54,15 @@ const MintNFTS = () => {
     { value: "building", label: "Building" },
     { value: "other", label: "Other" },
   ];
-  console.log('value', 
-  getSubLocationsFromLocation(["street-address", "locality", "region", "country-name"],latLngPlusCode.detailedAddress)
+  // console.log('value', 
+  // getSubLocationsFromLocation(["street-address", "locality", "region", "country-name"],latLngPlusCode.detailedAddress)
   
-  )
+  // )
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
         name: "name",
-        label: "Name",
+        label: "Name:",
         sublabel: "Exact Name as it appears on title",
         placeholder: "Enter the exact name",
       },
