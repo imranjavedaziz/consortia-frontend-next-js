@@ -23,6 +23,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -53,7 +54,10 @@ const MintNFTS = () => {
     { value: "building", label: "Building" },
     { value: "other", label: "Other" },
   ];
-
+  console.log('value', 
+  getSubLocationsFromLocation(["street-address", "locality", "region", "country-name"],latLngPlusCode.detailedAddress)
+  
+  )
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -107,7 +111,7 @@ const MintNFTS = () => {
         {
           key: categoryDocument.split("/").at(-1),
           title: values.name,
-          address: values.address,
+          address: getSubLocationsFromLocation(["street-address", "locality", "region", "postal-code", "country-name"],latLngPlusCode.detailedAddress),
         }
       );
       console.log({ response });
