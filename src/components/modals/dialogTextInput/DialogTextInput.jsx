@@ -72,6 +72,7 @@ function DialogTextInput({
           }, 2500);
         }
         setShowSecondForm(true);
+        push('/auth/signup')
         handleClose();
       } else {
         toast.error("Please enter OTP");
