@@ -34,6 +34,8 @@ import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogT
 import DialogResetPassword from "../../src/components/modals/resetPassword/DialogResetPassword";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
+import { AUTH_LOGIN } from "../../src/constants/endpoints";
+
 
 function Login() {
   useTitle("Login");
@@ -48,7 +50,7 @@ function Login() {
 
   const login = async ({ email, password, remember }) => {
     try {
-      const res = await publicAxios.post("auth/login", {
+      const res = await publicAxios.post(`${AUTH_LOGIN}`, {
         email,
         password,
         rememberMe: remember,
