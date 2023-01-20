@@ -16,6 +16,8 @@ import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { ImageLogo } from "../../src/layout/header/Header";
+import { AUTH_REGISTER } from "../../src/constants/endpoints";
+
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -104,7 +106,7 @@ const SignUp = () => {
     password,
   }) => {
     try {
-      const res = await publicAxios.post("auth/register", {
+      const res = await publicAxios.post(`${AUTH_REGISTER}`, {
         firstName,
         lastName,
         email,
