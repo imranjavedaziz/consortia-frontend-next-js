@@ -176,7 +176,7 @@ const EditProfile = () => {
           <Box>
             <Typography variant="h3">Profile Details</Typography>
           </Box>
-          {profileInfo?.user?.role === "practitioner"
+          {profileInfo?.user?.role === "Practitioner"
             ? Object.keys(userData).length > 0 && (
                 <Formik
                   enableReinitialize={true}

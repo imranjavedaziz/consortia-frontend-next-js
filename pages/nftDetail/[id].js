@@ -170,9 +170,9 @@ const DetailPage = () => {
           }}
         >
           <Typography variant="h4" fontWeight={600}>
-            {localData?.user?.role === "practitioner" ? 'Practitioner' : 'Consumer'} NFT
+            {localData?.user?.role === "Practitioner" ? 'Practitioner' : 'Consumer'} NFT
           </Typography>
-          {localData?.user?.role === "practitioner" ? '' :<Box sx={{ display: "flex", alignItems: "center" }}>
+          {localData?.user?.role === "Practitioner" ? '' :<Box sx={{ display: "flex", alignItems: "center" }}>
             <Box sx={{ display: "flex", paddingRight: "10px" }}>
               <Image src="/assets/icons/viewAll.svg" height={20} width={20} />
             </Box>
@@ -189,7 +189,7 @@ const DetailPage = () => {
               flexWrap: "wrap",
             }}
           >
-            { (localData?.user?.role === "practitioner" ? [1] : [1,2,3,4]).map((item, i) => (
+            { (localData?.user?.role === "Practitioner" ? [1] : [1,2,3,4]).map((item, i) => (
               <NftCard key={i} />
             ))}
           </Box>

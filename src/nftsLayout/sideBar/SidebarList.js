@@ -89,7 +89,7 @@ export default function SidebarList({ setopenForMobile }) {
   React.useEffect(() => {
     // debugger
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
-    if (profileInfo?.user?.role === "practitioner") {
+    if (profileInfo?.user?.role === "Practitioner") {
       if (route.includes("property")) {
         setParent(2);
       } else if (route.includes("practitionerNfts")) {
@@ -135,7 +135,7 @@ export default function SidebarList({ setopenForMobile }) {
       </Box>
 
       <List component="nav" aria-label="main mailbox folders">
-        {(profile_info?.user?.role === "practitioner"
+        {(profile_info?.user?.role === "Practitioner"
           ? practitionarPages
           : consumerPages
         ).map((item, index) =>

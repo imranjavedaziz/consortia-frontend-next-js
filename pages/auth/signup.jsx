@@ -104,23 +104,28 @@ const SignUp = () => {
     email,
     phoneNumber,
     password,
+    confirm_password
   }) => {
     try {
       const res = await publicAxios.post(`${AUTH_REGISTER}`, {
         firstName,
         lastName,
-        email,
+        // email,
         phoneNumber,
         password,
-        role: isPractitioner ? "practitioner" : "user",
+        confirm_password,
+        role: isPractitioner ? "Practitioner" : "Consumer",
       });
       toast.success("Welcome to Consortia! Please verify your email");
       setEmail(email);
       setEmailVerificationOpen(true);
+      console.log(res)
     } catch (error) {
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
+      console.log(error?.data?.message?.error[0])
+      if (error?.data?.message?.error[0]) {
+        toast.error(error?.data?.message?.error[0]);
       } else {
+        error
         toast.error(error?.data?.err?.msg);
       }
     }

@@ -31,7 +31,7 @@ function NftWallet() {
     setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
     const isPractitioner =
       JSON.parse(localStorage.getItem("profile_info"))?.user?.role ==
-      "practitioner";
+      "Practitioner";
     isPractitioner && getPractitionerNftData();
     getNftData();
   }, []);
@@ -121,7 +121,7 @@ function NftWallet() {
               </Box>
             </NftsCards>
 
-            {profileInfo?.user?.role === "practitioner" && (
+            {profileInfo?.user?.role === "Practitioner" && (
               <>
                 <Box
                   sx={{

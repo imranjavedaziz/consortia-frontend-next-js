@@ -65,7 +65,7 @@ function NftsLayout({ children }) {
 
     if (
       !!profile_info &&
-      profile_info?.user?.role == "practitioner" &&
+      profile_info?.user?.role == "Practitioner" &&
       !profile_info?.user?.bio
     ) {
       setCompleteProfileOpen(true);

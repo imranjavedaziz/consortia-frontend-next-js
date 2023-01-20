@@ -19,7 +19,7 @@ function Landing() {
     <>
       <Box sx={{ marginBottom: { xs: "10px", md: "40px" } }}>
         <Typography variant="h3">
-          {profileInfo?.user?.role === "practitioner"
+          {profileInfo?.user?.role === "Practitioner"
             ? "Practitioner"
             : "Consumer"}{" "}
           Dashboard
@@ -45,7 +45,7 @@ function Landing() {
           columnGap: { xs: 2, md: 5 },
         }}
       >
-        {profileInfo?.user?.role === "practitioner" && (
+        {profileInfo?.user?.role === "Practitioner" && (
           <Box
             width={230}
             // mr={5}

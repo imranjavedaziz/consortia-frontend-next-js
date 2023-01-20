@@ -60,7 +60,7 @@ function Login() {
       toast.success("Welcome Back!");
       if (
         res?.data?.data?.user?.complete ||
-        res?.data?.data?.user?.role == "user"
+        res?.data?.data?.user?.role == "Consumer"
       ) {
         push("/dashboard/landing");
       } else {

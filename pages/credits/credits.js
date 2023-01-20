@@ -80,7 +80,7 @@ const Credits = () => {
               </Box>
             </NftsCards>
 
-            {profileInfo?.user?.role === "practitioner" && (
+            {profileInfo?.user?.role === "Practitioner" && (
               <>
                 <Box
                   sx={{
