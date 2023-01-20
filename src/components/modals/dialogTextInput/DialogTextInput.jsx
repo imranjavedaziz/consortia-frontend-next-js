@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../../context/AuthContext";
+import { RESEND_OTP, VERIFY_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -58,12 +59,13 @@ function DialogTextInput({
     try {
       if (code.length > 0) {
         setFetching(true);
-        const res = await publicAxios.post("auth/verify", {
+        const res = await publicAxios.post(VERIFY_OTP, {
           email,
-          verificationCode: code,
+          otp: code,
+          otp_type: "Email"
         });
         setFetching(false);
-        localStorage.setItem("access_token", res?.data?.data?.token);
+        localStorage.getItem("access", res?.data?.data?.token);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
         toast.success(res?.data?.message);
         if (!isPractitioner) {
@@ -83,10 +85,14 @@ function DialogTextInput({
     }
   };
   const resendCode = async (email) => {
-    const res = await publicAxios.post("auth/resend", {
-      email,
-    });
-    toast.success(res?.data?.message);
+    try{
+      const res = await publicAxios.post(RESEND_OTP, {
+        email,
+      });
+      toast.success(res?.data?.message);
+    }catch(error){
+
+    }
   };
   return (
     <>

@@ -27,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../api";
 import toast from "react-hot-toast";
 import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
+import { EDIT_USER_PROFILE } from "../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -74,17 +75,17 @@ function CompletePractitionerProfile({
   const completePractitionerDetails = async () => {
     setIsLoading(true);
     try {
-      const res = await publicAxios.put(
-        "user/update",
+      const res = await publicAxios.patch(
+        `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`,
         {
           bio,
           headShot,
           licenseSince: dayjs(date).unix(),
-          country:""
+          complete: true
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
@@ -99,8 +100,11 @@ function CompletePractitionerProfile({
       setVerifyCodeOpen(true);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
-      toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+      }
     }
   };
   useEffect(() => {

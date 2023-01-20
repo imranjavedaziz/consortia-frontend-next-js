@@ -4,6 +4,7 @@ import Image from "next/image";
 import NftsLayout from "../../src/nftsLayout";
 import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";
+import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/endpoints";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -38,35 +39,43 @@ function NftWallet() {
 
   const getNftData = async () => {
     try {
-      const res = await publicAxios.get("/nft/", {
+      const res = await publicAxios.get(GET_PROPERTY_NFTS, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      setNftData(res?.data?.nfts);
+      setNftData(res?.data?.data);
 
       console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+      }
     }
   };
   const getPractitionerNftData = async () => {
     try {
-      const res = await publicAxios.get("/nft/practitioner", {
+      const res = await publicAxios.get(GET_PRACTITIONER_NFTS, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      if(res?.data?.nfts){
-        setPractitionerNftData([res?.data?.nfts]);
+      if(res?.data?.data){
+        setPractitionerNftData([res?.data?.data]);
       }else{
         setPractitionerNftData([]);
-
       }
     } catch (error) {
-      console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+      }
     }
   };
 
@@ -109,8 +118,8 @@ function NftWallet() {
                   flexWrap: "wrap",
                 }}
               >
-                {nftData.length >= 1 &&
-                  nftData.map(({ title, address, image }, i) => (
+                {nftData?.length >= 1 &&
+                  nftData?.map(({ title, address, image }, i) => (
                     <NftCard
                       title={title}
                       address={address}

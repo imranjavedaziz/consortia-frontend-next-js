@@ -55,11 +55,12 @@ function Login() {
         password,
         rememberMe: remember,
       });
+      console.log(res?.data?.data)
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
-      localStorage.setItem("access_token", res?.data?.data?.token);
+      localStorage.setItem("access", res?.data?.data?.access);
       toast.success("Welcome Back!");
       if (
-        res?.data?.data?.user?.complete ||
+        res?.data?.data?.user?.practitionerType ||
         res?.data?.data?.user?.role == "Consumer"
       ) {
         push("/dashboard/landing");
@@ -69,13 +70,22 @@ function Login() {
         push("signup");
       }
     } catch (error) {
-      if (error?.data?.data?.verified === false) {
+      if (error?.data?.email_verified === false) {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        }
         setEmail(email);
         setEmailVerificationOpen(true);
         return;
       }
-      toast.error(error?.data?.message);
-      console.log(error);
+
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+      }
     }
   };
   return (

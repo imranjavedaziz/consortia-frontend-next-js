@@ -33,7 +33,7 @@ function NftsLayout({ children }) {
   };
   const theme = useTheme();
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("access");
     if (!token) push("/auth/login");
   }, []);
   const sectionStyle = {
@@ -51,7 +51,7 @@ function NftsLayout({ children }) {
     //   publicAxios
     //     .get("kyc", {
     //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //         Authorization: `Bearer ${localStorage.getItem("access")}`,
     //       },
     //     })
     //     .then((data) => {

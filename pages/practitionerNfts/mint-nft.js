@@ -21,7 +21,7 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
-import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
+import { MINT_PRACTITIONER_NFT } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
@@ -138,7 +138,7 @@ const MintNFTS = () => {
     } else {
       try {
         const res = await publicAxios.post(
-          `${NFT_PRACTITIONER}`,
+          `${MINT_PRACTITIONER_NFT}`,
           {
             name,
             email,
@@ -153,17 +153,17 @@ const MintNFTS = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           }
         );
         toast.success("practitionar nft is minted successfully");
         push("/nftWallet/NftWallet");
       } catch (error) {
-        if (error?.data?.message) {
-          toast.error(error?.data?.message);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(error?.data?.err?.msg);
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
         }
       }
     }

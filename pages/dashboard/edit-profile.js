@@ -18,6 +18,7 @@ import { listOfCountries } from "../auth/signup";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import VerifyCodeForProfileUpdate from "../../src/components/modals/verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
 import { useTitle } from "../../src/utils/Title";
+import { EDIT_USER_PROFILE, GET_PROFILE_BY_USERID } from "../../src/constants/endpoints";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -103,11 +104,12 @@ const EditProfile = () => {
 
   const getUserData = async () => {
     try {
-      const res = await publicAxios.get("user", {
+      const res = await publicAxios.get(`${GET_PROFILE_BY_USERID}?user_id=${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
+      debugger
       setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);
@@ -129,18 +131,19 @@ const EditProfile = () => {
     if (Object.keys(valuesToSend).length > 0) {
       setUpdatedUserData(valuesToSend);
       try {
-        const res = await publicAxios.put("user/update", valuesToSend, {
+        const res = await publicAxios.patch(
+          `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, valuesToSend, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         });
         toast.success(res?.data?.message);
         setOpenVerificationModal(true);
       } catch (error) {
-        if (error?.data?.message) {
-          toast.error(error?.data?.message);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(error?.data?.err?.msg);
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
         }
       }
     } else {

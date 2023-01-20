@@ -57,7 +57,7 @@ const Header = () => {
     return route == path;
   };
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("access");
     if (token) {
       setIsLoggedIn(true);
     } else {

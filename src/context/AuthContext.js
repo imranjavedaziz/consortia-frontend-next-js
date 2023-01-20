@@ -14,7 +14,7 @@ export const AuthContext = ({ children }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   useEffect(() => {
-    if (localStorage.getItem("access_token")) {
+    if (localStorage.getItem("access")) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);

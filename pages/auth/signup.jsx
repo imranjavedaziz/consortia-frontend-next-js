@@ -16,7 +16,7 @@ import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { ImageLogo } from "../../src/layout/header/Header";
-import { AUTH_REGISTER } from "../../src/constants/endpoints";
+import { AUTH_REGISTER, EDIT_USER_PROFILE } from "../../src/constants/endpoints";
 
 
 const practitionerOptions = [
@@ -110,7 +110,7 @@ const SignUp = () => {
       const res = await publicAxios.post(`${AUTH_REGISTER}`, {
         firstName,
         lastName,
-        // email,
+        email,
         phoneNumber,
         password,
         confirm_password,
@@ -121,12 +121,10 @@ const SignUp = () => {
       setEmailVerificationOpen(true);
       console.log(res)
     } catch (error) {
-      console.log(error?.data?.message?.error[0])
-      if (error?.data?.message?.error[0]) {
-        toast.error(error?.data?.message?.error[0]);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
       } else {
-        error
-        toast.error(error?.data?.err?.msg);
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
       }
     }
   };
@@ -138,8 +136,8 @@ const SignUp = () => {
     companyName,
   }) => {
     try {
-      const res = await publicAxios.put(
-        "user/update",
+      const res = await publicAxios.patch(
+        `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`,
         {
           practitionerType: practitioner,
           state: state,
@@ -149,15 +147,18 @@ const SignUp = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
       toast.success("Details Added Successfully");
       setTimeout(() => push("/dashboard/landing"), 2500);
     } catch (error) {
-      console.log(error);
-      toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+      }
     }
   };
   return (

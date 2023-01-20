@@ -72,7 +72,7 @@ function VerifyCodeForProfileUpdate({
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           }
         );
@@ -103,7 +103,7 @@ function VerifyCodeForProfileUpdate({
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           }
         );

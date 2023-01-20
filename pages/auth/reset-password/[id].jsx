@@ -57,7 +57,7 @@ const SignUp = () => {
         verificationCode: id,
       });
       toast.success("Password set successfully");
-      localStorage.setItem("access_token", res?.data?.data?.token);
+      localStorage.getItem("access", res?.data?.data?.token);
       setTimeout(() => push("/"), 2500);
     } catch (error) {
       toast.error(error?.data?.message);

@@ -23,6 +23,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -131,7 +132,7 @@ const MintNFTS = () => {
         return;
       }
       const res = await publicAxios.post(
-        "nft/mint",
+        MINT_PROPERTY_NFT,
         {
           name: values.name,
           title:
@@ -148,20 +149,26 @@ const MintNFTS = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
-
       toast.success("NFT minted successfully");
       setVerifyModalOpen(false);
-
       resetForm();
       push("/nftWallet/NftWallet");
     } catch (error) {
+      if(typeof error?.data?.message == "string"){
+        toast.error(error?.data?.message);
+      }else{
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        }
+      }
       setVerifyModalOpen(false);
       console.log(error);
-      toast.error(error?.data?.message);
     }
   };
 
