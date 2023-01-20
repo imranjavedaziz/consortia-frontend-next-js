@@ -445,16 +445,18 @@ const SignUp = () => {
                   <form
                     onSubmit={handleSubmit}
                     autoComplete="off"
-                    style={{ width: {md:"80%",xs:"100%"} }}
+                    style={{ width: "80%" }}
+                    // style={{ width: {md:"80%",xs:"100%"} }}
                   >
                     <Box
                       display="flex"
                       flexDirection="column"
                       boxSizing="border-box"
-                      width="80%"
+                      // width="80%"
                       margin="auto"
                       // paddingX={2}
                       rowGap={3}
+                      sx={{ width: {md:"80%",xs:"100%"} }}
                     >
                       {secondFormInputFields.map(
                         ({ name, label, placeholder, select, options }) => (
