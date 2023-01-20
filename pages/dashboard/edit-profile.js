@@ -28,11 +28,15 @@ const practitionerOptions = [
 ];
 
 const inputFields = [
-  { name: "email", label: "Email Address", placeholder: "mail@example.com" },
+  { name: "email", label: "Email Address", placeholder: "mail@example.com", 
+  disabled: true,
+},
   {
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "Enter your phone number",
+    disabled: true,
+
   },
   {
     name: "practitionerType",

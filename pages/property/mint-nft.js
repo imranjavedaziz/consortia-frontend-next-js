@@ -39,7 +39,7 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     padding: "40px 281px",
   },
-  [theme.breakpoints.between("xs","lg")]: {
+  [theme.breakpoints.between("xs", "lg")]: {
     padding: "40px 12%",
   },
 }));
@@ -112,7 +112,7 @@ const MintNFTS = () => {
         {
           key: categoryDocument.split("/").at(-1),
           title: values.name,
-          place_id: latLngPlusCode.place_id,
+          address: values.address,
           // address: getSubLocationsFromLocation(
           //   [
           //     "street-address",

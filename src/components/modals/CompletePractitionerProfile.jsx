@@ -80,6 +80,7 @@ function CompletePractitionerProfile({
           bio,
           headShot,
           licenseSince: dayjs(date).unix(),
+          country:""
         },
         {
           headers: {
