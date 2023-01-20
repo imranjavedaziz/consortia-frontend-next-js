@@ -60,7 +60,7 @@ const DetailPage = () => {
         <GradientBorderContainer>
           <NftDetailPageContainer>
             <Grid container>
-              <Grid item xs={3} sx={{ display: "flex" }}>
+              <Grid item xs={12} md={5} lg={3} sx={{ display: "flex", order:{xs:2,md:1} }}>
                 <CardMedia
                   component="img"
                   height="328px"
@@ -82,11 +82,15 @@ const DetailPage = () => {
               </Grid>
               <Grid
                 item
-                xs={9}
+                xs={12}
+                md={7}
+                lg={9}
                 sx={{
-                  paddingLeft: "33px",
+                  paddingLeft: {md:"33px",xs:'0px'},
+                  paddingBottom:{md:'0px',xs:'20px'},
                   display: "flex",
                   justifyContent: "space-between",
+                  order:{xs:1, md:2}
                 }}
               >
                 <Box sx={{ width: "100%" }}>

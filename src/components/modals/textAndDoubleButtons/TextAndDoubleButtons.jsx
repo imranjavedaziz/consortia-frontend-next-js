@@ -110,7 +110,7 @@ function TextAndDoubleButtons({
                 textTransform: "capitalize",
                 // width: "100%",
                 width: "230px",
-                padding: "13px 61px",
+                padding: "13px 61px",    
               }}
               onClick={() => {
                 setIsPractitioner(false);

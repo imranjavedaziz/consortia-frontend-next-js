@@ -36,7 +36,12 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
   background: theme.palette.background.default,
   borderRadius: "24px",
-  padding: "40px 281px",
+  [theme.breakpoints.up("lg")]: {
+    padding: "40px 281px",
+  },
+  [theme.breakpoints.between("xs","lg")]: {
+    padding: "40px 12%",
+  },
 }));
 
 const MintNFTS = () => {

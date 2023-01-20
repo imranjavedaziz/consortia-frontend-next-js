@@ -15,6 +15,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -42,6 +43,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const { setShowSecondForm, setChoosePractitionerOpen } = useAuthContext();
+
+  const belowSm = useMediaQuery((theme) => theme.breakpoints.between('xs', 'sm'))
 
   const login = async ({ email, password, remember }) => {
     try {
@@ -106,13 +109,13 @@ function Login() {
           justifyContent="center"
         >
           <ImageLogo
-            sx={{ ":hover": { cursor: "pointer" } }}
+            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
             onClick={() => push("/")}
           >
             <Image
               src="/assets/images/consortiaLogo.svg"
-              width={217}
-              height={125}
+              width={belowSm ? 104 : 217}
+              height={belowSm ? 54 : 125}
               alt="Logo"
             />
           </ImageLogo>
@@ -245,7 +248,7 @@ function Login() {
         <Grid
           item
           xs={6}
-          display="flex"
+          display={{md:"flex",xs:"none"}}
           alignItems="center"
           justifyContent="center"
         >

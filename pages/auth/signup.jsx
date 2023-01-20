@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { Box, Button, Grid, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Grid, InputLabel, Typography, useMediaQuery } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
@@ -15,6 +15,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
+import { ImageLogo } from "../../src/layout/header/Header";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -80,6 +81,8 @@ const secondFormInputFields = [
 ];
 
 const SignUp = () => {
+  const belowSm = useMediaQuery((theme) => theme.breakpoints.between('xs', 'sm'))
+
   useTitle("Signup");
   const {
     showSecondForm,
@@ -87,7 +90,6 @@ const SignUp = () => {
     choosePractitionerOpen,
     setChoosePractitionerOpen,
   } = useAuthContext();
-
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [phoneNo, setPhoneNo] = useState("");
@@ -177,10 +179,12 @@ const SignUp = () => {
       <Grid container sx={{ height: "100%", minHeight: "100vh" }}>
         <Grid
           item
-          xs={6}
+          xs={12}
+          md={6}
           sx={{
             background: " url(/assets/images/signupbackground.jpg) no-repeat",
             backgroundSize: "100% 100%",
+            display: {xs:'none', md:'flex'},
             // width:"100%"
           }}
         >
@@ -191,6 +195,7 @@ const SignUp = () => {
               background: "rgba(24, 10, 91, 0.8)",
               display: "flex",
               justifyContent: "center",
+              width:'100%'
             }}
           >
             <Box sx={{ ":hover": { cursor: "pointer" } }}>
@@ -204,16 +209,39 @@ const SignUp = () => {
             </Box>
           </Box>
         </Grid>
+        {belowSm && <ImageLogo
+            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"},display:'flex',justifyContent:'center',width:'100%'}}
+            onClick={() => push("/")}
+          >
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              width={belowSm ? 104 : 217}
+              height={belowSm ? 54 : 125}
+              alt="Logo"
+            />
+          </ImageLogo>}
         {!showSecondForm ? (
           <Grid
             item
-            xs={6}
+            xs={12}
+            md={6}
             display="flex"
             flexDirection="column"
             alignItems="center"
             rowGap={3}
             justifyContent="center"
           >
+             {/* <ImageLogo
+            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
+            onClick={() => push("/")}
+          >
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              width={belowSm ? 104 : 217}
+              height={belowSm ? 54 : 125}
+              alt="Logo"
+            />
+          </ImageLogo> */}
             <Typography variant="h3">User Registration</Typography>
             <Formik
               initialValues={{
@@ -270,7 +298,7 @@ const SignUp = () => {
                   <form
                     onSubmit={handleSubmit}
                     autoComplete="off"
-                    style={{ width: "80%" }}
+                    style={{ width: {md:"80%",xs:"100%"} }}
                   >
                     <Box
                       display="flex"
@@ -371,7 +399,8 @@ const SignUp = () => {
         ) : (
           <Grid
             item
-            xs={6}
+            xs={12}
+            md={6}
             display="flex"
             flexDirection="column"
             alignItems="center"
@@ -416,7 +445,7 @@ const SignUp = () => {
                   <form
                     onSubmit={handleSubmit}
                     autoComplete="off"
-                    style={{ width: "80%" }}
+                    style={{ width: {md:"80%",xs:"100%"} }}
                   >
                     <Box
                       display="flex"

@@ -127,11 +127,11 @@ export default function SidebarList({ setopenForMobile }) {
         <Link href="/" style={{ verticalAlign: "middle" }}>
           <Image src={sidebarLogo} height={74} width={"100%"} />
         </Link>
-        {!isLaptop && (
+        {/* {!isLaptop && (
           <IconButton color="primary" onClick={() => setopenForMobile(false)}>
             <CloseIcon />
           </IconButton>
-        )}
+        )} */}
       </Box>
 
       <List component="nav" aria-label="main mailbox folders">
