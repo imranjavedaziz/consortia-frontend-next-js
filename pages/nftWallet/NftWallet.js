@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, styled } from "@mui/material";
 import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
 import NftsLayout from "../../src/nftsLayout";
 import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";
@@ -46,7 +47,7 @@ function NftWallet() {
       });
       setNftData(res?.data?.data);
 
-      console.log("res", res?.data?.nfts);
+      // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
@@ -74,7 +75,7 @@ function NftWallet() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object?.values(error?.data?.message)?.[0]?.[0])
       }
     }
   };
