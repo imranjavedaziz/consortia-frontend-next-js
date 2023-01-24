@@ -29,6 +29,7 @@ function NftWallet() {
   const [profileInfo, setProfileInfo] = useState({});
   const [nftData, setNftData] = useState([]);
   const [practitionerNftData, setPractitionerNftData] = useState([]);
+  console.log('practitionerNftData', practitionerNftData)
   useEffect(() => {
     setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
     const isPractitioner =
@@ -67,7 +68,7 @@ function NftWallet() {
         },
       });
       if(res?.data?.data){
-        setPractitionerNftData([res?.data?.data]);
+        setPractitionerNftData(res?.data?.data);
       }else{
         setPractitionerNftData([]);
       }
@@ -166,6 +167,7 @@ function NftWallet() {
                     }}
                   >
                     {practitionerNftData.length>=1 && practitionerNftData?.map(({ name, address, image }, i) => (
+                      console.log('name,address,image', name,address,image),
                       <NftCard
                         key={i}
                         title={name}
