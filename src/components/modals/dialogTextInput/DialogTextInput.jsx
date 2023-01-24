@@ -62,10 +62,10 @@ function DialogTextInput({
         const res = await publicAxios.post(VERIFY_OTP, {
           email,
           otp: code,
-          otp_type: "Email"
+          otp_type: "Email",
         });
         setFetching(false);
-        localStorage.getItem("access", res?.data?.data?.token);
+        localStorage.setItem("access", res?.data?.access);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
         toast.success(res?.data?.message);
         if (!isPractitioner) {
@@ -85,14 +85,12 @@ function DialogTextInput({
     }
   };
   const resendCode = async (email) => {
-    try{
+    try {
       const res = await publicAxios.post(RESEND_OTP, {
         email,
       });
       toast.success(res?.data?.message);
-    }catch(error){
-
-    }
+    } catch (error) {}
   };
   return (
     <>

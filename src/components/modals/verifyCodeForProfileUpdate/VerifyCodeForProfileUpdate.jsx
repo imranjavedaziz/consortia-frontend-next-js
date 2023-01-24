@@ -13,6 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { VERIFY_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -95,11 +96,13 @@ function VerifyCodeForProfileUpdate({
     try {
       if (code.length > 0) {
         setFetching(true);
-        const res = await publicAxios.put(
-          "user/update",
+        const res = await publicAxios.post(
+          "verify_complete_profile",
           {
             ...updatedUserData,
-            verificationCode: code,
+            otp: code,
+            otp_type: "Email",
+            complete: true,
           },
           {
             headers: {

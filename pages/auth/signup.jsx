@@ -26,7 +26,6 @@ import {
   AUTH_REGISTER,
   EDIT_USER_PROFILE,
 } from "../../src/constants/endpoints";
-import { borderRadius } from "@mui/system";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -47,7 +46,7 @@ const inputFields = [
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "+12345678900",
-    inputType:'phone'
+    inputType: "phone",
   },
   {
     name: "password",
@@ -118,8 +117,7 @@ const SignUp = () => {
     password,
     confirm_password,
   }) => {
-    console.log('phoneNumber', phoneNumber)
-    if(phoneNumber.length>1){
+    if (phoneNumber.length > 1) {
       try {
         const res = await publicAxios.post(`${AUTH_REGISTER}`, {
           firstName,
@@ -141,10 +139,9 @@ const SignUp = () => {
           toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
-    }else{
-      toast.error('Please enter valid phone number')
+    } else {
+      toast.error("Please enter valid phone number");
     }
-    
   };
   const completeDetails = async ({
     practitioner,
@@ -159,6 +156,7 @@ const SignUp = () => {
           JSON.parse(localStorage.getItem("profile_info"))?.user?.id
         }`,
         {
+          create_profile: true,
           practitionerType: practitioner,
           state: state,
           country: country,
@@ -310,12 +308,11 @@ const SignUp = () => {
                 email: Yup.string()
                   .email("Email Should be a valid email")
                   .required("Email is required"),
-                phoneNumber: Yup.string()
-                  .required("Phone number is required"),
-                  // .matches(
-                  //   /^\+([0-9]){11,12}$/gm,
-                  //   "Please enter a valid phone number"
-                  // ),
+                phoneNumber: Yup.string().required("Phone number is required"),
+                // .matches(
+                //   /^\+([0-9]){11,12}$/gm,
+                //   "Please enter a valid phone number"
+                // ),
                 password: Yup.string()
                   .required("Password is required")
                   .min(8, "Password should have a minimum of 8 characters")
@@ -329,7 +326,7 @@ const SignUp = () => {
               })}
             >
               {(props) => {
-                const { isSubmitting, handleSubmit ,setFieldValue} = props;
+                const { isSubmitting, handleSubmit, setFieldValue } = props;
                 return (
                   <form
                     onSubmit={handleSubmit}
@@ -365,7 +362,6 @@ const SignUp = () => {
                           />
                         </Box>
                       </Box>
-                      
 
                       {inputFields.map(
                         ({

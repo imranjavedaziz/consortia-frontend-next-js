@@ -64,7 +64,7 @@ function CompletePractitionerProfile({
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
 
-  const [headShot, setHeadshot] = useState("");
+  const [headshot, setHeadshot] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
   const [updatedUserData, setUpdatedUserData] = useState({});
@@ -76,12 +76,13 @@ function CompletePractitionerProfile({
     setIsLoading(true);
     try {
       const res = await publicAxios.patch(
-        `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`,
+        `${EDIT_USER_PROFILE}/${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
         {
           bio,
-          headShot,
+          headshot,
           licenseSince: dayjs(date).unix(),
-          complete: true
         },
         {
           headers: {
@@ -94,7 +95,7 @@ function CompletePractitionerProfile({
       toast.success("Verification code has been sent to your email");
       setUpdatedUserData({
         bio,
-        headShot,
+        headshot,
         licenseSince: dayjs(date).unix(),
       });
       setVerifyCodeOpen(true);
@@ -103,7 +104,7 @@ function CompletePractitionerProfile({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
@@ -212,7 +213,7 @@ function CompletePractitionerProfile({
                   Files types supported: JPG, PNG, GIF, SVG, Max Size: 1MB
                 </Typography>
                 <CustomFileUpload
-                  s3Url={headShot}
+                  s3Url={headshot}
                   setS3Url={setHeadshot}
                   width="100%"
                 />
@@ -261,7 +262,7 @@ function CompletePractitionerProfile({
                 <LoadingButton
                   onClick={completePractitionerDetails}
                   loading={isLoading}
-                  disabled={!(headShot.length > 1 && bio.length > 1)}
+                  disabled={!(headshot.length > 1 && bio.length > 1)}
                   variant="gradient"
                   size="large"
                   sx={{ fontSize: { xs: "10px", md: "20px" } }}

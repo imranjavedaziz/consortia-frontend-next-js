@@ -7,7 +7,7 @@ import Header from "./header/Header";
 import SideBar from "./sideBar/SideBar";
 import { useTheme } from "@emotion/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { IconButton } from "@mui/material";
+import { Dialog, IconButton, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
@@ -16,12 +16,14 @@ import { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
+import VerifyIdentity from "../components/stripeIntegration/VerifyIdentity";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
 
   const { push } = useRouter();
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const { isLoggedIn, setIsLoggedIn, isStripeModalOpen, setIsStripeModalOpen } =
+    useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
@@ -46,7 +48,10 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log(profile_info);
+    console.log(profile_info?.user?.stripe_identity_status);
+    if (!profile_info?.user?.stripe_identity_status) {
+      // setIsStripeModalOpen(true);
+    }
     // if (!!profile_info && !profile_info?.user?.onBoarded) {
     //   publicAxios
     //     .get("kyc", {
@@ -82,6 +87,38 @@ function NftsLayout({ children }) {
         btnText1="consumer"
         btnText2="practitioner"
       />
+      <Dialog
+        open={isStripeModalOpen}
+        // TransitionComponent={Transition}
+        keepMounted
+        // onClose={handleClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: "secondary.purpleGray",
+            borderRadius: "24px",
+            // width: "400px",
+            // height: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "40px 38px",
+          },
+        }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={3}
+        >
+          <Typography variant="h5">
+            You need to verify your identity before minting NFTs
+          </Typography>
+          <VerifyIdentity />
+        </Box>
+      </Dialog>
+
       <Box
         sx={{
           display: {

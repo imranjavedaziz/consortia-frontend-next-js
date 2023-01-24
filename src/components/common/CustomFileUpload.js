@@ -38,7 +38,6 @@ const CustomFileUpload = ({
       : ["jpg", "png"].some((char) => img?.endsWith(char));
 
   const handleChange = (e) => {
-    debugger;
     if (validImage(e.target.files[0]?.name)) {
       if (e.target.files[0].size < 1048576) {
         setFileType(e.target.files[0].type);
@@ -75,7 +74,6 @@ const CustomFileUpload = ({
     ref.current.click();
   };
   const handleDrop = (event) => {
-    debugger;
     event.preventDefault();
     const files = event.dataTransfer.files;
     console.log({ files });

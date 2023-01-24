@@ -109,7 +109,6 @@ const EditProfile = () => {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      debugger
       setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);

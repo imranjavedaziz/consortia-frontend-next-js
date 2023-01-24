@@ -11,6 +11,7 @@ const Context = createContext();
 export const AuthContext = ({ children }) => {
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [choosePractitionerOpen, setChoosePractitionerOpen] = useState(true);
+  const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   useEffect(() => {
@@ -29,6 +30,8 @@ export const AuthContext = ({ children }) => {
         setShowSecondForm,
         choosePractitionerOpen,
         setChoosePractitionerOpen,
+        isStripeModalOpen,
+        setIsStripeModalOpen
       }}
     >
       {children}

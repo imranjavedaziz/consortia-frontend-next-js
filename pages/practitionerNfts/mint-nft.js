@@ -132,7 +132,6 @@ const MintNFTS = () => {
     // licenseType,
     licenseNumber,
   }) => {
-    // debugger
     if (headShot.length == 0) {
       toast.error("Please upload profile");
     } else {
