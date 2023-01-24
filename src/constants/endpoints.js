@@ -16,5 +16,8 @@ export const GET_PROPERTY_NFTS = "user_property_list"
 export const EDIT_USER_PROFILE = "profile"
 export const RESEND_OTP = "resend_otp"
 
+export const PROPERTY_NFT_DETAIL = "property_nft"
+export const PRACTITIONER_NFT_DETAIL = "practitioner_nft"
+
 
 

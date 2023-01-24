@@ -215,11 +215,11 @@ const EditProfile = () => {
                       .email("Email Should be a valid email")
                       .required("Email is required"),
                     phoneNumber: Yup.string()
-                      .required("Phone number is required")
-                      .matches(
-                        /^\+([0-9]){11,12}$/gm,
-                        "Please enter a valid phone number"
-                      ),
+                      .required("Phone number is required"),
+                      // .matches(
+                      //   /^\+([0-9]){11,12}$/gm,
+                      //   "Please enter a valid phone number"
+                      // ),
                     practitionerType: Yup.string().required(
                       "Practitioner type is required"
                     ),

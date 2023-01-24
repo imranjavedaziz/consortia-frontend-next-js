@@ -15,6 +15,13 @@ import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
+import {
+  PROPERTY_NFT_DETAIL,
+  PRACTITIONER_NFT_DETAIL,
+} from "../../src/constants/endpoints";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { publicAxios } from "../../src/api";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -44,13 +51,47 @@ const NftsCards = styled(Box)(({ theme }) => ({
 }));
 
 const DetailPage = () => {
-  const [localData, setLocalData] = useState({})
+  const { push, query } = useRouter();
+  console.log('query', query.id.split('-').at(-1))
+
+  const [localData, setLocalData] = useState({});
+  const [nftDetail, setNftDetail] = useState({});
+  console.log('nftDetail', nftDetail)
 
   useEffect(() => {
-   const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
-   setLocalData(profileInfo)
-  }, [])
-  
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    setLocalData(profileInfo);
+    getNftData();
+  }, []);
+
+  const getNftData = async () => {
+    try {
+      const res = await publicAxios.get(
+        query.id.split("-")[0] === "property"
+          ? `${PROPERTY_NFT_DETAIL}/${query.id.split('-').at(-1)}`
+          : `${PRACTITIONER_NFT_DETAIL}/${query.id.split('-').at(-1)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      // console.log('res', res)
+      setNftDetail(res?.data?.data);
+
+      // console.log("res", res?.data?.nfts);
+
+      // setUserData(res?.data?.data?.user);
+    } catch (error) {
+      console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      }
+    }
+  };
+
   return (
     <>
       <Box>
@@ -60,13 +101,19 @@ const DetailPage = () => {
         <GradientBorderContainer>
           <NftDetailPageContainer>
             <Grid container>
-              <Grid item xs={12} md={5} lg={3} sx={{ display: "flex", order:{xs:2,md:1} }}>
+              <Grid
+                item
+                xs={12}
+                md={5}
+                lg={3}
+                sx={{ display: "flex", order: { xs: 2, md: 1 } }}
+              >
                 <CardMedia
                   component="img"
                   height="328px"
                   // width="250px"
                   alt="nft card Icon"
-                  image="/assets/images/nftCard.png"
+                  image={nftDetail?.image}
                   sx={{ borderRadius: "16px" }}
                 ></CardMedia>
 
@@ -86,16 +133,16 @@ const DetailPage = () => {
                 md={7}
                 lg={9}
                 sx={{
-                  paddingLeft: {md:"33px",xs:'0px'},
-                  paddingBottom:{md:'0px',xs:'20px'},
+                  paddingLeft: { md: "33px", xs: "0px" },
+                  paddingBottom: { md: "0px", xs: "20px" },
                   display: "flex",
                   justifyContent: "space-between",
-                  order:{xs:1, md:2}
+                  order: { xs: 1, md: 2 },
                 }}
               >
                 <Box sx={{ width: "100%" }}>
                   <Typography variant="h5" sx={{ padding: "0px 0px 12px 0px" }}>
-                    US-06041-N
+                    {nftDetail?.title}
                   </Typography>
                   <Box sx={{ display: "flex" }}>
                     <Box
@@ -130,7 +177,7 @@ const DetailPage = () => {
                           variant="subtitle1"
                           sx={{ padding: "0px 8px" }}
                         >
-                          Sam Anderson
+                         {nftDetail?.name}
                         </Typography>
                       </Box>
                     </Box>
@@ -162,7 +209,7 @@ const DetailPage = () => {
             </Grid>
           </NftDetailPageContainer>
         </GradientBorderContainer>
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -170,14 +217,21 @@ const DetailPage = () => {
           }}
         >
           <Typography variant="h4" fontWeight={600}>
-            {localData?.user?.role === "Practitioner" ? 'Practitioner' : 'Consumer'} NFT
+            {localData?.user?.role === "Practitioner"
+              ? "Practitioner"
+              : "Consumer"}{" "}
+            NFT
           </Typography>
-          {localData?.user?.role === "Practitioner" ? '' :<Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box sx={{ display: "flex", paddingRight: "10px" }}>
-              <Image src="/assets/icons/viewAll.svg" height={20} width={20} />
+          {localData?.user?.role === "Practitioner" ? (
+            ""
+          ) : (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", paddingRight: "10px" }}>
+                <Image src="/assets/icons/viewAll.svg" height={20} width={20} />
+              </Box>
+              <Typography variant="body1">View All</Typography>
             </Box>
-            <Typography variant="body1">View All</Typography>
-          </Box>}
+          )}
         </Box>
         <NftsCards>
           <Box
@@ -189,11 +243,14 @@ const DetailPage = () => {
               flexWrap: "wrap",
             }}
           >
-            { (localData?.user?.role === "Practitioner" ? [1] : [1,2,3,4]).map((item, i) => (
+            {(localData?.user?.role === "Practitioner"
+              ? [1]
+              : [1, 2, 3, 4]
+            ).map((item, i) => (
               <NftCard key={i} />
             ))}
           </Box>
-        </NftsCards>
+        </NftsCards> */}
       </Box>
     </>
   );

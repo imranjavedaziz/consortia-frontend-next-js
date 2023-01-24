@@ -6,6 +6,8 @@ import NftsLayout from "../../src/nftsLayout";
 import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";
 import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/endpoints";
+import { useRouter } from "next/router";
+
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -26,10 +28,10 @@ const NftsCards = styled(Box)(({ theme }) => ({
 }));
 
 function NftWallet() {
+  const {push} = useRouter()
   const [profileInfo, setProfileInfo] = useState({});
   const [nftData, setNftData] = useState([]);
   const [practitionerNftData, setPractitionerNftData] = useState([]);
-  console.log('practitionerNftData', practitionerNftData)
   useEffect(() => {
     setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
     const isPractitioner =
@@ -81,6 +83,9 @@ function NftWallet() {
     }
   };
 
+  const handleClick = (data) => {
+    push(`/nftsList/${data}`)
+  }
   return (
     <>
       <Box>
@@ -99,7 +104,7 @@ function NftWallet() {
               <Typography variant="h4" fontWeight={600}>
                 Mint Property NFTs
               </Typography>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              {nftData?.length>4 && <Box sx={{ display: "flex", alignItems: "center",cursor:'pointer' }} onClick={() => handleClick('property-nfts')}>
                 <Box sx={{ display: "flex", paddingRight: "10px" }}>
                   <Image
                     src="/assets/icons/viewAll.svg"
@@ -108,7 +113,7 @@ function NftWallet() {
                   />
                 </Box>
                 <Typography variant="body1">View All</Typography>
-              </Box>
+              </Box>}
             </Box>
             <NftsCards>
               <Box
@@ -121,12 +126,14 @@ function NftWallet() {
                 }}
               >
                 {nftData?.length >= 1 &&
-                  nftData?.map(({ title, address, image }, i) => (
+                  nftData?.slice(0,4)?.map(({ title, address, image,id }, i) => (
                     <NftCard
                       title={title}
+                      id={id}
                       address={address}
                       image={image}
                       key={i}
+                      type='property'
                     />
                   ))}
               </Box>
@@ -145,7 +152,7 @@ function NftWallet() {
                   <Typography variant="h4" fontWeight={600}>
                     Mint Practitioner NFTs
                   </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  {practitionerNftData?.length>4 && <Box sx={{ display: "flex", alignItems: "center",cursor:'pointer' }} onClick={() => handleClick('practitioner-nfts')}>
                     <Box sx={{ display: "flex", paddingRight: "10px" }}>
                       <Image
                         src="/assets/icons/viewAll.svg"
@@ -154,7 +161,7 @@ function NftWallet() {
                       />
                     </Box>
                     <Typography variant="body1">View All</Typography>
-                  </Box>
+                  </Box>}
                 </Box>
                 <NftsCards>
                   <Box
@@ -166,13 +173,14 @@ function NftWallet() {
                       flexWrap: "wrap",
                     }}
                   >
-                    {practitionerNftData.length>=1 && practitionerNftData?.map(({ name, address, image }, i) => (
-                      console.log('name,address,image', name,address,image),
+                    {practitionerNftData.length>=1 && practitionerNftData?.slice(0,4)?.map(({ name, address, image,id }, i) => (
                       <NftCard
                         key={i}
+                        id={id}
                         title={name}
                         address={address}
                         image={image}
+                        type='practitioner'
                       />
                     ))}
                   </Box>

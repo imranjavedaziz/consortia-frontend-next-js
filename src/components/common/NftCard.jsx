@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 
-const NftCard = ({ title, address, image }) => {
+const NftCard = ({ title, address, image, id, type }) => {
   const { push } = useRouter();
   return (
     <Card
@@ -28,7 +28,7 @@ const NftCard = ({ title, address, image }) => {
       <CardMedia
         onClick={() => {
           const token = localStorage.getItem("access");
-          if (true) push("/nftDetail/card");
+          if (true) push(`/nftDetail/${type}-${id}`);
         }}
         component="img"
         height="220px"

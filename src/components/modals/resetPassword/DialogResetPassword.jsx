@@ -13,7 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import { RESET_PASSWORD } from "../../../constants/endpoints";
+import { FORGET_PASSWORD } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -58,7 +58,7 @@ function DialogResetPassword({
       try {
 
         setFetching(true);
-        const res = await publicAxios.post(RESET_PASSWORD, {
+        const res = await publicAxios.post(FORGET_PASSWORD, {
           email,
         });
         setFetching(false);

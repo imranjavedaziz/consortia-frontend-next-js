@@ -70,7 +70,8 @@ function DialogTextInput({
         toast.success(res?.data?.message);
         if (!isPractitioner) {
           return setTimeout(() => {
-            window.open(res?.data?.data?.accountLink?.url);
+            // window.open(res?.data?.data?.accountLink?.url);
+            push('/dashboard/landing')
           }, 2500);
         }
         setShowSecondForm(true);
@@ -80,8 +81,12 @@ function DialogTextInput({
       }
     } catch (error) {
       setFetching(false);
-      toast.error(error?.data?.message);
       console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      }
     }
   };
   const resendCode = async (email) => {
@@ -90,7 +95,13 @@ function DialogTextInput({
         email,
       });
       toast.success(res?.data?.message);
-    } catch (error) {}
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      }
+    }
   };
   return (
     <>
