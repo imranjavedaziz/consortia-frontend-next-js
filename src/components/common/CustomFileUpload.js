@@ -50,7 +50,7 @@ const CustomFileUpload = ({
             Bucket: privateBucket
               ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
               : process.env.NEXT_PUBLIC_BUCKET_NAME,
-            Key: e.target.files[0].name,
+            Key: Date.now() + e.target.files[0].name,
             Body: e.target.files[0],
           },
           async (err, data) => {
