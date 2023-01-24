@@ -8,17 +8,9 @@ import { useState } from "react";
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
 
-const S3_BUCKET = "consortiamedia";
-const REGION = "us-east-1";
-
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
   secretAccessKey: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
-});
-
-const myBucket = new AWS.S3({
-  params: { Bucket: S3_BUCKET },
-  region: REGION,
 });
 
 const CustomFileUpload = ({
@@ -27,11 +19,22 @@ const CustomFileUpload = ({
   borderRadius,
   width,
   allowPdf = false,
+  privateBucket = false,
 }) => {
   const [file, setFile] = useState("");
   const [fileType, setFileType] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
+
+  const myBucket = new AWS.S3({
+    params: {
+      Bucket: privateBucket
+        ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+        : process.env.NEXT_PUBLIC_BUCKET_NAME,
+    },
+    region: process.env.REGION,
+  });
+
   const validImage = (img) =>
     allowPdf
       ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
@@ -44,7 +47,9 @@ const CustomFileUpload = ({
         setFile(URL.createObjectURL(e.target.files[0]));
         myBucket.upload(
           {
-            Bucket: S3_BUCKET,
+            Bucket: privateBucket
+              ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+              : process.env.NEXT_PUBLIC_BUCKET_NAME,
             Key: e.target.files[0].name,
             Body: e.target.files[0],
           },
