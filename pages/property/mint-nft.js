@@ -158,13 +158,13 @@ const MintNFTS = () => {
       resetForm();
       push("/nftWallet/NftWallet");
     } catch (error) {
-      if(typeof error?.data?.message == "string"){
+      if (typeof error?.data?.message == "string") {
         toast.error(error?.data?.message);
-      }else{
+      } else {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
       setVerifyModalOpen(false);
@@ -359,6 +359,7 @@ const MintNFTS = () => {
                                 setS3Url={setCategoryDocument}
                                 borderRadius="24px"
                                 width="100%"
+                                privateBucket={true}
                               />
                             </Box>
                           )}
