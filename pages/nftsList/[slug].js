@@ -9,6 +9,8 @@ import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import Pagination from "../../src/components/common/pagination/Pagination";
+import CardSkeletonLoader from "../../src/components/common/cardSkeletonLoader/CardSkeletonLoader";
+
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -41,19 +43,21 @@ const NftsList = () => {
     const {push, query} = useRouter()
 
     const [page, setPage] = useState(1);
-    console.log('query', query)
+const [loading,setLoading] = useState(false)
   const [nftsList, setNftsList] = useState([])
 
   useEffect(() => {
 //    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
 //    setLocalData(profileInfo)
-query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
+query.slug === 'practitioner-nfts' && getPractitionerNftData()
+query.slug === 'property-nfts' && getNftData()
    
   }, [page])
 
 
   const getNftData = async () => {
     try {
+      setLoading(true)
       const res = await publicAxios.get(`${GET_PROPERTY_NFTS}?page_size=${12}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -64,7 +68,9 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
@@ -75,6 +81,7 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
   };
   const getPractitionerNftData = async () => {
     try {
+      setLoading(true)
       const res = await publicAxios.get(`${GET_PRACTITIONER_NFTS}?page_size=${12}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -85,7 +92,9 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
       // }else{
       //   setNftsList([]);
       // }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
@@ -115,8 +124,9 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
                       flexWrap: "wrap",
                     }}
                   >
-                      {query.slug === 'practitioner-nfts' ? nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
-                      console.log('name,address,image', name,address,image),
+                      {query.slug === 'practitioner-nfts' && (loading ? Array.from(new Array(4)).map((item, i) => {
+                        return <CardSkeletonLoader key={i}/>
+                      }) : nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
                       <NftCard
                         key={i}
                         title={name}
@@ -125,9 +135,11 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
                         type="practitionerNftDetail"
                         id={id}
                       />
-                    )) : nftsList?.results?.length >= 1 &&
-                    nftsList?.results?.map(({ title, address, image ,id}, i) => (
-                      <NftCard
+                    )))}
+                     {query.slug === 'property-nfts' && (loading ? Array.from(new Array(4)).map((item, i) => {
+                        return <CardSkeletonLoader key={i}/>
+                      }) : nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
+                        <NftCard
                         title={title}
                         address={address}
                         image={image}
@@ -136,8 +148,7 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
                         id={id}
                          
                       />
-                    ))}
-                    
+                    )))}
                   </Box>
                 </NftsCards>
           </NftDetailPageContainer>
