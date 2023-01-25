@@ -24,6 +24,9 @@ import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
+import CreditCardInput from "../../src/components/CreditCardInput";
+import { useAuthContext } from "../../src/context/AuthContext";
+import VerifyIdentity from "../../src/components/stripeIntegration/VerifyIdentity";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -47,13 +50,18 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
 
 const MintNFTS = () => {
   const { push } = useRouter();
-
+  const {
+    isCreditCardModalOpen,
+    setIsCreditCardModalOpen,
+    handleCreditCardModalClose,
+  } = useAuthContext();
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [isSubmitting, setisSubmitting] = useState(false);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
+  const [data, setData] = useState({});
 
   const propertyList = [
     { value: "building", label: "Building" },
@@ -114,16 +122,6 @@ const MintNFTS = () => {
           key: categoryDocument.split("/").at(-1),
           title: values.name,
           address: values.address,
-          // address: getSubLocationsFromLocation(
-          //   [
-          //     "street-address",
-          //     "locality",
-          //     "region",
-          //     "postal-code",
-          //     "country-name",
-          //   ],
-          //   latLngPlusCode.detailedAddress
-          // ),
         }
       );
       if (response?.data?.status == "failed") {
@@ -131,32 +129,50 @@ const MintNFTS = () => {
         setVerifyModalOpen(false);
         return;
       }
-      const res = await publicAxios.post(
-        MINT_PROPERTY_NFT,
-        {
-          name: values.name,
-          title:
-            values.propertyType === "building"
-              ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
-              : latLngPlusCode.plusCode,
-          price: 10,
-          image: housePhoto,
-          description: "description",
-          address: values.address,
-          document: categoryDocument,
-          docCategory: values.category,
-          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-      toast.success("NFT minted successfully");
+
       setVerifyModalOpen(false);
-      resetForm();
-      push("/nftWallet/NftWallet");
+      setData({
+        name: values.name,
+        title:
+          values.propertyType === "building"
+            ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
+            : latLngPlusCode.plusCode,
+        price: 10,
+        image: housePhoto,
+        description: "description",
+        address: values.address,
+        document: categoryDocument,
+        docCategory: values.category,
+        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      });
+      setIsCreditCardModalOpen(true);
+
+      // const res = await publicAxios.post(
+      //   MINT_PROPERTY_NFT,
+      //   {
+      //     name: values.name,
+      //     title:
+      //       values.propertyType === "building"
+      //         ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
+      //         : latLngPlusCode.plusCode,
+      //     price: 10,
+      //     image: housePhoto,
+      //     description: "description",
+      //     address: values.address,
+      //     document: categoryDocument,
+      //     docCategory: values.category,
+      //     agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //     },
+      //   }
+      // );
+      // toast.success("NFT minted successfully");
+      // setVerifyModalOpen(false);
+      // resetForm();
+      // push("/nftWallet/NftWallet");
     } catch (error) {
       if (typeof error?.data?.message == "string") {
         toast.error(error?.data?.message);
@@ -422,6 +438,8 @@ const MintNFTS = () => {
           <CircularProgress size={70} />
         </Box>
       </Dialog>
+      <CreditCardInput mintNFTData={data} />
+      <VerifyIdentity />
     </>
   );
 };

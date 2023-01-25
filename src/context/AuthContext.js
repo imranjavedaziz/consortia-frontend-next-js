@@ -12,8 +12,18 @@ export const AuthContext = ({ children }) => {
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [choosePractitionerOpen, setChoosePractitionerOpen] = useState(true);
   const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);
+  const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
+  const [isVerifyIdentityModalOpen, setIsVerifyIdentityModalOpen] =
+    useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handleCreditCardModalClose = () => {
+    setIsCreditCardModalOpen(false);
+  };
+  const handleVerifyIdentityModalClose = () => {
+    setIsVerifyIdentityModalOpen(false);
+  };
   useEffect(() => {
     if (localStorage.getItem("access")) {
       setIsLoggedIn(true);
@@ -31,7 +41,13 @@ export const AuthContext = ({ children }) => {
         choosePractitionerOpen,
         setChoosePractitionerOpen,
         isStripeModalOpen,
-        setIsStripeModalOpen
+        setIsStripeModalOpen,
+        isCreditCardModalOpen,
+        setIsCreditCardModalOpen,
+        handleCreditCardModalClose,
+        isVerifyIdentityModalOpen,
+        setIsVerifyIdentityModalOpen,
+        handleVerifyIdentityModalClose,
       }}
     >
       {children}
