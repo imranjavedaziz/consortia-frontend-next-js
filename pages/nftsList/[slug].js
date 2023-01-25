@@ -8,6 +8,7 @@ import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/en
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import Pagination from "../../src/components/common/pagination/Pagination";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -38,7 +39,9 @@ const NftsCards = styled(Box)(({ theme }) => ({
 
 const NftsList = () => {
     const {push, query} = useRouter()
-    // console.log('query', query)
+
+    const [page, setPage] = useState(1);
+    console.log('query', query)
   const [nftsList, setNftsList] = useState([])
 
   useEffect(() => {
@@ -46,17 +49,17 @@ const NftsList = () => {
 //    setLocalData(profileInfo)
 query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
    
-  }, [])
+  }, [page])
 
 
   const getNftData = async () => {
     try {
-      const res = await publicAxios.get(GET_PROPERTY_NFTS, {
+      const res = await publicAxios.get(`${GET_PROPERTY_NFTS}?page_size=${12}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      setNftsList(res?.data?.data);
+      setNftsList(res?.data);
 
       // console.log("res", res?.data?.nfts);
 
@@ -72,16 +75,16 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
   };
   const getPractitionerNftData = async () => {
     try {
-      const res = await publicAxios.get(GET_PRACTITIONER_NFTS, {
+      const res = await publicAxios.get(`${GET_PRACTITIONER_NFTS}?page_size=${12}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      if(res?.data?.data){
-        setNftsList(res?.data?.data);
-      }else{
-        setNftsList([]);
-      }
+      // if(res?.data?.data){
+        setNftsList(res?.data);
+      // }else{
+      //   setNftsList([]);
+      // }
     } catch (error) {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
@@ -89,6 +92,9 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
         toast.error(Object?.values(error?.data?.message)?.[0]?.[0])
       }
     }
+  };
+  const paginationHandler = (event, value) => {
+    setPage(value);
   };
   
   return (
@@ -109,21 +115,26 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
                       flexWrap: "wrap",
                     }}
                   >
-                      {query.slug === 'practitioner-nfts' ? nftsList.length>=1 && nftsList?.map(({ name, address, image }, i) => (
+                      {query.slug === 'practitioner-nfts' ? nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
                       console.log('name,address,image', name,address,image),
                       <NftCard
                         key={i}
                         title={name}
                         address={address}
                         image={image}
+                        type="practitionerNftDetail"
+                        id={id}
                       />
-                    )) : nftsList?.length >= 1 &&
-                    nftsList?.map(({ title, address, image }, i) => (
+                    )) : nftsList?.results?.length >= 1 &&
+                    nftsList?.results?.map(({ title, address, image ,id}, i) => (
                       <NftCard
                         title={title}
                         address={address}
                         image={image}
                         key={i}
+                        type="propertyNftDetail"
+                        id={id}
+                         
                       />
                     ))}
                     
@@ -131,6 +142,17 @@ query.slug === 'practitioner-nfts' ? getPractitionerNftData(): getNftData()
                 </NftsCards>
           </NftDetailPageContainer>
         </GradientBorderContainer>
+        <Box sx={{paddingBottom:'40px'}}>
+          <Pagination 
+           handleChangePage={paginationHandler}
+           totalItems={nftsList?.results?.length}
+           pageSize={12}
+           pageNo={page}
+           totalCounts={
+            nftsList?.count
+           }
+          />
+        </Box>
       </Box>
     </>
   );

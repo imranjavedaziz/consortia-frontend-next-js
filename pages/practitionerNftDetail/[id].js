@@ -1,22 +1,18 @@
-// import React from 'react'
-// import ComingSoon from '../../src/components/common/comingSoon/ComingSoon'
-
-// function DetailPage() {
-//   return (
-//     <><ComingSoon /></>
-//   )
-// }
-
-// export default DetailPage
-
-import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Typography,
+  styled,
+  Grid,
+  CardMedia,
+  Avatar,
+} from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
 import {
-  PROPERTY_NFT_DETAIL,
+  GET_PROPERTY_NFTS,
   PRACTITIONER_NFT_DETAIL,
 } from "../../src/constants/endpoints";
 import toast from "react-hot-toast";
@@ -50,26 +46,26 @@ const NftsCards = styled(Box)(({ theme }) => ({
   marginBottom: "120px",
 }));
 
-const DetailPage = () => {
+const PractitionerDetailPage = () => {
   const { push, query } = useRouter();
-  console.log('query', query.id.split('-').at(-1))
+
+  const [propertyNftsData, setPropertyNftsData] = useState([]);
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
-  console.log('nftDetail', nftDetail)
 
   useEffect(() => {
+    // debugger
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
-    setLocalData(profileInfo);
+    // setLocalData(profileInfo);
     getNftData();
+    getPropertyNftData();
   }, []);
 
   const getNftData = async () => {
     try {
       const res = await publicAxios.get(
-        query.id.split("-")[0] === "property"
-          ? `${PROPERTY_NFT_DETAIL}/${query.id.split('-').at(-1)}`
-          : `${PRACTITIONER_NFT_DETAIL}/${query.id.split('-').at(-1)}`,
+        `${PRACTITIONER_NFT_DETAIL}/${query?.id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -92,46 +88,91 @@ const DetailPage = () => {
     }
   };
 
+  const getPropertyNftData = async () => {
+    try {
+      const res = await publicAxios.get(GET_PROPERTY_NFTS, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      setPropertyNftsData(res?.data?.results);
+
+      // console.log("res", res?.data?.nfts);
+
+      // setUserData(res?.data?.data?.user);
+    } catch (error) {
+      console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      }
+    }
+  };
+
+  const CopyPrivateTextRef = useRef(null);
+  const CopyPrivateTextHandler = () => {
+    toast.success("copied");
+    const text = CopyPrivateTextRef.current.innerText;
+    navigator.clipboard.writeText(text);
+  };
+
+  const headerData = [
+    "Token ID",
+    "Address",
+    "Google+ Code",
+    "Document Type",
+    "Timestamp",
+  ];
+  const rowData = propertyNftsData?.map((item, i) => {
+    return {
+      text1: `${item.tx_id.slice(0, 12)}...`,
+      text2: item.address,
+      text3: item.title,
+      text4: item.docCategory,
+      text5: item.updated_at,
+    };
+  });
+  // console.log("rowData", rowData);
   return (
     <>
       <Box>
         <Box>
-          <Typography variant="h3">NFT Details</Typography>
+          <Typography variant="h3">Practitioner NFT Details</Typography>
         </Box>
         <GradientBorderContainer>
           <NftDetailPageContainer>
-            <Grid container>
+            <Grid
+              container
+              bgcolor="secondary.purpleGray"
+              sx={{ borderRadius: "24px", padding: "24px 40px" }}
+            >
               <Grid
                 item
                 xs={12}
                 md={5}
-                lg={3}
+                lg={2}
                 sx={{ display: "flex", order: { xs: 2, md: 1 } }}
               >
-                <CardMedia
-                  component="img"
-                  height="328px"
-                  // width="250px"
-                  alt="nft card Icon"
-                  image={nftDetail?.image}
-                  sx={{ borderRadius: "16px" }}
-                ></CardMedia>
-
-                {/* <Box sx={{ padding: "24px 0px 16px 0px" }}>
-                  <Typography variant="h5">Selected Category:</Typography>
+                <Box>
+                  <Box>
+                    {/* <Image src={nftDetail?.image} height={149} width={149} alt='image' /> */}
+                    <Avatar
+                      alt="nft card Icon"
+                      src={nftDetail?.image}
+                      sx={{
+                        height: "150px",
+                        width: "150px",
+                      }}
+                    />
+                  </Box>
                 </Box>
-                <Box sx={{ display: "flex" }}>
-                  <Typography variant="body2" sx={{ paddingRight: "8px" }}>
-                    Document Name:
-                  </Typography>
-                  <Typography variant="body2">Deed</Typography>
-                </Box> */}
               </Grid>
               <Grid
                 item
                 xs={12}
                 md={7}
-                lg={9}
+                lg={10}
                 sx={{
                   paddingLeft: { md: "33px", xs: "0px" },
                   paddingBottom: { md: "0px", xs: "20px" },
@@ -141,58 +182,39 @@ const DetailPage = () => {
                 }}
               >
                 <Box sx={{ width: "100%" }}>
-                  <Typography variant="h5" sx={{ padding: "0px 0px 12px 0px" }}>
-                    {nftDetail?.title}
-                  </Typography>
-                  <Box sx={{ display: "flex" }}>
+                  <Box>
+                    <Typography variant="h5">{nftDetail?.name}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body1">{nftDetail?.bio}</Typography>
+                  </Box>
+                  <Box sx={{ paddingTop: "16px" }}>
                     <Box
-                      sx={
-                        {
-                          // display: "flex",
-                          // flexDirection: "column",
-                          // alignItems: "center",
-                          // paddingRight: "45px",
-                        }
-                      }
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(29, 6, 104, 0.5)",
+                        borderRadius: "8px",
+                        maxWidth: "400px",
+                      }}
                     >
-                      <Typography variant="body5" fontWeight={600}>
-                        Minter
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        Wallet Address:
                       </Typography>
-                      <Box
-                        sx={{
-                          padding: "8px 0px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                      <Typography variant="subtitle1" ref={CopyPrivateTextRef}>
+                        {nftDetail?.wallet_address}
+                      </Typography>
+                      <Box sx={{ paddingLeft: "10px", cursor: "pointer" }}>
                         <Image
-                          height={48}
-                          width={48}
-                          // width="250px"
-                          alt="Minter avtar"
-                          src="/assets/icons/profileImage.svg"
-                          sx={{ borderRadius: "50px" }}
+                          src="/assets/icons/copyIcon.svg"
+                          height={16}
+                          width={16}
+                          alt="icon"
+                          onClick={CopyPrivateTextHandler}
                         />
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ padding: "0px 8px" }}
-                        >
-                         {nftDetail?.name}
-                        </Typography>
                       </Box>
                     </Box>
-                  </Box>
-                </Box>
-                <Box>
-                  <Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    {/* <Typography variant="h5">Transaction History</Typography> */}
-                    <Image
-                      src="/assets/icons/export.svg"
-                      height={40}
-                      width={40}
-                    />
                   </Box>
                 </Box>
               </Grid>
@@ -203,7 +225,10 @@ const DetailPage = () => {
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
                 <Box sx={{ paddingTop: "40px" }}>
-                  <TransactiionHistoryTable />
+                  <TransactiionHistoryTable
+                    tableHeader={headerData}
+                    tableRowData={rowData}
+                  />
                 </Box>
               </Grid>
             </Grid>
@@ -256,7 +281,7 @@ const DetailPage = () => {
   );
 };
 
-export default DetailPage;
-DetailPage.getLayout = function (page) {
+export default PractitionerDetailPage;
+PractitionerDetailPage.getLayout = function (page) {
   return <NftsLayout>{page}</NftsLayout>;
 };

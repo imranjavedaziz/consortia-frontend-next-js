@@ -28,7 +28,7 @@ const NftCard = ({ title, address, image, id, type }) => {
       <CardMedia
         onClick={() => {
           const token = localStorage.getItem("access");
-          if (true) push(`/nftDetail/${type}-${id}`);
+          if (true) push(`/${type}/${id}`);
         }}
         component="img"
         height="220px"
