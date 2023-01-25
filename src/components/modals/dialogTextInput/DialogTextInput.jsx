@@ -56,6 +56,7 @@ function DialogTextInput({
   const { showSecondForm, setShowSecondForm } = useAuthContext();
 
   const verifyCode = async (email) => {
+    debugger
     try {
       if (code.length > 0) {
         setFetching(true);
@@ -68,13 +69,19 @@ function DialogTextInput({
         localStorage.setItem("access", res?.data?.access);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
         toast.success(res?.data?.message);
-        if (!isPractitioner) {
-          return setTimeout(() => {
-            // window.open(res?.data?.data?.accountLink?.url);
-            push('/dashboard/landing')
-          }, 2500);
+        if(res?.data?.data?.user?.role === "Practitioner" && !res.data?.data?.user?.practitionerType){
+          setShowSecondForm(true);
+          push('/auth/signup')
+        }else{
+          if (!isPractitioner) {
+            return setTimeout(() => {
+              // window.open(res?.data?.data?.accountLink?.url);
+              push('/dashboard/landing')
+            }, 2500);
+          }
         }
-        setShowSecondForm(true);
+       
+        
         handleClose();
       } else {
         toast.error("Please enter OTP");
