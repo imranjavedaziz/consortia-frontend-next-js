@@ -8,6 +8,8 @@ function CardSkeletonLoader() {
         <Skeleton variant="rectangular" width={210} height={118} />
         <Skeleton />
         <Skeleton />
+        <Skeleton />
+        <Skeleton />
       </Box>
     </>
   );

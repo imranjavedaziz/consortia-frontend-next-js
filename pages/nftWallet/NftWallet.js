@@ -7,6 +7,7 @@ import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";
 import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/endpoints";
 import { useRouter } from "next/router";
+import CardSkeletonLoader from "../../src/components/common/cardSkeletonLoader/CardSkeletonLoader";
 
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -31,6 +32,10 @@ function NftWallet() {
   const {push} = useRouter()
   const [profileInfo, setProfileInfo] = useState({});
   const [nftData, setNftData] = useState([]);
+
+  const [loading,setLoading] = useState(false)
+
+
   const [practitionerNftData, setPractitionerNftData] = useState([]);
   useEffect(() => {
     setProfileInfo(JSON.parse(localStorage.getItem("profile_info")));
@@ -43,17 +48,19 @@ function NftWallet() {
 
   const getNftData = async () => {
     try {
+      setLoading(true)
       const res = await publicAxios.get(GET_PROPERTY_NFTS, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
       setNftData(res?.data?.results);
-
+      setLoading(false)
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
+      setLoading(false)
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
@@ -64,6 +71,7 @@ function NftWallet() {
   };
   const getPractitionerNftData = async () => {
     try {
+      setLoading(true)
       const res = await publicAxios.get(GET_PRACTITIONER_NFTS, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -71,10 +79,14 @@ function NftWallet() {
       });
       // if(res?.data?.data){
         setPractitionerNftData(res?.data?.results);
+      setLoading(false)
+
       // }else{
       //   setPractitionerNftData([]);
       // }
     } catch (error) {
+      setLoading(false)
+
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
@@ -125,7 +137,9 @@ function NftWallet() {
                   flexWrap: "wrap",
                 }}
               >
-                {nftData?.length >= 1 &&
+                {loading ? Array.from(new Array(4)).map((item, i) => {
+                        return <CardSkeletonLoader key={i}/>
+                      }) : nftData?.length >= 1 &&
                   nftData?.slice(0,4)?.map(({ title, address, image,id }, i) => (
                     <NftCard
                       title={title}
@@ -173,7 +187,9 @@ function NftWallet() {
                       flexWrap: "wrap",
                     }}
                   >
-                    {practitionerNftData.length>=1 && practitionerNftData?.slice(0,4)?.map(({ name, address, image,id }, i) => (
+                    {loading ? Array.from(new Array(4)).map((item, i) => {
+                        return <CardSkeletonLoader key={i}/>
+                      }) : practitionerNftData.length>=1 && practitionerNftData?.slice(0,4)?.map(({ name, address, image,id }, i) => (
                       <NftCard
                         key={i}
                         id={id}
