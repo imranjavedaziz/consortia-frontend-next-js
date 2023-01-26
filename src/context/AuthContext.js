@@ -25,10 +25,26 @@ export const AuthContext = ({ children }) => {
     setIsVerifyIdentityModalOpen(false);
   };
   useEffect(() => {
-    if (localStorage.getItem("access")) {
-      setIsLoggedIn(true);
+    // if (localStorage.getItem("access")) {
+    //   setIsLoggedIn(true);
+    // } else {
+    //   setIsLoggedIn(false);
+    // }
+    const token = localStorage.getItem("access")
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    if (profileInfo?.user?.role === "Practitioner") {
+      if (token && profileInfo?.user?.practitionerType) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+        // push("/auth/signup");
+      }
     } else {
-      setIsLoggedIn(false);
+      if (token) {
+        setIsLoggedIn(true);
+      }else{
+        setIsLoggedIn(false);
+      }
     }
   }, []);
   return (

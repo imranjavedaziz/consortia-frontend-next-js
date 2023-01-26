@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Button, Divider, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Typography, useMediaQuery } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  SwipeableDrawer,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { Box, styled } from "@mui/system";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,19 +61,34 @@ const Header = () => {
     theme.breakpoints.between("xs", "sm")
   );
   useEffect(() => {
-    if(!belowSm)setDrawer(false)
-  }, [belowSm])
-  
+    if (!belowSm) setDrawer(false);
+  }, [belowSm]);
 
   const isActive = (path) => {
     return route == path;
   };
   useEffect(() => {
+    // debugger
     const token = localStorage.getItem("access");
-    if (token) {
-      setIsLoggedIn(true);
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    // if (token) {
+    //   setIsLoggedIn(true);
+    // } else {
+    //   setIsLoggedIn(false);
+    // }
+    if (profileInfo?.user?.role === "Practitioner") {
+      if (token && profileInfo?.user?.practitionerType) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+        // push("/auth/signup");
+      }
     } else {
-      setIsLoggedIn(false);
+      if (token) {
+        setIsLoggedIn(true);
+      }else{
+        setIsLoggedIn(false);
+      }
     }
   }, []);
 
@@ -89,43 +116,51 @@ const Header = () => {
       path: "/contact-us",
     },
   ];
- 
+
   const list = (anchor) => (
     <Box
-      sx={{ width:250 ,height:'100%',background:'linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)'}}
+      sx={{
+        width: 250,
+        height: "100%",
+        background:
+          "linear-gradient(94.09deg, #12134D 3.97%, #10053C 51.03%, #12134D 95.99%)",
+      }}
       // role="presentation"
-     
+
       // onKeyDown={() => setDrawer(false)}
     >
-      <Box sx={{display:'flex',justifyContent:"center", padding:"24px"}}>
-      <ImageLogo>
-              <Image
-                src="/assets/images/consortiaLogo.svg"
-                width={152}
-                height={29}
-                alt="Logo"
-              />
-            </ImageLogo>
+      <Box sx={{ display: "flex", justifyContent: "center", padding: "24px" }}>
+        <ImageLogo>
+          <Image
+            src="/assets/images/consortiaLogo.svg"
+            width={152}
+            height={29}
+            alt="Logo"
+          />
+        </ImageLogo>
       </Box>
       <List>
         {navigationItems.map((text, index) => (
-          <StyledListItem key={text.name} disablePadding  onClick={() => {setDrawer(false),push(text.path)}}>
+          <StyledListItem
+            key={text.name}
+            disablePadding
+            onClick={() => {
+              setDrawer(false), push(text.path);
+            }}
+          >
             <ListItemButton selected={text.path === route}>
               {/* <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon> */}
               <ListItemText
-                          primary={
-                            <Typography variant="h5">
-                              {text.name}
-                            </Typography>
-                          }
-                        />
+                primary={<Typography variant="h5">{text.name}</Typography>}
+              />
             </ListItemButton>
           </StyledListItem>
         ))}
       </List>
-    </Box>);
+    </Box>
+  );
   return (
     <>
       {!belowSm ? (
@@ -277,34 +312,36 @@ const Header = () => {
             )}
           </Grid>
         </Grid>
-      ) : <><Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "30px 0px",
-      }}
-    >
-      <Box onClick={() => setDrawer(true)}>
-        {/* <ImageLogo> */}
-        <Image
-          src="/assets/icons/hamburger.svg"
-          width={24}
-          height={24}
-          alt="Logo"
-        />
-        {/* </ImageLogo> */}
-      </Box>
-      <Box>
-        <ImageLogo>
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            width={isNotLap ? 100 : 180}
-            height={29}
-            alt="Logo"
-          />
-        </ImageLogo>
-      </Box>
-      {isLoggedIn ? (
+      ) : (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "30px 0px",
+            }}
+          >
+            <Box onClick={() => setDrawer(true)}>
+              {/* <ImageLogo> */}
+              <Image
+                src="/assets/icons/hamburger.svg"
+                width={24}
+                height={24}
+                alt="Logo"
+              />
+              {/* </ImageLogo> */}
+            </Box>
+            <Box>
+              <ImageLogo>
+                <Image
+                  src="/assets/images/consortiaLogo.svg"
+                  width={isNotLap ? 100 : 180}
+                  height={29}
+                  alt="Logo"
+                />
+              </ImageLogo>
+            </Box>
+            {isLoggedIn ? (
               <Link
                 href="/dashboard/landing"
                 style={{ textDecoration: "none" }}
@@ -370,15 +407,17 @@ const Header = () => {
                 </Button>
               </>
             )}
-    </Box></>}
-    <SwipeableDrawer
-            // anchor={anchor}
-            open={drawer}
-            onClose={() => setDrawer(false)}
-            onOpen={() => setDrawer(true)}
-          >
-            {list()}
-          </SwipeableDrawer>
+          </Box>
+        </>
+      )}
+      <SwipeableDrawer
+        // anchor={anchor}
+        open={drawer}
+        onClose={() => setDrawer(false)}
+        onOpen={() => setDrawer(true)}
+      >
+        {list()}
+      </SwipeableDrawer>
       {/* <GradientBorderButton btnText='login' /> */}
     </>
   );

@@ -189,7 +189,7 @@ const MintNFTS = () => {
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
-                  licenseNumber: profileInfo?.user?.licenseNumber,
+                  licenseNumber: "",
                 }}
                 enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -341,7 +341,7 @@ const MintNFTS = () => {
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
-                            disabled={true}
+                            // disabled={true}
                             // select={select}
                             // options={options}
                             // rows={maxRows}
