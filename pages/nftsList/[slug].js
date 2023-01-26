@@ -140,6 +140,7 @@ const NftsList = () => {
                           return (
                             <Grid
                               item
+                              key={i}
                               xl={3}
                               lg={4}
                               md={6}
@@ -160,6 +161,7 @@ const NftsList = () => {
                             <Grid
                               item
                               xl={3}
+                              key={i}
                               lg={4}
                               md={6}
                               sm={6}
@@ -187,6 +189,7 @@ const NftsList = () => {
                           return (
                             <Grid
                               item
+                              key={i}
                               xl={3}
                               lg={4}
                               md={6}
@@ -206,6 +209,7 @@ const NftsList = () => {
                           ({ name, address, image, id }, i) => (
                             <Grid
                               item
+                              key={i}
                               xl={3}
                               lg={4}
                               md={6}

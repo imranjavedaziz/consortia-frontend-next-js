@@ -151,6 +151,7 @@ function NftWallet() {
                         return (
                           <Grid
                             item
+                            key={i}
                             xl={3}
                             lg={4}
                             md={6}
@@ -169,6 +170,7 @@ function NftWallet() {
                           <Grid
                             item
                             xl={3}
+                            key={i}
                             lg={4}
                             md={6}
                             sm={6}
@@ -242,6 +244,7 @@ function NftWallet() {
                             return (
                               <Grid
                                 item
+                                key={i}
                                 xl={3}
                                 lg={4}
                                 md={6}
@@ -263,6 +266,7 @@ function NftWallet() {
                               <Grid
                                 item
                                 xl={3}
+                                key={i}
                                 lg={4}
                                 md={6}
                                 sm={6}
