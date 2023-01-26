@@ -4,7 +4,6 @@ import NftsLayout from "../../src/nftsLayout";
 import GradientButton from "../../src/components/common/GradientButton";
 import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
-import VerifyIdentity from "../../src/components/stripeIntegration/VerifyIdentity";
 // import AWS from "aws-sdk";
 {
   /* 

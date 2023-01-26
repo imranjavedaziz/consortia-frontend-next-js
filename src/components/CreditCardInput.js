@@ -24,7 +24,7 @@ import {
   formatFormData,
 } from "./utils";
 import { publicAxios } from "../api";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { GradiantTextField } from "./common/CustomInputField";
 import { useAuthContext } from "../context/AuthContext";
@@ -86,7 +86,6 @@ const CreditCardInput = ({ mintNFTData }) => {
   useEffect(() => {
     getStripe();
   }, []);
-  console.log({ stripe });
   const handleCallback = ({ issuer }, isValid) => {
     if (isValid) {
       setData({ ...data, issuer });
@@ -104,24 +103,12 @@ const CreditCardInput = ({ mintNFTData }) => {
     } else if (target.name === "cvc") {
       target.value = formatCVC(target.value);
     }
-
     setData({ ...data, [target.name]: target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // const { issuer } = data;
-    // const formData = [...e.target.elements]
-    //   .filter((d) => d.name)
-    //   .reduce((acc, d) => {
-    //     acc[d.name] = d.value;
-    //     return acc;
-    //   }, {});
-
-    // setData({ ...data, formData: formData });
-    // this.form.reset();
-
     var myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
@@ -144,6 +131,12 @@ const CreditCardInput = ({ mintNFTData }) => {
     fetch("https://api.stripe.com/v1/payment_methods", requestOptions)
       .then((response) => response.json())
       .then(async (result) => {
+        if (result?.error) {
+          setLoading(false);
+          toast.error(result?.error?.message);
+          return;
+        }
+        console.log({ result });
         try {
           const res = await publicAxios.post(
             "/property_nft",
@@ -159,45 +152,89 @@ const CreditCardInput = ({ mintNFTData }) => {
             }
           );
           console.log(res);
-          //   if (!res?.data?.message == "3D secure") {
-          setLoading(false);
+          if (res?.data?.data?.requires_action) {
+            const result1 = await stripe.confirmCardPayment(
+              res?.data?.data?.payment_intent_client_secret
+            );
+            console.log(result1?.paymentIntent?.id);
+            const result3 = await publicAxios.post(
+              "/property_nft",
+              {
+                payment_intent_id: result1?.paymentIntent?.id,
+                "3d_secure": true,
+                name: "Paul",
+                ...mintNFTData,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
+                },
+              }
+            );
+          }
           toast.success("Property NFT Minted Successfully");
+          if (
+            !JSON.parse(localStorage.getItem("profile_info"))?.user
+              ?.stripe_identity_status
+          ) {
+            const { data } = await publicAxios.post(
+              "create-verification-session",
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("access")}`,
+                },
+              }
+            );
+            const { error } = await stripe.verifyIdentity(data?.data);
+            if (error) {
+              toast.error("Verification failed");
+              console.log("[error]", error);
+              setLoading(false);
+              push("/nftWallet/NftWallet");
+              handleCreditCardModalClose();
+              return;
+            } else {
+              console.log("Verification submitted!");
+              const old_profile_info = JSON.parse(
+                localStorage.getItem("profile_info")
+              );
+              const new_profile_info = {
+                ...old_profile_info,
+                user: {
+                  ...old_profile_info.user,
+                  stripe_identity_status: true,
+                },
+              };
+              localStorage.setItem(
+                "profile_info",
+                JSON.stringify(new_profile_info)
+              );
+              toast.success("Verification submitted!");
+              push("/nftWallet/NftWallet");
+              handleCreditCardModalClose();
+              return;
+            }
+          }
+          push("/nftWallet/NftWallet");
           handleCreditCardModalClose();
-          setIsVerifyIdentityModalOpen(true);
-          // push("/nftWallet/NftWallet");
-          //   }
-
-          //   debugger;
-
-          //   const result1 = await stripe.confirmCardPayment(
-          //     res?.data?.data?.payment_intent_client_secret
-          //   );
-          //   console.log(result1?.paymentIntent?.id);
-          //   const result3 = await publicAxios.post(
-          //     "/property_nft",
-          //     {
-          //       payment_intent_id: result1?.paymentIntent?.id,
-          //       "3d_secure": true,
-          //       name: "Paul",
-          //       title: "test",
-          //       price: 10,
-          //       image: "https://teams.microsoft.com/_?culture",
-          //       description: "description",
-          //       address: "address",
-          //       document: "https://teams.microsoft.com/_?culture",
-          //       docCategory: "deed",
-          //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user
-          //         ?.id,
-          //     },
-          //     {
-          //       headers: {
-          //         Authorization: `Bearer ${localStorage.getItem("access")}`,
-          //       },
-          //     }
-          //   );
-          //   console.log({ result3 });
         } catch (error) {
           console.log(error);
+          setLoading(false);
+
+          if (typeof error?.data?.message == "string") {
+            if (error?.data?.message.includes(":")) {
+              toast.error(error?.data?.message?.split(":")[1]);
+            } else {
+              toast.error(error?.data?.message);
+            }
+          } else {
+            if (Array.isArray(error?.data?.message)) {
+              toast.error(error?.data?.message?.error?.[0]);
+            } else {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
         }
       })
       .catch((error) => console.log(error));
@@ -221,10 +258,12 @@ const CreditCardInput = ({ mintNFTData }) => {
         },
       }}
     >
-      <DialogTitle>Payment</DialogTitle>
+      <DialogTitle>
+        <Typography variant="h3">Property NFT $20</Typography>
+      </DialogTitle>
       <DialogContent>
         <div className="App-payment">
-          <h4>Please enter your card details</h4>
+          <h4>Please enter your payment information</h4>
           <Card
             number={data.number}
             name={data.name}
@@ -298,7 +337,7 @@ const CreditCardInput = ({ mintNFTData }) => {
                 size="large"
                 type="submit"
               >
-                PAY
+                Pay and continue to verification
               </LoadingButton>
             </form>
           </Box>

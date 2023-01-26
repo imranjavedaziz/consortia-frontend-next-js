@@ -26,7 +26,6 @@ import axios from "axios";
 import { MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
-import VerifyIdentity from "../../src/components/stripeIntegration/VerifyIdentity";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -104,6 +103,7 @@ const MintNFTS = () => {
   ];
 
   const handleSubmit = async (values, resetForm) => {
+    debugger;
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");
       return;
@@ -174,6 +174,12 @@ const MintNFTS = () => {
       // resetForm();
       // push("/nftWallet/NftWallet");
     } catch (error) {
+      console.log(error);
+      if (error?.code == "ERR_NETWORK") {
+        toast.error("Verification failed. Please try again");
+        setVerifyModalOpen(false);
+        return;
+      }
       if (typeof error?.data?.message == "string") {
         toast.error(error?.data?.message);
       } else {
@@ -198,7 +204,7 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Mint Property NFTs
+                Step One: Property Information
               </Typography>
             </Box>
             <Box>
@@ -355,8 +361,8 @@ const MintNFTS = () => {
                             <Box>
                               <InputLabel shrink>
                                 {values.category == "deed"
-                                  ? "Upload a photo of the deed:"
-                                  : "Upload a photo of the Settlement Statement"}
+                                  ? "Upload a copy of the deed:"
+                                  : "Upload a copy of the Settlement Statement"}
                               </InputLabel>
                               <Typography
                                 variant="subtitle1"
@@ -397,7 +403,7 @@ const MintNFTS = () => {
                                 fontWeight: 600,
                               }}
                             >
-                              Mint
+                              Verify Document
                             </LoadingButton>
                           </Box>
                         </Box>
@@ -439,7 +445,6 @@ const MintNFTS = () => {
         </Box>
       </Dialog>
       <CreditCardInput mintNFTData={data} />
-      <VerifyIdentity />
     </>
   );
 };

@@ -16,7 +16,6 @@ import { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
-import VerifyIdentity from "../components/stripeIntegration/VerifyIdentity";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
@@ -115,7 +114,6 @@ function NftsLayout({ children }) {
           <Typography variant="h5">
             You need to verify your identity before minting NFTs
           </Typography>
-          <VerifyIdentity />
         </Box>
       </Dialog>
 
