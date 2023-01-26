@@ -86,6 +86,7 @@ const MintNFTS = () => {
         name: "name",
         label: "Name:",
         placeholder: "Enter Your Name",
+        disabled: true,
       },
       {
         name: "email",
@@ -183,7 +184,7 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
-                  name: "",
+                  name: profileInfo && profileInfo?.user?.firstName + ` ${profileInfo?.user?.lastName}`,
                   email: profileInfo && profileInfo?.user?.email,
                   address: "",
                   // image: "",

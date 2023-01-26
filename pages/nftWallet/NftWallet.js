@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, styled } from "@mui/material";
+import { Box, Typography, styled, Grid } from "@mui/material";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import NftsLayout from "../../src/nftsLayout";
 import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";
-import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/endpoints";
+import {
+  GET_PRACTITIONER_NFTS,
+  GET_PROPERTY_NFTS,
+} from "../../src/constants/endpoints";
 import { useRouter } from "next/router";
-import CardSkeletonLoader from "../../src/components/common/cardSkeletonLoader/CardSkeletonLoader";
-
+import CardSkeletonLoader from "../../src/components/common/loader/cardSkeletonLoader/CardSkeletonLoader";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -29,12 +31,11 @@ const NftsCards = styled(Box)(({ theme }) => ({
 }));
 
 function NftWallet() {
-  const {push} = useRouter()
+  const { push } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
   const [nftData, setNftData] = useState([]);
 
-  const [loading,setLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false);
 
   const [practitionerNftData, setPractitionerNftData] = useState([]);
   useEffect(() => {
@@ -48,56 +49,56 @@ function NftWallet() {
 
   const getNftData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await publicAxios.get(GET_PROPERTY_NFTS, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
       setNftData(res?.data?.results);
-      setLoading(false)
+      setLoading(false);
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
   const getPractitionerNftData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await publicAxios.get(GET_PRACTITIONER_NFTS, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
       // if(res?.data?.data){
-        setPractitionerNftData(res?.data?.results);
-      setLoading(false)
+      setPractitionerNftData(res?.data?.results);
+      setLoading(false);
 
       // }else{
       //   setPractitionerNftData([]);
       // }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
 
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object?.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object?.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
 
   const handleClick = (data) => {
-    push(`/nftsList/${data}`)
-  }
+    push(`/nftsList/${data}`);
+  };
   return (
     <>
       <Box>
@@ -116,16 +117,25 @@ function NftWallet() {
               <Typography variant="h4" fontWeight={600}>
                 Mint Property NFTs
               </Typography>
-              {nftData?.length>4 && <Box sx={{ display: "flex", alignItems: "center",cursor:'pointer' }} onClick={() => handleClick('property-nfts')}>
-                <Box sx={{ display: "flex", paddingRight: "10px" }}>
-                  <Image
-                    src="/assets/icons/viewAll.svg"
-                    height={20}
-                    width={20}
-                  />
+              {nftData?.length > 4 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleClick("property-nfts")}
+                >
+                  <Box sx={{ display: "flex", paddingRight: "10px" }}>
+                    <Image
+                      src="/assets/icons/viewAll.svg"
+                      height={20}
+                      width={20}
+                    />
+                  </Box>
+                  <Typography variant="body1">View All</Typography>
                 </Box>
-                <Typography variant="body1">View All</Typography>
-              </Box>}
+              )}
             </Box>
             <NftsCards>
               <Box
@@ -137,19 +147,51 @@ function NftWallet() {
                   flexWrap: "wrap",
                 }}
               >
-                {loading ? Array.from(new Array(4)).map((item, i) => {
-                        return <CardSkeletonLoader key={i}/>
-                      }) : nftData?.length >= 1 &&
-                  nftData?.slice(0,4)?.map(({ title, address, image,id }, i) => (
-                    <NftCard
-                      title={title}
-                      id={id}
-                      address={address}
-                      image={image}
-                      key={i}
-                      type='propertyNftDetail'
-                    />
-                  ))}
+                <Grid container>
+                  {loading
+                    ? Array.from(new Array(4)).map((item, i) => {
+                        return (
+                          <Grid
+                            item
+                            xl={3}
+                            lg={4}
+                            md={6}
+                            sm={6}
+                            xs={12}
+                            sx={{ display: "flex", justifyContent: "center" }}
+                          >
+                            <CardSkeletonLoader key={i} />
+                          </Grid>
+                        );
+                      })
+                    : nftData?.length >= 1 &&
+                      nftData
+                        ?.slice(0, 4)
+                        ?.map(({ title, address, image, id }, i) => (
+                          <Grid
+                            item
+                            xl={3}
+                            lg={4}
+                            md={6}
+                            sm={6}
+                            xs={12}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              paddingTop: "30px",
+                            }}
+                          >
+                            <NftCard
+                              title={title}
+                              id={id}
+                              address={address}
+                              image={image}
+                              key={i}
+                              type="propertyNftDetail"
+                            />
+                          </Grid>
+                        ))}
+                </Grid>
               </Box>
             </NftsCards>
 
@@ -166,16 +208,25 @@ function NftWallet() {
                   <Typography variant="h4" fontWeight={600}>
                     Mint Practitioner NFTs
                   </Typography>
-                  {practitionerNftData?.length>4 && <Box sx={{ display: "flex", alignItems: "center",cursor:'pointer' }} onClick={() => handleClick('practitioner-nfts')}>
-                    <Box sx={{ display: "flex", paddingRight: "10px" }}>
-                      <Image
-                        src="/assets/icons/viewAll.svg"
-                        height={20}
-                        width={20}
-                      />
+                  {practitionerNftData?.length > 4 && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleClick("practitioner-nfts")}
+                    >
+                      <Box sx={{ display: "flex", paddingRight: "10px" }}>
+                        <Image
+                          src="/assets/icons/viewAll.svg"
+                          height={20}
+                          width={20}
+                        />
+                      </Box>
+                      <Typography variant="body1">View All</Typography>
                     </Box>
-                    <Typography variant="body1">View All</Typography>
-                  </Box>}
+                  )}
                 </Box>
                 <NftsCards>
                   <Box
@@ -187,18 +238,54 @@ function NftWallet() {
                       flexWrap: "wrap",
                     }}
                   >
-                    {loading ? Array.from(new Array(4)).map((item, i) => {
-                        return <CardSkeletonLoader key={i}/>
-                      }) : practitionerNftData.length>=1 && practitionerNftData?.slice(0,4)?.map(({ name, address, image,id }, i) => (
-                      <NftCard
-                        key={i}
-                        id={id}
-                        title={name}
-                        address={address}
-                        image={image}
-                        type='practitionerNftDetail'
-                      />
-                    ))}
+                    <Grid container>
+                      {loading
+                        ? Array.from(new Array(4)).map((item, i) => {
+                            return (
+                              <Grid
+                                item
+                                xl={3}
+                                lg={4}
+                                md={6}
+                                sm={6}
+                                xs={12}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <CardSkeletonLoader key={i} />
+                              </Grid>
+                            );
+                          })
+                        : practitionerNftData.length >= 1 &&
+                          practitionerNftData
+                            ?.slice(0, 4)
+                            ?.map(({ name, address, image, id }, i) => (
+                              <Grid
+                                item
+                                xl={3}
+                                lg={4}
+                                md={6}
+                                sm={6}
+                                xs={12}
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  paddingTop: "30px",
+                                }}
+                              >
+                                <NftCard
+                                  key={i}
+                                  id={id}
+                                  title={name}
+                                  address={address}
+                                  image={image}
+                                  type="practitionerNftDetail"
+                                />
+                              </Grid>
+                            ))}
+                    </Grid>
                   </Box>
                 </NftsCards>
               </>

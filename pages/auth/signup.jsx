@@ -306,7 +306,7 @@ const SignUp = () => {
                     "Last Name can only contain alphabets"
                   ),
                 email: Yup.string()
-                  .email("Email Should be a valid email")
+                  .email("Email should be a valid email")
                   .required("Email is required"),
                 phoneNumber: Yup.string().required("Phone number is required"),
                 // .matches(

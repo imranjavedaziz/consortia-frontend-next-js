@@ -5,6 +5,7 @@ import {
   styled,
   Grid,
   CardMedia,
+  Skeleton,
   Avatar,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
@@ -51,6 +52,8 @@ const PractitionerDetailPage = () => {
 
   const [propertyNftsData, setPropertyNftsData] = useState([]);
 
+  const [loading, setLoading] = useState([])
+
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
 
@@ -64,6 +67,7 @@ const PractitionerDetailPage = () => {
 
   const getNftData = async () => {
     try {
+      setLoading(true)
       const res = await publicAxios.get(
         `${PRACTITIONER_NFT_DETAIL}/${query?.id}`,
         {
@@ -74,11 +78,13 @@ const PractitionerDetailPage = () => {
       );
       // console.log('res', res)
       setNftDetail(res?.data?.data);
-
+      setLoading(false)
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
+      setLoading(false)
+
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
@@ -157,14 +163,14 @@ const PractitionerDetailPage = () => {
                 <Box>
                   <Box>
                     {/* <Image src={nftDetail?.image} height={149} width={149} alt='image' /> */}
-                    <Avatar
+                   {loading ?  <Skeleton animation="wave" variant="circular" width={150} height={150} /> : <Avatar
                       alt="nft card Icon"
                       src={nftDetail?.image}
                       sx={{
                         height: "150px",
                         width: "150px",
                       }}
-                    />
+                    />}
                   </Box>
                 </Box>
               </Grid>

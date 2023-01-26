@@ -23,6 +23,7 @@ const NftCard = ({ title, address, image, id, type }) => {
         backdropFilter: "blur(10px)",
         padding: 1,
         borderRadius: "15px",
+        marginRight:'10px'
       }}
     >
       <CardMedia

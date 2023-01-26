@@ -13,7 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import { VERIFY_OTP } from "../../../constants/endpoints";
+import { VERIFY_OTP, RESEND_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -44,7 +44,10 @@ function VerifyCodeForProfileUpdate({
   updatedUserData,
   fetchUpdatedData,
   profileUpdate,
+  endPoint,
   email,
+  isParentModal,
+  editProfileKey,
   handleParentClose,
 }) {
   const [code, setCode] = useState("");
@@ -93,16 +96,23 @@ function VerifyCodeForProfileUpdate({
     }
   };
   const updateDetails = async () => {
+    debugger
     try {
       if (code.length > 0) {
         setFetching(true);
         const res = await publicAxios.post(
-          "verify_complete_profile",
+          endPoint || "verify_complete_profile",
           {
             ...updatedUserData,
             otp: code,
             otp_type: "Email",
-            complete: true,
+            ...(editProfileKey
+              ? {
+                  edit_profile: true,
+                }
+              : {
+                  complete: true,
+                }),
           },
           {
             headers: {
@@ -120,7 +130,7 @@ function VerifyCodeForProfileUpdate({
         };
         localStorage.setItem("profile_info", JSON.stringify(newProfileData));
         handleClose();
-        handleParentClose();
+        isParentModal && handleParentClose();
       } else {
         toast.error("Please enter OTP");
       }
@@ -137,11 +147,20 @@ function VerifyCodeForProfileUpdate({
   const resendCode = async (
     email = JSON.parse(localStorage.getItem("profile_info"))?.user?.email
   ) => {
-    const res = await publicAxios.post("auth/resend", {
-      email: email,
-    });
-    toast.success(res?.data?.message);
+    try {
+      const res = await publicAxios.post(RESEND_OTP, {
+        email,
+      });
+      toast.success(res?.data?.message);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      }
+    }
   };
+  console.log("editProfileKey", editProfileKey);
   return (
     <>
       <Dialog

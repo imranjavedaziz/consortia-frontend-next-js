@@ -131,7 +131,7 @@ const EditProfile = () => {
       setUpdatedUserData(valuesToSend);
       try {
         const res = await publicAxios.patch(
-          `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, valuesToSend, {
+          `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, {...valuesToSend,edit_profile:true}, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
@@ -330,6 +330,10 @@ const EditProfile = () => {
                           btnText="Submit"
                           placeholder="Enter your verification code"
                           updatedUserData={updatedUserData}
+                          endPoint='verify_edit_profile'
+
+                          editProfileKey={true}
+                          profileUpdate={true}
                           fetchUpdatedData={fetchUpdatedData}
                           inputTypeCode
                         />
@@ -369,11 +373,11 @@ const EditProfile = () => {
                       .email("Email Should be a valid email")
                       .required("Email is required"),
                     phoneNumber: Yup.string()
-                      .required("Phone number is required")
-                      .matches(
-                        /^\+([0-9]){11,12}$/gm,
-                        "Please enter a valid phone number"
-                      ),
+                      .required("Phone number is required"),
+                      // .matches(
+                      //   /^\+([0-9]){11,12}$/gm,
+                      //   "Please enter a valid phone number"
+                      // ),
                   })}
                 >
                   {(props) => {
@@ -461,6 +465,9 @@ const EditProfile = () => {
                           placeholder="Enter your verification code"
                           updatedUserData={updatedUserData}
                           fetchUpdatedData={fetchUpdatedData}
+                          profileUpdate={true}
+                          editProfileKey={true}
+                          endPoint='verify_edit_profile'
                           inputTypeCode
                         />
                       </form>

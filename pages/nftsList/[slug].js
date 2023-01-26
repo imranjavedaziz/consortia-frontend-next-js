@@ -4,13 +4,15 @@ import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
-import { GET_PRACTITIONER_NFTS, GET_PROPERTY_NFTS } from "../../src/constants/endpoints";
+import {
+  GET_PRACTITIONER_NFTS,
+  GET_PROPERTY_NFTS,
+} from "../../src/constants/endpoints";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import Pagination from "../../src/components/common/pagination/Pagination";
-import CardSkeletonLoader from "../../src/components/common/cardSkeletonLoader/CardSkeletonLoader";
-
+import CardSkeletonLoader from "../../src/components/common/loader/cardSkeletonLoader/CardSkeletonLoader";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -40,128 +42,204 @@ const NftsCards = styled(Box)(({ theme }) => ({
 }));
 
 const NftsList = () => {
-    const {push, query} = useRouter()
+  const { push, query } = useRouter();
 
-    const [page, setPage] = useState(1);
-const [loading,setLoading] = useState(false)
-  const [nftsList, setNftsList] = useState([])
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [nftsList, setNftsList] = useState([]);
 
   useEffect(() => {
-//    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
-//    setLocalData(profileInfo)
-query.slug === 'practitioner-nfts' && getPractitionerNftData()
-query.slug === 'property-nfts' && getNftData()
-   
-  }, [page])
-
+    //    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
+    //    setLocalData(profileInfo)
+    query.slug === "practitioner-nfts" && getPractitionerNftData();
+    query.slug === "property-nfts" && getNftData();
+  }, [page]);
 
   const getNftData = async () => {
     try {
-      setLoading(true)
-      const res = await publicAxios.get(`${GET_PROPERTY_NFTS}?page_size=${12}&page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
+      setLoading(true);
+      const res = await publicAxios.get(
+        `${GET_PROPERTY_NFTS}?page_size=${12}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
       setNftsList(res?.data);
 
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
   const getPractitionerNftData = async () => {
     try {
-      setLoading(true)
-      const res = await publicAxios.get(`${GET_PRACTITIONER_NFTS}?page_size=${12}&page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
+      setLoading(true);
+      const res = await publicAxios.get(
+        `${GET_PRACTITIONER_NFTS}?page_size=${12}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
       // if(res?.data?.data){
-        setNftsList(res?.data);
+      setNftsList(res?.data);
       // }else{
       //   setNftsList([]);
       // }
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object?.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object?.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
   const paginationHandler = (event, value) => {
     setPage(value);
   };
-  
+
   return (
     <>
       <Box>
         <Box>
-          <Typography variant="h3">{query.slug === 'practitioner-nfts' ? 'Practitioner' : 'Property'} NFTs </Typography>
+          <Typography variant="h3">
+            {query.slug === "practitioner-nfts" ? "Practitioner" : "Property"}{" "}
+            NFTs{" "}
+          </Typography>
         </Box>
         <GradientBorderContainer>
           <NftDetailPageContainer>
-          <NftsCards>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: { xs: "center", md: "space-between" },
-                      rowGap: 2,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                      {query.slug === 'practitioner-nfts' && (loading ? Array.from(new Array(4)).map((item, i) => {
-                        return <CardSkeletonLoader key={i}/>
-                      }) : nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
-                      <NftCard
-                        key={i}
-                        title={name}
-                        address={address}
-                        image={image}
-                        type="practitionerNftDetail"
-                        id={id}
-                      />
-                    )))}
-                     {query.slug === 'property-nfts' && (loading ? Array.from(new Array(4)).map((item, i) => {
-                        return <CardSkeletonLoader key={i}/>
-                      }) : nftsList?.results?.length>=1 && nftsList?.results?.map(({ name, address, image ,id}, i) => (
-                        <NftCard
-                        title={title}
-                        address={address}
-                        image={image}
-                        key={i}
-                        type="propertyNftDetail"
-                        id={id}
-                         
-                      />
-                    )))}
-                  </Box>
-                </NftsCards>
+            <NftsCards>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: { xs: "center", md: "space-between" },
+                  rowGap: 2,
+                  flexWrap: "wrap",
+                }}
+              >
+                <Grid container>
+                  {query.slug === "practitioner-nfts" &&
+                    (loading
+                      ? Array.from(new Array(4)).map((item, i) => {
+                          return (
+                            <Grid
+                              item
+                              xl={3}
+                              lg={4}
+                              md={6}
+                              sm={6}
+                              xs={12}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <CardSkeletonLoader key={i} />
+                            </Grid>
+                          );
+                        })
+                      : nftsList?.results?.length >= 1 &&
+                        nftsList?.results?.map(
+                          ({ name, address, image, id }, i) => (
+                            <Grid
+                              item
+                              xl={3}
+                              lg={4}
+                              md={6}
+                              sm={6}
+                              xs={12}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                paddingTop:'30px'
+                              }}
+                            >
+                              <NftCard
+                                key={i}
+                                title={name}
+                                address={address}
+                                image={image}
+                                type="practitionerNftDetail"
+                                id={id}
+                              />
+                            </Grid>
+                          )
+                        ))}
+                  {query.slug === "property-nfts" &&
+                    (loading
+                      ? Array.from(new Array(4)).map((item, i) => {
+                          return (
+                            <Grid
+                              item
+                              xl={3}
+                              lg={4}
+                              md={6}
+                              sm={6}
+                              xs={12}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <CardSkeletonLoader key={i} />
+                            </Grid>
+                          );
+                        })
+                      : nftsList?.results?.length >= 1 &&
+                        nftsList?.results?.map(
+                          ({ name, address, image, id }, i) => (
+                            <Grid
+                              item
+                              xl={3}
+                              lg={4}
+                              md={6}
+                              sm={6}
+                              xs={12}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                paddingTop:'30px'
+                              }}
+                            >
+                              <NftCard
+                                title={title}
+                                address={address}
+                                image={image}
+                                key={i}
+                                type="propertyNftDetail"
+                                id={id}
+                              />
+                            </Grid>
+                          )
+                        ))}
+                </Grid>
+              </Box>
+            </NftsCards>
           </NftDetailPageContainer>
         </GradientBorderContainer>
-        <Box sx={{paddingBottom:'40px'}}>
-          <Pagination 
-           handleChangePage={paginationHandler}
-           totalItems={nftsList?.results?.length}
-           pageSize={12}
-           pageNo={page}
-           totalCounts={
-            nftsList?.count
-           }
+        <Box sx={{ paddingBottom: "40px" }}>
+          <Pagination
+            handleChangePage={paginationHandler}
+            totalItems={nftsList?.results?.length}
+            pageSize={12}
+            pageNo={page}
+            totalCounts={nftsList?.count}
           />
         </Box>
       </Box>

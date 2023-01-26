@@ -283,6 +283,7 @@ function CompletePractitionerProfile({
         placeholder="Enter your verification code"
         updatedUserData={updatedUserData}
         profileUpdate={true}
+        isParentModal = {true}
         handleParentClose={handleClose}
         email={email}
         inputTypeCode
