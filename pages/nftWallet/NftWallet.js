@@ -82,9 +82,7 @@ function NftWallet() {
       setPractitionerNftData(res?.data?.results);
       setLoading(false);
 
-      // }else{
-      //   setPractitionerNftData([]);
-      // }
+      setPractitionerNftData(res?.data?.results);
     } catch (error) {
       setLoading(false);
 

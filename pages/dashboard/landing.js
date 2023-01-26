@@ -4,11 +4,46 @@ import NftsLayout from "../../src/nftsLayout";
 import GradientButton from "../../src/components/common/GradientButton";
 import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
-import VerifyIdentity from "../../src/components/stripeIntegration/VerifyIdentity";
+// import AWS from "aws-sdk";
+{
+  /* 
+AWS.config.update({
+  accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
+  secretAccessKey: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
+});
 
+const myBucket = new AWS.S3({
+  params: {
+    Bucket: true
+      ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+      : process.env.NEXT_PUBLIC_BUCKET_NAME,
+  },
+  region: process.env.REGION,
+});
+
+const handleDownload = () => {
+  myBucket.getObject(
+    {
+      Bucket: "consortialockablecontent",
+      Key: "1674563359663Warranty_Deed.pdf",
+    },
+    async (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const file = data.Body;
+        console.log({ data });
+        const blob = new Blob([arr], { type: "application/pdf" });
+        const url = URL.createObjectURL(file);
+        console.log({ url });
+      }
+    }
+  );
+};
+*/
+}
 function Landing() {
   useTitle("Dasboard");
-  
 
   const { push } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
@@ -23,7 +58,7 @@ function Landing() {
         <Typography variant="h3">
           {profileInfo?.user?.role === "Practitioner"
             ? "Practitioner"
-            : "Consumer"}{" "}
+            : "Consumer"}
           Dashboard
         </Typography>
       </Box>
@@ -62,7 +97,6 @@ function Landing() {
             </Button>
           </Box>
         )}
-
         <Box width={230} onClick={() => push("/property/mint-nft")}>
           <Button
             variant="gradient"
@@ -72,6 +106,17 @@ function Landing() {
             Mint Property NFT
           </Button>
         </Box>
+        {/*
+        <Box width={230} onClick={handleDownload}>
+          <Button
+            variant="gradient"
+            size="large"
+            sx={{ fontSize: { xs: "10px", md: "20px" } }}
+          >
+            Download
+          </Button>
+        </Box>
+        */}
       </Box>
     </>
   );
