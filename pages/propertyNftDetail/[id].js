@@ -87,7 +87,7 @@ const PractitionerDetailPage = () => {
       }
     }
   };
-  const headerData = ["Token ID", "Action","Timestamp", "Document Type"];
+  const headerData = ["Token ID", "Action","Document Type","Timestamp", ];
   const rowData = [
       {text1: `${nftDetail?.tx_id?.slice(0, 12)}...`,
       text2: nftDetail?.is_minted ? 'Mint' : '_ _',
