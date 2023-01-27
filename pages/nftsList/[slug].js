@@ -49,11 +49,12 @@ const NftsList = () => {
   const [nftsList, setNftsList] = useState([]);
 
   useEffect(() => {
+    // debugger
     //    const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
     //    setLocalData(profileInfo)
     query.slug === "practitioner-nfts" && getPractitionerNftData();
     query.slug === "property-nfts" && getNftData();
-  }, [page]);
+  }, [page,query.slug]);
 
   const getNftData = async () => {
     try {
