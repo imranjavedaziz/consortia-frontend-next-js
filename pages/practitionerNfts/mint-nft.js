@@ -67,7 +67,7 @@ const MintNFTS = () => {
 
   useTitle("Mint NFTs");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
-  const [profileInfo, setProfileInfo] = useState();
+  const [profileInfo, setProfileInfo] = useState({});
   const [headShot, setHeadshot] = useState("");
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
@@ -76,6 +76,7 @@ const MintNFTS = () => {
     if (typeof window !== "undefined") {
       const localData = JSON.parse(localStorage.getItem("profile_info"));
       setProfileInfo(localData);
+      setHeadshot(localData?.user?.headshot)
       setLicenseTypeValue(localData?.user?.practitionerType);
     }
   }, []);
@@ -141,7 +142,7 @@ const MintNFTS = () => {
     // licenseType,
     licenseNumber,
   }) => {
-    if (headShot.length == 0) {
+    if (false) {
       toast.error("Please upload profile");
     } else {
       setData({
@@ -378,7 +379,7 @@ const MintNFTS = () => {
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={headShot.length < 1}
+                            // disabled={headShot.length < 1}
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,
