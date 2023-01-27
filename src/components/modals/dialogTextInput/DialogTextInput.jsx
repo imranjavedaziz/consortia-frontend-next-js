@@ -56,7 +56,6 @@ function DialogTextInput({
   const { showSecondForm, setShowSecondForm } = useAuthContext();
 
   const verifyCode = async (email) => {
-    debugger
     try {
       if (code.length > 0) {
         setFetching(true);

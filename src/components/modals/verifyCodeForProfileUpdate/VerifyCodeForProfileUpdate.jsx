@@ -96,7 +96,6 @@ function VerifyCodeForProfileUpdate({
     }
   };
   const updateDetails = async () => {
-    debugger
     try {
       if (code.length > 0) {
         setFetching(true);
