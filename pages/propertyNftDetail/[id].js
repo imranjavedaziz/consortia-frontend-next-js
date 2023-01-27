@@ -59,33 +59,36 @@ const PractitionerDetailPage = () => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     setLocalData(profileInfo);
     getNftData();
-  }, []);
+  }, [query?.id]);
 
   const getNftData = async () => {
     // debugger
-    try {
-      const res = await publicAxios.get(
-        `${PROPERTY_NFT_DETAIL}/${query?.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
+    if(query?.id){
+      try {
+        const res = await publicAxios.get(
+          `${PROPERTY_NFT_DETAIL}/${query?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        // console.log('res', res)
+        setNftDetail(res?.data?.data);
+  
+        // console.log("res", res?.data?.nfts);
+  
+        // setUserData(res?.data?.data?.user);
+      } catch (error) {
+        console.log(error);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
-      );
-      // console.log('res', res)
-      setNftDetail(res?.data?.data);
-
-      // console.log("res", res?.data?.nfts);
-
-      // setUserData(res?.data?.data?.user);
-    } catch (error) {
-      console.log(error);
-      if (Array.isArray(error?.data?.message)) {
-        toast.error(error?.data?.message?.error?.[0]);
-      } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
+    
   };
   const headerData = ["Token ID", "Action","Document Type","Timestamp", ];
   const rowData = [
