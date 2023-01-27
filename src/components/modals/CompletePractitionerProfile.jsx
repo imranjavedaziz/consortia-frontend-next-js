@@ -201,6 +201,8 @@ function CompletePractitionerProfile({
                       margin: "2px 2px 2px 2px",
                       borderRadius: "24px",
                     }}
+                    rows={3}
+                    multiline={true}
                   />
                 </div>
               </Box>

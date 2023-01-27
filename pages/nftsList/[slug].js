@@ -206,7 +206,7 @@ const NftsList = () => {
                         })
                       : nftsList?.results?.length >= 1 &&
                         nftsList?.results?.map(
-                          ({ name, address, image, id }, i) => (
+                          ({ name, address, image, id,title }, i) => (
                             <Grid
                               item
                               key={i}

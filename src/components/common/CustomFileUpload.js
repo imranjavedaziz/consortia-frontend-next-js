@@ -1,6 +1,6 @@
 import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRef } from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -20,12 +20,15 @@ const CustomFileUpload = ({
   width,
   allowPdf = false,
   privateBucket = false,
+  practitioner,
 }) => {
   const [file, setFile] = useState("");
+  const [userData, setuserData] = useState({})
   const [fileType, setFileType] = useState("");
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
 
+  console.log('userData', userData)
   const myBucket = new AWS.S3({
     params: {
       Bucket: privateBucket
@@ -40,6 +43,14 @@ const CustomFileUpload = ({
       ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
       : ["jpg", "png"].some((char) => img?.endsWith(char));
 
+      useEffect(() => {
+        const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
+        if(practitioner && profileInfo?.user?.role === "Practitioner"){
+          setFile(profileInfo?.user?.headshot)
+        }
+        setuserData(profileInfo)
+      }, [])
+      
   const handleChange = (e) => {
     if (validImage(e.target.files[0]?.name)) {
       if (e.target.files[0].size < 1048576) {
@@ -123,7 +134,8 @@ const CustomFileUpload = ({
             justifyContent: "center",
             alignItems: "center",
             borderRadius: borderRadius ?? "4px",
-            cursor: "pointer",
+            cursor: practitioner && userData?.user?.role === 
+            "Practitioner" ? "arrow" : "pointer",
           }}
           onClick={handleClick}
         >
@@ -149,6 +161,8 @@ const CustomFileUpload = ({
         <input
           type="file"
           ref={ref}
+          disabled={practitioner && userData?.user?.role === 
+            "Practitioner" ? true : false}
           hidden
           width={"100%"}
           height="100%"

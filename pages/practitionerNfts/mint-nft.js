@@ -295,6 +295,8 @@ const MintNFTS = () => {
                             setS3Url={setHeadshot}
                             borderRadius="24px"
                             width="100%"
+                            // componentFor="Practitioner"
+                            practitioner={true}
                           />
                         </Box>
                         <Box pt={3}>
@@ -305,8 +307,8 @@ const MintNFTS = () => {
                             disabled={true}
                             // select={select}
                             // options={options}
-                            // rows={maxRows}
-                            // multiline={multiline}
+                            rows={3}
+                            multiline={true}
                           />
                         </Box>
                         <Box pt={3}>

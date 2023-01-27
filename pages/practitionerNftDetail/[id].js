@@ -132,7 +132,7 @@ const PractitionerDetailPage = () => {
   ];
   const rowData = propertyNftsData?.map((item, i) => {
     return {
-      text1: `${item.tx_id.slice(0, 12)}...`,
+      text1: `${item.tx_id?.slice(0, 12)}...`,
       text2: item.address,
       text3: item.title,
       text4: item.docCategory,

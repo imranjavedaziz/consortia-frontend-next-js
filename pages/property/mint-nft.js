@@ -75,13 +75,13 @@ const MintNFTS = () => {
         sublabel: "Exact Name as it appears on title",
         placeholder: "Enter the exact name",
       },
-      {
-        name: "propertyType",
-        label: "Select property category:",
-        placeholder: "Select your property",
-        options: propertyList,
-        select: true,
-      },
+      // {
+      //   name: "propertyType",
+      //   label: "Select property category:",
+      //   placeholder: "Select your property",
+      //   options: propertyList,
+      //   select: true,
+      // },
 
       {
         component: (
@@ -134,8 +134,8 @@ const MintNFTS = () => {
       setData({
         name: values.name,
         title:
-          values.propertyType === "building"
-            ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
+          values.apartmentNo
+            ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
             : latLngPlusCode.plusCode,
         price: 10,
         image: housePhoto,
@@ -211,11 +211,11 @@ const MintNFTS = () => {
               <Formik
                 initialValues={{
                   name: "",
-                  propertyType: "",
+                  // propertyType: "",
                   agent: "",
                   price: "",
                   apartmentNo: "",
-                  floorNo: "",
+                  // floorNo: "",
                   address: "",
                   category: "",
                 }}
@@ -225,19 +225,21 @@ const MintNFTS = () => {
                 validationSchema={Yup.object().shape({
                   // agent: Yup.string().required("Agent is required"),
                   // price: Yup.string().required("Price is required"),
-                  propertyType: Yup.string().required(
-                    "Property Type is required"
-                  ),
-                  floorNo: Yup.string().when(["propertyType"], {
-                    is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("Floor No. is required"),
-                    otherwise: Yup.string().optional(),
-                  }),
-                  apartmentNo: Yup.string().when(["propertyType"], {
-                    is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("Apartment No. is required"),
-                    otherwise: Yup.string().optional(),
-                  }),
+                  // propertyType: Yup.string().required(
+                  //   "Property Type is required"
+                  // ),
+                  // floorNo: Yup.string().when(["propertyType"], {
+                  //   is: (propertyType) => propertyType == "building",
+                  //   then: Yup.string().required("Floor No. is required"),
+                  //   otherwise: Yup.string().optional(),
+                  // }),
+                  apartmentNo: Yup.string().optional(),
+
+                  // .when(["propertyType"], {
+                  //   is: (propertyType) => propertyType == "building",
+                  //   then: Yup.string().required("Apartment No. is required"),
+                  //   otherwise: Yup.string()
+                  // }),
                   address: Yup.string().required("Address is required"),
                   category: Yup.string().required(
                     "Please choose a document category"
@@ -289,9 +291,9 @@ const MintNFTS = () => {
                             </Box>
                           )
                         )}
-                        {values.propertyType === "building" && (
+                        {/* {values.propertyType === "building" && ( */}
                           <>
-                            <Box
+                            {/* <Box
                               display="flex"
                               flexDirection="column"
                               rowGap={3}
@@ -305,7 +307,7 @@ const MintNFTS = () => {
                                   select={false}
                                 />
                               </Box>
-                            </Box>
+                            </Box> */}
                             <Box
                               display="flex"
                               flexDirection="column"
@@ -322,7 +324,7 @@ const MintNFTS = () => {
                               </Box>
                             </Box>
                           </>
-                        )}
+                        {/* // )} */}
 
                         <Box
                           display="flex"
