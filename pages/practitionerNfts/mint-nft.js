@@ -26,6 +26,8 @@ import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../../src/context/AuthContext";
+import CreditCardInput from "../../src/components/CreditCardInput";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -42,7 +44,7 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     padding: "40px 281px",
   },
-  [theme.breakpoints.between("xs","lg")]: {
+  [theme.breakpoints.between("xs", "lg")]: {
     padding: "40px 12%",
   },
 }));
@@ -57,12 +59,18 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 
 const MintNFTS = () => {
   const { push } = useRouter();
+  const {
+    isCreditCardModalOpen,
+    setIsCreditCardModalOpen,
+    handleCreditCardModalClose,
+  } = useAuthContext();
 
   useTitle("Mint NFTs");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [profileInfo, setProfileInfo] = useState();
   const [headShot, setHeadshot] = useState("");
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
+  const [data, setData] = useState({});
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -136,36 +144,47 @@ const MintNFTS = () => {
     if (headShot.length == 0) {
       toast.error("Please upload profile");
     } else {
-      try {
-        const res = await publicAxios.post(
-          `${MINT_PRACTITIONER_NFT}`,
-          {
-            name,
-            email,
-            address,
-            image: headShot,
-            bio,
-            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      setData({
+        name,
+        email,
+        address,
+        image: headShot,
+        bio,
+        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+        licenseType: licenseTypeValue,
+        licenseNumber,
+      });
+      setIsCreditCardModalOpen(true);
+      // try {
+      //   const res = await publicAxios.post(
+      //     `${MINT_PRACTITIONER_NFT}`,
+      //     {
+      //       name,
+      //       email,
+      //       address,
+      //       image: headShot,
+      //       bio,
+      //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
 
-            // role: profileInfo.user.role ? "practitioner" : "consumer",
-            licenseType: licenseTypeValue,
-            licenseNumber,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          }
-        );
-        toast.success("practitionar nft is minted successfully");
-        push("/nftWallet/NftWallet");
-      } catch (error) {
-        if (Array.isArray(error?.data?.message)) {
-          toast.error(error?.data?.message?.error?.[0]);
-        } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
-        }
-      }
+      //       // role: profileInfo.user.role ? "practitioner" : "consumer",
+      //       licenseType: licenseTypeValue,
+      //       licenseNumber,
+      //     },
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //       },
+      //     }
+      //   );
+      //   toast.success("practitionar nft is minted successfully");
+      //   push("/nftWallet/NftWallet");
+      // } catch (error) {
+      //   if (Array.isArray(error?.data?.message)) {
+      //     toast.error(error?.data?.message?.error?.[0]);
+      //   } else {
+      //     toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+      //   }
+      // }
     }
   };
   return (
@@ -184,7 +203,10 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
-                  name: profileInfo && profileInfo?.user?.firstName + ` ${profileInfo?.user?.lastName}`,
+                  name:
+                    profileInfo &&
+                    profileInfo?.user?.firstName +
+                      ` ${profileInfo?.user?.lastName}`,
                   email: profileInfo && profileInfo?.user?.email,
                   address: "",
                   // image: "",
@@ -293,7 +315,7 @@ const MintNFTS = () => {
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
-                              flexWrap:'wrap'
+                              flexWrap: "wrap",
                             }}
                           >
                             {radioBoxList.map((item, i) => {
@@ -372,6 +394,7 @@ const MintNFTS = () => {
           </MintPropertyNfts>
         </GradientMintPropertyNfts>
       </Box>
+      <CreditCardInput isPractitionerNFT={true} mintNFTData={data} />
     </>
   );
 };

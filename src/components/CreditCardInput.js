@@ -30,6 +30,10 @@ import { GradiantTextField } from "./common/CustomInputField";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
+import {
+  MINT_PRACTITIONER_NFT,
+  MINT_PROPERTY_NFT,
+} from "../constants/endpoints";
 
 const inputFields = [
   {
@@ -57,7 +61,7 @@ const inputFields = [
   },
 ];
 
-const CreditCardInput = ({ mintNFTData }) => {
+const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
   const { push } = useRouter();
 
   const {
@@ -139,7 +143,7 @@ const CreditCardInput = ({ mintNFTData }) => {
         console.log({ result });
         try {
           const res = await publicAxios.post(
-            "/property_nft",
+            isPractitionerNFT ? MINT_PRACTITIONER_NFT : MINT_PROPERTY_NFT,
             {
               payment_intent_id: result?.id,
               "3d_secure": false,
@@ -158,7 +162,7 @@ const CreditCardInput = ({ mintNFTData }) => {
             );
             console.log(result1?.paymentIntent?.id);
             const result3 = await publicAxios.post(
-              "/property_nft",
+              isPractitionerNFT ? MINT_PRACTITIONER_NFT : MINT_PROPERTY_NFT,
               {
                 payment_intent_id: result1?.paymentIntent?.id,
                 "3d_secure": true,
@@ -172,7 +176,7 @@ const CreditCardInput = ({ mintNFTData }) => {
               }
             );
           }
-          toast.success("Property NFT Minted Successfully");
+          toast.success("NFT Minted Successfully");
           if (
             !JSON.parse(localStorage.getItem("profile_info"))?.user
               ?.stripe_identity_status
@@ -259,7 +263,9 @@ const CreditCardInput = ({ mintNFTData }) => {
       }}
     >
       <DialogTitle>
-        <Typography variant="h3">Property NFT $20</Typography>
+        <Typography variant="h3">
+          {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $1"}
+        </Typography>
       </DialogTitle>
       <DialogContent>
         <div className="App-payment">
