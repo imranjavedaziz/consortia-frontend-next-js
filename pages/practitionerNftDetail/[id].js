@@ -209,7 +209,7 @@ const PractitionerDetailPage = () => {
                         Wallet Address:
                       </Typography>
                       <Typography variant="subtitle1" ref={CopyPrivateTextRef}>
-                        {nftDetail?.wallet_address}
+                        {loading ?  <Skeleton animation="wave" variant="circular" width={150} height={150} /> : nftDetail?.wallet_address}
                       </Typography>
                       <Box sx={{ paddingLeft: "10px", cursor: "pointer" }}>
                         <Image

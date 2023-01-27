@@ -17,8 +17,8 @@ function Index({ children }) {
       if (token && profileInfo?.user?.practitionerType ) {
         push("/dashboard/landing");
       } else {
-        setShowSecondForm(true)
-        push("/auth/signup");
+        // setShowSecondForm(true)
+        push("/auth/login");
       }
     } else {
       if (token) push("/dashboard/landing");
