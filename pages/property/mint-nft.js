@@ -103,7 +103,6 @@ const MintNFTS = () => {
   ];
 
   const handleSubmit = async (values, resetForm) => {
-    debugger;
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");
       return;

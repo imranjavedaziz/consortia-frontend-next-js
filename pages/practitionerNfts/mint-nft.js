@@ -197,7 +197,7 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Mint Practitioner NFTs
+                Step One: Property Information
               </Typography>
             </Box>
             <Box>

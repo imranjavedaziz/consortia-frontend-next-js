@@ -68,7 +68,6 @@ const Header = () => {
     return route == path;
   };
   useEffect(() => {
-    // debugger
     const token = localStorage.getItem("access");
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     // if (token) {

@@ -140,7 +140,6 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
           toast.error(result?.error?.message);
           return;
         }
-        console.log({ result });
         try {
           const res = await publicAxios.post(
             isPractitionerNFT ? MINT_PRACTITIONER_NFT : MINT_PROPERTY_NFT,
@@ -157,14 +156,19 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
           );
           console.log(res);
           if (res?.data?.data?.requires_action) {
-            const result1 = await stripe.confirmCardPayment(
+            const confirmationData = await stripe.confirmCardPayment(
               res?.data?.data?.payment_intent_client_secret
             );
-            console.log(result1?.paymentIntent?.id);
-            const result3 = await publicAxios.post(
+
+            if (confirmationData?.error) {
+              toast.error(confirmationData?.error?.message);
+              setLoading(false);
+              return;
+            }
+            const mintNftAfterPayment = await publicAxios.post(
               isPractitionerNFT ? MINT_PRACTITIONER_NFT : MINT_PROPERTY_NFT,
               {
-                payment_intent_id: result1?.paymentIntent?.id,
+                payment_intent_id: confirmationData?.paymentIntent?.id,
                 "3d_secure": true,
                 name: "Paul",
                 ...mintNFTData,
