@@ -18,7 +18,6 @@ import toast, { Toaster } from "react-hot-toast";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import countries from "../../src/listOfCountriesAndStates.json";
 import { useRouter } from "next/router";
-import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { ImageLogo } from "../../src/layout/header/Header";
@@ -123,7 +122,7 @@ const SignUp = () => {
           firstName,
           lastName,
           email,
-          phoneNumber,
+          phoneNumber: `+${phoneNumber}`,
           password,
           confirm_password,
           role: isPractitioner ? "Practitioner" : "Consumer",

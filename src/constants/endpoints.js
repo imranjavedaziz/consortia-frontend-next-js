@@ -9,6 +9,7 @@ export const PROFILE_BY_ID= "profile"
 export const VERIFY_OTP = "verify_otp"
 export const RESET_PASSWORD = "reset_password"
 export const VERIFY_OTP_PASSWORD = "verify_password_otp"
+export const VERIFY_OTP_MFA = "verify_phone_email"
 
 export const GET_PROFILE_BY_USERID = "get_profile"
 export const MINT_PRACTITIONER_NFT = "practitioner_nft"

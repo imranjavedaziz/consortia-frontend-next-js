@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { styled } from "@mui/system";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PhoneInput from "react-phone-input-2";
-// import "react-phone-input-2/lib/bootstrap.css";
+import "react-phone-input-2/lib/style.css";
 
 export const GradiantTextField = styled(TextField)(({}) => ({
   paddingRight: "20px",
@@ -127,15 +127,15 @@ const CustomInputField = ({
                   },
                 },
                 "& .country-list": {
-                  "& .search":{
+                  "& .search": {
                     background: "rgba(29, 6, 104, 1)",
                   },
                   "& :hover": {
                     background: "rgba(29, 6, 104, 1)",
                   },
                   "& .country.highlight": {
-                    backgroundColor:'transparent'
-                  }
+                    backgroundColor: "transparent",
+                  },
                 },
                 // }
               },
@@ -146,7 +146,7 @@ const CustomInputField = ({
               enableSearch={true}
               // name={props.name}
               // value={this.state.phone}
-              onChange={(phone) =>setFieldValue("phoneNumber",phone)}
+              onChange={(phone) => setFieldValue("phoneNumber", phone)}
               // {...field}
               // {...props}
               buttonStyle={{
@@ -154,7 +154,7 @@ const CustomInputField = ({
                 color: "#fff",
                 border: "none",
                 borderRadius: "24px",
-                paddingLeft:'10px',
+                paddingLeft: "10px",
                 ":hover": {
                   background: "transparent",
                 },
@@ -165,7 +165,6 @@ const CustomInputField = ({
                 width: "100%",
                 border: "none",
                 borderRadius: "24px",
-              
               }}
               dropdownStyle={{
                 backgroundColor: "rgba(29, 6, 104, 1)",
