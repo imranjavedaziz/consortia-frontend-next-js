@@ -36,7 +36,6 @@ import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { AUTH_LOGIN } from "../../src/constants/endpoints";
 
-
 function Login() {
   useTitle("Login");
 
@@ -46,7 +45,9 @@ function Login() {
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const { setShowSecondForm, setChoosePractitionerOpen } = useAuthContext();
 
-  const belowSm = useMediaQuery((theme) => theme.breakpoints.between('xs', 'sm'))
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   const login = async ({ email, password, remember }) => {
     try {
@@ -55,7 +56,7 @@ function Login() {
         password,
         rememberMe: remember,
       });
-      console.log(res?.data?.data)
+      console.log(res?.data?.data);
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access", res?.data?.data?.access);
       toast.success("Welcome Back!");
@@ -74,7 +75,7 @@ function Login() {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
         setEmail(email);
         setEmailVerificationOpen(true);
@@ -84,7 +85,7 @@ function Login() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0])
+        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
   };
@@ -121,7 +122,10 @@ function Login() {
           justifyContent="center"
         >
           <ImageLogo
-            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
+            sx={{
+              ":hover": { cursor: "pointer" },
+              padding: { xs: "24px 0px 32px 0px", md: "0px" },
+            }}
             onClick={() => push("/")}
           >
             <Image
@@ -260,7 +264,7 @@ function Login() {
         <Grid
           item
           xs={6}
-          display={{md:"flex",xs:"none"}}
+          display={{ md: "flex", xs: "none" }}
           alignItems="center"
           justifyContent="center"
         >

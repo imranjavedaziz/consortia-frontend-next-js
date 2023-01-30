@@ -15,6 +15,9 @@ export const AuthContext = ({ children }) => {
   const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
   const [isVerifyIdentityModalOpen, setIsVerifyIdentityModalOpen] =
     useState(false);
+    const [openVerficationModal, setOpenVerficationModal] = useState(false)
+    const [openVerificationSuccess,setOpenVerificationSuccess] = useState(false)
+  const [openVerificationFailure,setOpenVerificationFailure] = useState(false)
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -24,6 +27,9 @@ export const AuthContext = ({ children }) => {
   const handleVerifyIdentityModalClose = () => {
     setIsVerifyIdentityModalOpen(false);
   };
+
+
+
   useEffect(() => {
     // if (localStorage.getItem("access")) {
     //   setIsLoggedIn(true);
@@ -64,6 +70,12 @@ export const AuthContext = ({ children }) => {
         isVerifyIdentityModalOpen,
         setIsVerifyIdentityModalOpen,
         handleVerifyIdentityModalClose,
+        setOpenVerficationModal,
+        openVerficationModal,
+        openVerificationSuccess,
+        setOpenVerificationSuccess,
+        openVerificationFailure,
+        setOpenVerificationFailure
       }}
     >
       {children}

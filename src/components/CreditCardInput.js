@@ -63,12 +63,15 @@ const inputFields = [
 
 const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
   const { push } = useRouter();
+  
 
   const {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
     setIsVerifyIdentityModalOpen,
+    setOpenVerificationSuccess,
+    setOpenVerificationFailure
   } = useAuthContext();
 
   const [stripe, setStripe] = useState({});
@@ -196,14 +199,15 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             );
             const { error } = await stripe.verifyIdentity(data?.data);
             if (error) {
-              toast.error("Verification failed");
-              console.log("[error]", error);
               setLoading(false);
-              push("/nftWallet/NftWallet");
+              // toast.error("Verification failed");
+              setOpenVerificationFailure(true)
               handleCreditCardModalClose();
+              console.log("[error]", error);
+              // push("/nftWallet/NftWallet");
               return;
             } else {
-              console.log("Verification submitted!");
+              // console.log("Verification submitted!");
               const old_profile_info = JSON.parse(
                 localStorage.getItem("profile_info")
               );
@@ -218,8 +222,9 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                 "profile_info",
                 JSON.stringify(new_profile_info)
               );
-              toast.success("Verification submitted!");
-              push("/nftWallet/NftWallet");
+              // toast.success("Verification submitted!");
+              setOpenVerificationSuccess(true)
+              // push("/nftWallet/NftWallet");
               handleCreditCardModalClose();
               return;
             }

@@ -16,13 +16,24 @@ import { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
+import VerificationModal from "../components/modals/verificationModal/VerificationModal";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
 
   const { push } = useRouter();
-  const { isLoggedIn, setIsLoggedIn, isStripeModalOpen, setIsStripeModalOpen } =
-    useAuthContext();
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    isStripeModalOpen,
+    setIsStripeModalOpen,
+    setOpenVerficationModal,
+    openVerficationModal,
+    openVerificationSuccess,
+    setOpenVerificationSuccess,
+    openVerificationFailure,
+    setOpenVerificationFailure
+  } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
@@ -78,6 +89,20 @@ function NftsLayout({ children }) {
 
   return (
     <>
+      <VerificationModal
+        open={openVerificationFailure}
+        setOpen={setOpenVerificationFailure}
+        title="Verification failed!"
+        imageSrc="/assets/icons/verificationFailedIcon.svg"
+        text="Unable to verify your identity at this time. Please try again later."
+      />
+        <VerificationModal
+        open={openVerificationSuccess}
+        setOpen={setOpenVerificationSuccess}
+        title="Congratulations!"
+        imageSrc="/assets/icons/verificationSuccessIcon.svg"
+        text="Your identity has been successfully verified"
+      />
       <CompletePractitionerProfile
         open={completeProfileOpen}
         setOpen={setCompleteProfileOpen}
