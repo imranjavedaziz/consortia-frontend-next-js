@@ -12,61 +12,46 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
-import { useRouter } from "next/router";
-import { FORGET_PASSWORD } from "../../../constants/endpoints";
+import { VERIFY_OTP_MFA } from "../../../constants/endpoints";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import CustomInputField from "../../common/CustomInputField";
-import DialogOTPSend from "./DialogOTPSend";
+import { useRouter } from "next/router";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const inputFields = [
-  { name: "email", label: "Email Address", placeholder: "mail@example.com" },
+  { name: "email_otp", label: "Email OTP", placeholder: "123456" },
   {
-    name: "phoneNumber",
-    label: "Phone Number",
-    placeholder: "+12345678900",
-    inputType: "phone",
+    name: "phone_otp",
+    label: "Phone OTP",
+    placeholder: "123456",
   },
 ];
 
-function DialogResetPassword({
-  open,
-  setOpen,
-  text,
-  title,
-  input,
-  btnText,
-  placeholder,
-  inputTypeCode,
-  isPractitioner,
-  setShowSecondForm,
-}) {
+function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
+  const { push } = useRouter();
+
   const handleClose = () => {
     setOpen(false);
-    setEmail("");
   };
-  const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
-  const [otpModalOpen, setOtpModalOpen] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const resetPassword = async (values) => {
-    // if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+  const resetPassword = async ({ email_otp, phone_otp }) => {
     try {
       setFetching(true);
-      const res = await publicAxios.post(FORGET_PASSWORD, {
-        email: values.email,
-        phoneNumber: `+${values.phoneNumber}`,
+      const res = await publicAxios.post(VERIFY_OTP_MFA, {
+        email_otp,
+        phone_otp,
+        email,
       });
       setFetching(false);
-      setEmail(values.email);
+      console.log(res);
       toast.success(res?.data?.message);
-      setOtpModalOpen(true);
-      // handleClose();
+      push(`reset-password/${res?.data?.reset_token}`);
+      handleClose();
     } catch (error) {
       setFetching(false);
       if (Array.isArray(error?.data?.message)) {
@@ -75,10 +60,6 @@ function DialogResetPassword({
         toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
       }
     }
-    // }else{
-    // setIsValidEmail(false)
-    // toast.error('Please enter a valid email!')
-    // }
   };
 
   return (
@@ -86,8 +67,6 @@ function DialogResetPassword({
       <Dialog
         open={open}
         TransitionComponent={Transition}
-        // onClose={handleClose}
-        // aria-describedby="alert-dialog-slide-description"
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
@@ -137,12 +116,11 @@ function DialogResetPassword({
             setSubmitting(false);
           }}
           validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .email("Email should be a valid email")
-              .required("Email is required"),
-            phoneNumber: Yup.string()
-              .required("Phone number is required")
-              .min(1, "Phone number is required"),
+            email_otp: Yup.string()
+              // .email("Email should be a valid email")
+              .required("Email OTP is required"),
+            phone_otp: Yup.string().required("Phone OTP is required"),
+            // .min(1, "Phone number is required"),
           })}
         >
           {(props) => {
@@ -233,16 +211,8 @@ function DialogResetPassword({
           }}
         </Formik>
       </Dialog>
-      <DialogOTPSend
-        email={email}
-        text="Please enter phone and email otp"
-        title="OTP Verification"
-        btnText="Verify"
-        open={otpModalOpen}
-        setOpen={setOtpModalOpen}
-      />
     </>
   );
 }
 
-export default DialogResetPassword;
+export default DialogOTPSend;
