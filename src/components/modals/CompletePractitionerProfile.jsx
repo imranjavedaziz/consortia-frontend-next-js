@@ -115,10 +115,8 @@ function CompletePractitionerProfile({
     }
   };
   useEffect(() => {
-    const {
-      user: { email },
-    } = JSON.parse(localStorage.getItem("profile_info"));
-    setEmail(email);
+    const user = JSON.parse(localStorage.getItem("profile_info"));
+    setEmail(user?.email);
   }, []);
   return (
     <>
