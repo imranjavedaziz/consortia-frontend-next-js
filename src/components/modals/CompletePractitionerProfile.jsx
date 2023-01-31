@@ -65,6 +65,8 @@ function CompletePractitionerProfile({
   const [email, setEmail] = useState("");
 
   const [headshot, setHeadshot] = useState("");
+  const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
   const [updatedUserData, setUpdatedUserData] = useState({});
@@ -215,6 +217,8 @@ function CompletePractitionerProfile({
                   Files types supported: JPG, PNG, GIF, SVG, Max Size: 1MB
                 </Typography>
                 <CustomFileUpload
+                  uploadingToS3={uploadingHeadshot}
+                  setUploadingToS3={setUploadingHeadshot}
                   s3Url={headshot}
                   setS3Url={setHeadshot}
                   width="100%"
@@ -264,7 +268,13 @@ function CompletePractitionerProfile({
                 <LoadingButton
                   onClick={completePractitionerDetails}
                   loading={isLoading}
-                  disabled={!(headshot.length > 1 && bio.length > 1)}
+                  disabled={
+                    !(
+                      headshot.length > 1 &&
+                      bio.length > 1 &&
+                      !uploadingHeadshot
+                    )
+                  }
                   variant="gradient"
                   size="large"
                   sx={{ fontSize: { xs: "10px", md: "20px" } }}
@@ -285,7 +295,7 @@ function CompletePractitionerProfile({
         placeholder="Enter your verification code"
         updatedUserData={updatedUserData}
         profileUpdate={true}
-        isParentModal = {true}
+        isParentModal={true}
         handleParentClose={handleClose}
         email={email}
         inputTypeCode

@@ -121,7 +121,7 @@ const SignUp = () => {
         const res = await publicAxios.post(`${AUTH_REGISTER}`, {
           firstName,
           lastName,
-          email,
+          email: email.toLowerCase(),
           phoneNumber: `+${phoneNumber}`,
           password,
           confirm_password,

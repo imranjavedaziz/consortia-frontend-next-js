@@ -63,7 +63,7 @@ const SignUp = () => {
       // localStorage.getItem("access", res?.data?.data?.token);
       setTimeout(() => push("/auth/login"), 2500);
     } catch (error) {
-      toast.error(error?.data?.message);
+      // toast.error(error?.data?.message);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
