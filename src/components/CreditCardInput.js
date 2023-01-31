@@ -33,6 +33,7 @@ import { LoadingButton } from "@mui/lab";
 import {
   MINT_PRACTITIONER_NFT,
   MINT_PROPERTY_NFT,
+  STRIPE_VERIFY_IDENTITY,
 } from "../constants/endpoints";
 
 const inputFields = [
@@ -63,7 +64,6 @@ const inputFields = [
 
 const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
   const { push } = useRouter();
-  
 
   const {
     isCreditCardModalOpen,
@@ -71,7 +71,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     handleCreditCardModalClose,
     setIsVerifyIdentityModalOpen,
     setOpenVerificationSuccess,
-    setOpenVerificationFailure
+    setOpenVerificationFailure,
   } = useAuthContext();
 
   const [stripe, setStripe] = useState({});
@@ -190,7 +190,10 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
           ) {
             const { data } = await publicAxios.post(
               "create-verification-session",
-              {},
+              {
+                [isPractitionerNFT ? "practitioner_nft" : "property_nft"]:
+                  res?.data?.data?.id,
+              },
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -199,15 +202,36 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             );
             const { error } = await stripe.verifyIdentity(data?.data);
             if (error) {
+              const res = await publicAxios.post(
+                STRIPE_VERIFY_IDENTITY,
+                {
+                  stripe_identity_progress: "cancelled",
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access")}`,
+                  },
+                }
+              );
               setLoading(false);
               // toast.error("Verification failed");
-              setOpenVerificationFailure(true)
+              setOpenVerificationFailure(true);
               handleCreditCardModalClose();
               console.log("[error]", error);
               // push("/nftWallet/NftWallet");
               return;
             } else {
-              // console.log("Verification submitted!");
+              const res = await publicAxios.post(
+                STRIPE_VERIFY_IDENTITY,
+                {
+                  stripe_identity_progress: "completed",
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access")}`,
+                  },
+                }
+              );
               const old_profile_info = JSON.parse(
                 localStorage.getItem("profile_info")
               );
@@ -223,7 +247,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                 JSON.stringify(new_profile_info)
               );
               // toast.success("Verification submitted!");
-              setOpenVerificationSuccess(true)
+              setOpenVerificationSuccess(true);
               // push("/nftWallet/NftWallet");
               handleCreditCardModalClose();
               return;
