@@ -99,7 +99,7 @@ const CustomInputField = ({
               "& .react-tel-input": {
                 // "& .form-control ": {
                 "& :hover": {
-                  background: "rgba(29, 6, 104, 1)",
+                  // background: "rgba(29, 6, 104, 1)",
                 },
                 "& .selected-flag open ": {
                   background: "none",
@@ -115,6 +115,9 @@ const CustomInputField = ({
                   background: "none",
                 },
                 "& .selected-flag.open": {
+                  ":hover": {
+                    background: "transparent !important",
+                  },
                   ":before": {
                     borderColor: "none",
                     boxShadow: "none",
