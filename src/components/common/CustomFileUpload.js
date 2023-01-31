@@ -7,6 +7,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useState } from "react";
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
+import CircularProgress from "@mui/material/CircularProgress";
 
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
@@ -21,14 +22,17 @@ const CustomFileUpload = ({
   allowPdf = false,
   privateBucket = false,
   practitioner,
+  uploadingToS3, 
+  setUploadingToS3
 }) => {
   const [file, setFile] = useState("");
-  const [userData, setuserData] = useState({})
+  const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
+  // const [uploadingToS3, setUploadingToS3] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
 
-  console.log('userData', userData)
+  console.log("userData", userData);
   const myBucket = new AWS.S3({
     params: {
       Bucket: privateBucket
@@ -43,17 +47,18 @@ const CustomFileUpload = ({
       ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
       : ["jpg", "png"].some((char) => img?.endsWith(char));
 
-      useEffect(() => {
-        const profileInfo = JSON.parse(localStorage.getItem('profile_info'))
-        if(practitioner && profileInfo?.user?.role === "Practitioner"){
-          setFile(profileInfo?.user?.headshot)
-        }
-        setuserData(profileInfo)
-      }, [])
-      
+  useEffect(() => {
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    if (practitioner && profileInfo?.user?.role === "Practitioner") {
+      setFile(profileInfo?.user?.headshot);
+    }
+    setuserData(profileInfo);
+  }, []);
+
   const handleChange = (e) => {
     if (validImage(e.target.files[0]?.name)) {
       if (e.target.files[0].size < 1048576) {
+        setUploadingToS3(true);
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
         myBucket.upload(
@@ -66,9 +71,11 @@ const CustomFileUpload = ({
           },
           async (err, data) => {
             if (err) {
+              setUploadingToS3(false);
               console.log(err);
             } else {
               setS3Url(data?.Location);
+              setUploadingToS3(false);
             }
           }
         );
@@ -134,8 +141,10 @@ const CustomFileUpload = ({
             justifyContent: "center",
             alignItems: "center",
             borderRadius: borderRadius ?? "4px",
-            cursor: practitioner && userData?.user?.role === 
-            "Practitioner" ? "arrow" : "pointer",
+            cursor:
+              practitioner && userData?.user?.role === "Practitioner"
+                ? "arrow"
+                : "pointer",
           }}
           onClick={handleClick}
         >
@@ -152,6 +161,8 @@ const CustomFileUpload = ({
                 Click to upload photo
               </Typography>
             </Stack>
+          ) : uploadingToS3 ? (
+            <CircularProgress color="primary" />
           ) : fileType == "application/pdf" ? (
             <iframe src={file} width="auto" height="100%"></iframe>
           ) : (
@@ -161,8 +172,11 @@ const CustomFileUpload = ({
         <input
           type="file"
           ref={ref}
-          disabled={practitioner && userData?.user?.role === 
-            "Practitioner" ? true : false}
+          disabled={
+            practitioner && userData?.user?.role === "Practitioner"
+              ? true
+              : false
+          }
           hidden
           width={"100%"}
           height="100%"

@@ -61,6 +61,8 @@ const MintNFTS = () => {
   const [isSubmitting, setisSubmitting] = useState(false);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
   const [data, setData] = useState({});
+  const [uploadingHousePhoto, setUploadingHousePhoto] = useState(false);
+  const [uploadingDocument, setUploadingDocument] = useState(false);
 
   const propertyList = [
     { value: "building", label: "Building" },
@@ -132,10 +134,9 @@ const MintNFTS = () => {
       setVerifyModalOpen(false);
       setData({
         name: values.name,
-        title:
-          values.apartmentNo
-            ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
-            : latLngPlusCode.plusCode,
+        title: values.apartmentNo
+          ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+          : latLngPlusCode.plusCode,
         price: 10,
         image: housePhoto,
         description: "description",
@@ -295,8 +296,8 @@ const MintNFTS = () => {
                           )
                         )}
                         {/* {values.propertyType === "building" && ( */}
-                          <>
-                            {/* <Box
+                        <>
+                          {/* <Box
                               display="flex"
                               flexDirection="column"
                               rowGap={3}
@@ -311,22 +312,22 @@ const MintNFTS = () => {
                                 />
                               </Box>
                             </Box> */}
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              rowGap={3}
-                              pt={3}
-                            >
-                              <Box>
-                                <CustomInputField
-                                  name="apartmentNo"
-                                  label="Apartment No:"
-                                  placeholder="Enter apartment no"
-                                  select={false}
-                                />
-                              </Box>
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            rowGap={3}
+                            pt={3}
+                          >
+                            <Box>
+                              <CustomInputField
+                                name="apartmentNo"
+                                label="Apartment No:"
+                                placeholder="Enter apartment no"
+                                select={false}
+                              />
                             </Box>
-                          </>
+                          </Box>
+                        </>
                         {/* // )} */}
 
                         <Box
@@ -350,6 +351,9 @@ const MintNFTS = () => {
                               Files types supported: JPG, PNG Max Size: 1MB
                             </Typography>
                             <CustomFileUpload
+                              // isUploading = {}
+                              uploadingToS3={uploadingHousePhoto}
+                              setUploadingToS3={setUploadingHousePhoto}
                               s3Url={housePhoto}
                               setS3Url={setHousePhoto}
                               borderRadius="24px"
@@ -382,6 +386,8 @@ const MintNFTS = () => {
                               </Typography>
                               <CustomFileUpload
                                 allowPdf={true}
+                                uploadingToS3={uploadingDocument}
+                                setUploadingToS3={setUploadingDocument}
                                 s3Url={categoryDocument}
                                 setS3Url={setCategoryDocument}
                                 borderRadius="24px"
@@ -400,7 +406,9 @@ const MintNFTS = () => {
                               disabled={
                                 !(
                                   housePhoto.length > 1 &&
-                                  categoryDocument.length > 1
+                                  categoryDocument.length > 1 &&
+                                  !uploadingDocument &&
+                                  !uploadingHousePhoto
                                 )
                               }
                               sx={{

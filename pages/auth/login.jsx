@@ -52,7 +52,7 @@ function Login() {
   const login = async ({ email, password, remember }) => {
     try {
       const res = await publicAxios.post(`${AUTH_LOGIN}`, {
-        email,
+        email: email.toLowerCase(),
         password,
         rememberMe: remember,
       });
