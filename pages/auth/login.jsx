@@ -75,7 +75,11 @@ function Login() {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
         }
         setEmail(email);
         setEmailVerificationOpen(true);
@@ -85,7 +89,11 @@ function Login() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
       }
     }
   };
