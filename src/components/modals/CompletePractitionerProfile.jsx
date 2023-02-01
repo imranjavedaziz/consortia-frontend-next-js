@@ -160,11 +160,16 @@ function CompletePractitionerProfile({
             "&::-webkit-scrollbar": {
               width: "6px",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "#f1f1f1",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#9f9dc9",
+            // "&::-webkit-scrollbar-track": {
+            //   background: "#f1f1f1",
+            // },
+            // "&::-webkit-scrollbar-thumb": {
+            //   background: "#9f9dc9",
+            // },
+            "& textarea::-webkit-scrollbar": {
+              // display: "none",
+              // overflow: "hidden",
+              display: "none",
             },
           }}
         >
