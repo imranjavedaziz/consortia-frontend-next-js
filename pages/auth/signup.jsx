@@ -135,9 +135,9 @@ const SignUp = () => {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
@@ -153,6 +153,7 @@ const SignUp = () => {
     state,
     companyName,
   }) => {
+    debugger;
     try {
       const res = await publicAxios.patch(
         `${EDIT_USER_PROFILE}/${
@@ -163,7 +164,7 @@ const SignUp = () => {
           practitionerType: practitioner,
           state: state,
           country: country,
-          ...(license.length > 1 && { licenseNumber: license }),
+          ...(license?.length > 1 && { licenseNumber: license }),
           companyName: companyName,
         },
         {
@@ -172,17 +173,30 @@ const SignUp = () => {
           },
         }
       );
+      const old_profile_info = JSON.parse(localStorage.getItem("profile_info"));
+      const new_profile_info = {
+        ...old_profile_info,
+        user: {
+          ...old_profile_info.user,
+          practitionerType: practitioner,
+          state: state,
+          country: country,
+          ...(license?.length > 1 && { licenseNumber: license }),
+          companyName: companyName,
+        },
+      };
+      localStorage.setItem("profile_info", JSON.stringify(new_profile_info));
       toast.success("Details Added Successfully");
       setTimeout(() => push("/dashboard/landing"), 2500);
     } catch (error) {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };

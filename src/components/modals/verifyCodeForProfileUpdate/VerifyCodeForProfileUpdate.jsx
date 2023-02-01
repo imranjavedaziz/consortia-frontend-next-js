@@ -120,6 +120,7 @@ function VerifyCodeForProfileUpdate({
           }
         );
         setFetching(false);
+        debugger;
         const user = res?.data?.data?.user;
         toast.success(res?.data?.message);
         const profile_info = JSON.parse(localStorage.getItem("profile_info"));
@@ -135,10 +136,14 @@ function VerifyCodeForProfileUpdate({
       }
     } catch (error) {
       setFetching(false);
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(error?.data?.err?.msg);
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -155,11 +160,11 @@ function VerifyCodeForProfileUpdate({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };

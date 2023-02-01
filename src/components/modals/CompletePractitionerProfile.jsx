@@ -66,6 +66,7 @@ function CompletePractitionerProfile({
 
   const [headshot, setHeadshot] = useState("");
   const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
+  const [showLicenseSince, setShowLicenseSince] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
@@ -84,7 +85,9 @@ function CompletePractitionerProfile({
         {
           bio,
           headshot,
-          licenseSince: dayjs(date).unix(),
+          ...(showLicenseSince && {
+            licenseSince: dayjs(date).unix(),
+          }),
         },
         {
           headers: {
@@ -98,7 +101,9 @@ function CompletePractitionerProfile({
       setUpdatedUserData({
         bio,
         headshot,
-        licenseSince: dayjs(date).unix(),
+        ...(showLicenseSince && {
+          licenseSince: dayjs(date).unix(),
+        }),
       });
       setVerifyCodeOpen(true);
     } catch (error) {
@@ -106,22 +111,23 @@ function CompletePractitionerProfile({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("profile_info"));
+    const user = JSON.parse(localStorage.getItem("profile_info"))?.user;
     setEmail(user?.email);
+    setShowLicenseSince(!!user?.licenseNumber);
   }, []);
   return (
     <>
       <Dialog
-        open={open}
+        open={true}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
@@ -182,7 +188,18 @@ function CompletePractitionerProfile({
             >
               <Box>
                 <InputLabel shrink>Bio</InputLabel>
-                <div
+                <Box
+                  sx={{
+                    "&::-webkit-scrollbar": {
+                      width: "6px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "#f1f1f1",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#9f9dc9",
+                    },
+                  }}
                   style={{
                     background:
                       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
@@ -194,11 +211,40 @@ function CompletePractitionerProfile({
                 >
                   <GradiantTextField
                     value={bio}
+                    sx={{
+                      // overflow: "hidden",
+                      "&::-webkit-scrollbar ": {},
+                    }}
                     onChange={(e) => setBio(e.target.value)}
                     fullWidth
                     variant="standard"
+                    inputProps={{
+                      overflow: "hidden",
+                      "&::-webkit-scrollbar": {
+                        width: "6px",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        background: "#f1f1f1",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        background: "#9f9dc9",
+                      },
+                    }}
                     InputProps={{
                       disableUnderline: true,
+                      style: {
+                        overflow: "hidden",
+
+                        "&::-webkit-scrollbar": {
+                          width: "6px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f1f1f1",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#9f9dc9",
+                        },
+                      },
                     }}
                     style={{
                       background: "rgba(29, 6, 104, 1)",
@@ -206,9 +252,10 @@ function CompletePractitionerProfile({
                       borderRadius: "24px",
                     }}
                     rows={3}
+                    maxRows={10}
                     multiline={true}
                   />
-                </div>
+                </Box>
               </Box>
               <Box>
                 <InputLabel shrink>Headshot:</InputLabel>
@@ -226,46 +273,48 @@ function CompletePractitionerProfile({
                   width="100%"
                 />
               </Box>
-              <Box>
-                <InputLabel shrink>License Since Date:</InputLabel>
-                <div
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    display: "flex",
-                    justifyContent: "center",
-                    borderRadius: "24px",
-                    alignItems: "center",
-                  }}
-                >
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DesktopDatePicker
-                      label=""
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
-                      disableFuture
-                      value={date}
-                      onChange={(newValue) => {
-                        setDate(newValue);
-                      }}
-                      renderInput={(params) => (
-                        <GradiantTextField
-                          variant="standard"
-                          onKeyDown={(e) => e.preventDefault()}
-                          fullWidth
-                          style={{
-                            background: "rgba(29, 6, 104, 1)",
-                            margin: "2px 2px 2px 2px",
-                            borderRadius: "24px",
-                          }}
-                          {...params}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                </div>
-              </Box>
+              {showLicenseSince && (
+                <Box>
+                  <InputLabel shrink>License Since Date:</InputLabel>
+                  <div
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                      display: "flex",
+                      justifyContent: "center",
+                      borderRadius: "24px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DesktopDatePicker
+                        label=""
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        disableFuture
+                        value={date}
+                        onChange={(newValue) => {
+                          setDate(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <GradiantTextField
+                            variant="standard"
+                            onKeyDown={(e) => e.preventDefault()}
+                            fullWidth
+                            style={{
+                              background: "rgba(29, 6, 104, 1)",
+                              margin: "2px 2px 2px 2px",
+                              borderRadius: "24px",
+                            }}
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </Box>
+              )}
               <Box display="flex" flexDirection="column" mt={{ md: 4 }}>
                 <LoadingButton
                   onClick={completePractitionerDetails}
