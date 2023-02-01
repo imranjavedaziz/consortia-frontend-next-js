@@ -32,7 +32,7 @@ function NftsLayout({ children }) {
     openVerificationSuccess,
     setOpenVerificationSuccess,
     openVerificationFailure,
-    setOpenVerificationFailure
+    setOpenVerificationFailure,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
@@ -96,7 +96,7 @@ function NftsLayout({ children }) {
         imageSrc="/assets/icons/verificationFailedIcon.svg"
         text="Unable to verify your identity at this time. Please try again later."
       />
-        <VerificationModal
+      <VerificationModal
         open={openVerificationSuccess}
         setOpen={setOpenVerificationSuccess}
         title="Congratulations!"

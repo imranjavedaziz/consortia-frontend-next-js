@@ -35,7 +35,7 @@ function VerificationModal({ open, setOpen, text, title, imageSrc }) {
 
   const handleClose = () => {
     setOpen(false);
-    push("/nftWallet/NftWallet")
+    push("/nftWallet/NftWallet");
   };
 
   return (
@@ -93,7 +93,7 @@ function VerificationModal({ open, setOpen, text, title, imageSrc }) {
               width: "100%",
             }}
           >
-            <Box sx={{ paddingRight: 5}}>
+            <Box sx={{ paddingRight: 5 }}>
               <Image src={imageSrc} height={147} width={160} alt="" />
             </Box>
             <Box
@@ -110,7 +110,9 @@ function VerificationModal({ open, setOpen, text, title, imageSrc }) {
           </Box>
         </DialogTitle>
         <DialogContent sx={{ padding: "20px 10px 0px 10px" }}>
-          <Typography variant="body1">{text}</Typography>
+          <Typography variant="body1" textAlign="center">
+            {text}
+          </Typography>
         </DialogContent>
       </Dialog>
     </>

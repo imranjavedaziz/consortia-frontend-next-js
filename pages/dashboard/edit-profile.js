@@ -18,7 +18,10 @@ import { listOfCountries } from "../auth/signup";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import VerifyCodeForProfileUpdate from "../../src/components/modals/verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
 import { useTitle } from "../../src/utils/Title";
-import { EDIT_USER_PROFILE, GET_PROFILE_BY_USERID } from "../../src/constants/endpoints";
+import {
+  EDIT_USER_PROFILE,
+  GET_PROFILE_BY_USERID,
+} from "../../src/constants/endpoints";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -29,15 +32,17 @@ const practitionerOptions = [
 ];
 
 const inputFields = [
-  { name: "email", label: "Email Address", placeholder: "mail@example.com", 
-  disabled: true,
-},
+  {
+    name: "email",
+    label: "Email Address",
+    placeholder: "mail@example.com",
+    disabled: true,
+  },
   {
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "Enter your phone number",
     disabled: true,
-
   },
   {
     name: "practitionerType",
@@ -104,11 +109,16 @@ const EditProfile = () => {
 
   const getUserData = async () => {
     try {
-      const res = await publicAxios.get(`${GET_PROFILE_BY_USERID}?user_id=${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
+      const res = await publicAxios.get(
+        `${GET_PROFILE_BY_USERID}?user_id=${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
       setUserData(res?.data?.data?.user);
     } catch (error) {
       console.log(error);
@@ -124,27 +134,36 @@ const EditProfile = () => {
     const valuesToSend = {};
     originalKeys.forEach((item) => {
       if (values[item] !== userData[item]) {
-        valuesToSend[item] = values[item];
+        if (item == "licenseNumber" && values[item] == "") {
+          valuesToSend[item] = null;
+        } else {
+          valuesToSend[item] = values[item];
+        }
       }
     });
     if (Object.keys(valuesToSend).length > 0) {
       setUpdatedUserData(valuesToSend);
       try {
         const res = await publicAxios.patch(
-          `${EDIT_USER_PROFILE}/${JSON.parse(localStorage.getItem("profile_info"))?.user?.id}`, {...valuesToSend,edit_profile:true}, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        });
+          `${EDIT_USER_PROFILE}/${
+            JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+          }`,
+          { ...valuesToSend, edit_profile: true },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
         toast.success(res?.data?.message);
         setOpenVerificationModal(true);
       } catch (error) {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
@@ -195,7 +214,7 @@ const EditProfile = () => {
                     companyName: userData.companyName,
                     country: userData.country,
                     state: userData.state,
-                    licenseNumber: userData.licenseNumber,
+                    licenseNumber: userData.licenseNumber ?? "",
                   }}
                   onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true);
@@ -218,12 +237,13 @@ const EditProfile = () => {
                     email: Yup.string()
                       .email("Email Should be a valid email")
                       .required("Email is required"),
-                    phoneNumber: Yup.string()
-                      .required("Phone number is required"),
-                      // .matches(
-                      //   /^\+([0-9]){11,12}$/gm,
-                      //   "Please enter a valid phone number"
-                      // ),
+                    phoneNumber: Yup.string().required(
+                      "Phone number is required"
+                    ),
+                    // .matches(
+                    //   /^\+([0-9]){11,12}$/gm,
+                    //   "Please enter a valid phone number"
+                    // ),
                     practitionerType: Yup.string().required(
                       "Practitioner type is required"
                     ),
@@ -334,8 +354,7 @@ const EditProfile = () => {
                           btnText="Submit"
                           placeholder="Enter your verification code"
                           updatedUserData={updatedUserData}
-                          endPoint='verify_edit_profile'
-
+                          endPoint="verify_edit_profile"
                           editProfileKey={true}
                           profileUpdate={true}
                           fetchUpdatedData={fetchUpdatedData}
@@ -376,12 +395,13 @@ const EditProfile = () => {
                     email: Yup.string()
                       .email("Email Should be a valid email")
                       .required("Email is required"),
-                    phoneNumber: Yup.string()
-                      .required("Phone number is required"),
-                      // .matches(
-                      //   /^\+([0-9]){11,12}$/gm,
-                      //   "Please enter a valid phone number"
-                      // ),
+                    phoneNumber: Yup.string().required(
+                      "Phone number is required"
+                    ),
+                    // .matches(
+                    //   /^\+([0-9]){11,12}$/gm,
+                    //   "Please enter a valid phone number"
+                    // ),
                   })}
                 >
                   {(props) => {
@@ -471,7 +491,7 @@ const EditProfile = () => {
                           fetchUpdatedData={fetchUpdatedData}
                           profileUpdate={true}
                           editProfileKey={true}
-                          endPoint='verify_edit_profile'
+                          endPoint="verify_edit_profile"
                           inputTypeCode
                         />
                       </form>
