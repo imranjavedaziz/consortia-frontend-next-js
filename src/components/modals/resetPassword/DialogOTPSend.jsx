@@ -111,8 +111,8 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
         </DialogTitle>
         <Formik
           initialValues={{
-            phoneNumber: "",
-            email: "",
+            email_otp: "",
+            phone_otp: "",
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -181,6 +181,8 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
                             onPasteHandler={onCutCopyPaste}
                             inputType={inputType}
                             setFieldValue={setFieldValue}
+                            resendOtpButton={true}
+                            emailForOtp={email}
                           />
                         )
                       )}

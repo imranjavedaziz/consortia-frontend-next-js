@@ -35,12 +35,14 @@ const inputFields = [
     label: "Password",
     placeholder: "Minimum of 8 characters",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
   {
     name: "confirm_password",
     label: "Confirm Password",
     placeholder: "Confirm Password",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
 ];
 
@@ -158,13 +160,16 @@ const SignUp = () => {
                     rowGap={3}
                   >
                     {inputFields.map(
-                      ({ name, label, placeholder, sensitive }) => (
+                      ({ name, label, placeholder, sensitive,onCutCopyPaste }) => (
                         <CustomInputField
                           key={name}
                           name={name}
                           label={label}
                           placeholder={placeholder}
                           sensitive={sensitive}
+                          onCutHandler={onCutCopyPaste}
+                            onCopyHandler={onCutCopyPaste}
+                            onPasteHandler={onCutCopyPaste}
                         />
                       )
                     )}

@@ -12,6 +12,9 @@ import { styled } from "@mui/system";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { RESEND_OTP } from "../../constants/endpoints";
+import toast from "react-hot-toast";
+import { publicAxios } from "../../api";
 
 export const GradiantTextField = styled(TextField)(({}) => ({
   paddingRight: "20px",
@@ -47,6 +50,11 @@ export const GradiantTextField = styled(TextField)(({}) => ({
   },
 }));
 
+const Placeholder = ({ children }) => {
+  // const classes = usePlaceholderStyles();
+  return <div>{children}</div>;
+};
+
 const CustomInputField = ({
   label,
   sublabel,
@@ -58,13 +66,34 @@ const CustomInputField = ({
   onPasteHandler,
   inputType,
   setFieldValue,
+  emailForOtp,
+  resendOtpButton,
+  values,
   ...props
 }) => {
+  // debugger
   const [field, meta] = useField(props);
-
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
+  const resendCode = async (email) => {
+    // debugger
+    try {
+      const res = await publicAxios.post(RESEND_OTP, {
+        email,
+      });
+      toast.success(res?.data?.message);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
+    }
+  };
   return (
     <Box>
       {label && (
@@ -222,6 +251,27 @@ const CustomInputField = ({
                     ) : (
                       <Visibility opacity={0.8} />
                     )}
+                  </IconButton>
+                ),
+              }),
+              ...(resendOtpButton && {
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => resendCode(emailForOtp)}
+                    // onClick={handleClickShowPassword}
+                    // onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    <Box>
+                      <Typography
+                        variant="subtitle1"
+                        color="secondary.yellow"
+                        sx={{ paddingRight: "20px" }}
+                      >
+                        Resend Code
+                      </Typography>
+                    </Box>
                   </IconButton>
                 ),
               }),
