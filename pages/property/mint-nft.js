@@ -64,39 +64,102 @@ const MintNFTS = () => {
   const [uploadingHousePhoto, setUploadingHousePhoto] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
 
-  const propertyList = [
-    { value: "building", label: "Building" },
-    { value: "other", label: "Other" },
+  const propertyCategoryOptions = [
+    { value: true, label: "Yes" },
+    { value: false, label: "No" },
   ];
-
-  const itemsFunction = (setFieldValue) => {
-    const propertyNftsForm = [
-      {
-        name: "name",
-        label: "Name:",
-        sublabel: "Exact Name as it appears on title",
-        placeholder: "Enter the exact name",
-      },
-      // {
-      //   name: "propertyType",
-      //   label: "Select property category:",
-      //   placeholder: "Select your property",
-      //   options: propertyList,
-      //   select: true,
-      // },
-
-      {
-        component: (
-          <GoogleMapAutoComplete
-            name="address"
-            setFieldValue={setFieldValue}
-            setLatLngPlusCode={setLatLngPlusCode}
-            latLngPlusCode={latLngPlusCode}
-          />
-        ),
-      },
-    ];
-    return propertyNftsForm;
+  const itemsFunction = (setFieldValue, propertyStatus) => {
+    if (propertyStatus) {
+      const propertyNftsForm = [
+        {
+          name: "name",
+          label: "Name:",
+          sublabel: "Exact Legal name on Government ID:",
+          placeholder: "Enter the exact name",
+        },
+        {
+          name: "property_category",
+          label: "Property",
+          sublabel: "Is this property in a trust, LLC, or business entity?",
+          placeholder: "Select Category",
+          options: propertyCategoryOptions,
+          select: true,
+        },
+        {
+          name: "entity",
+          label: "Entity name:",
+          sublabel: "Exact name of trust, LLC, or business entity",
+          placeholder: "Enter the entity name",
+        },
+        {
+          component: (<><InputLabel shrink>
+            Upload a legal document for entity:
+          </InputLabel>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: "#FAFBFC",
+              opacity: 0.5,
+              marginBottom: 1,
+            }}
+          >
+            Files types supported: JPG, PNG Max Size: 1MB
+          </Typography>
+          <CustomFileUpload
+              allowPdf={true}
+              uploadingToS3={uploadingDocument}
+              setUploadingToS3={setUploadingDocument}
+              s3Url={categoryDocument}
+              setS3Url={setCategoryDocument}
+              borderRadius="24px"
+              width="100%"
+              privateBucket={true}
+            />
+          </>
+            
+          ),
+        },
+        {
+          component: (
+            <GoogleMapAutoComplete
+              name="address"
+              setFieldValue={setFieldValue}
+              setLatLngPlusCode={setLatLngPlusCode}
+              latLngPlusCode={latLngPlusCode}
+            />
+          ),
+        },
+      ];
+      return propertyNftsForm;
+    } else {
+      const propertyNftsForm = [
+        {
+          name: "name",
+          label: "Name:",
+          sublabel: "Exact Legal name on Government ID",
+          placeholder: "Enter the exact name",
+        },
+        {
+          name: "property_category",
+          label: "Property Category",
+          sublabel: "Is this property in a trust, LLC, or business entity?",
+          placeholder: "Select Category",
+          options: propertyCategoryOptions,
+          select: true,
+        },
+        {
+          component: (
+            <GoogleMapAutoComplete
+              name="address"
+              setFieldValue={setFieldValue}
+              setLatLngPlusCode={setLatLngPlusCode}
+              latLngPlusCode={latLngPlusCode}
+            />
+          ),
+        },
+      ];
+      return propertyNftsForm;
+    }
   };
 
   const documentOptions = [
@@ -146,33 +209,6 @@ const MintNFTS = () => {
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
       setIsCreditCardModalOpen(true);
-
-      // const res = await publicAxios.post(
-      //   MINT_PROPERTY_NFT,
-      //   {
-      //     name: values.name,
-      //     title:
-      //       values.propertyType === "building"
-      //         ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
-      //         : latLngPlusCode.plusCode,
-      //     price: 10,
-      //     image: housePhoto,
-      //     description: "description",
-      //     address: values.address,
-      //     document: categoryDocument,
-      //     docCategory: values.category,
-      //     agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-      //     },
-      //   }
-      // );
-      // toast.success("NFT minted successfully");
-      // setVerifyModalOpen(false);
-      // resetForm();
-      // push("/nftWallet/NftWallet");
     } catch (error) {
       console.log(error);
       if (error?.code == "ERR_NETWORK") {
@@ -186,9 +222,9 @@ const MintNFTS = () => {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
@@ -215,11 +251,10 @@ const MintNFTS = () => {
               <Formik
                 initialValues={{
                   name: "",
-                  // propertyType: "",
+                  property_category: false,
                   agent: "",
                   price: "",
                   apartmentNo: "",
-                  // floorNo: "",
                   address: "",
                   category: "",
                 }}
@@ -227,33 +262,20 @@ const MintNFTS = () => {
                   handleSubmit(values, resetForm);
                 }}
                 validationSchema={Yup.object().shape({
-                  // agent: Yup.string().required("Agent is required"),
-                  // price: Yup.string().required("Price is required"),
-                  // propertyType: Yup.string().required(
-                  //   "Property Type is required"
-                  // ),
-                  // floorNo: Yup.string().when(["propertyType"], {
-                  //   is: (propertyType) => propertyType == "building",
-                  //   then: Yup.string().required("Floor No. is required"),
-                  //   otherwise: Yup.string().optional(),
-                  // }),
                   apartmentNo: Yup.string().optional(),
-
-                  // .when(["propertyType"], {
-                  //   is: (propertyType) => propertyType == "building",
-                  //   then: Yup.string().required("Apartment No. is required"),
-                  //   otherwise: Yup.string()
-                  // }),
                   address: Yup.string().required("Address is required"),
                   category: Yup.string().required(
                     "Please choose a document category"
+                  ),
+                  property_category: Yup.string().required(
+                    "Please choose a property category"
                   ),
                   name: Yup.string().required("Please enter a name"),
                 })}
               >
                 {(props) => {
                   const { handleSubmit, setFieldValue, values } = props;
-                  // console.log("values", values);
+
                   return (
                     <form
                       onSubmit={handleSubmit}
@@ -261,7 +283,10 @@ const MintNFTS = () => {
                       // style={{ width: "80%" }}
                     >
                       <Box>
-                        {itemsFunction(setFieldValue).map(
+                        {itemsFunction(
+                          setFieldValue,
+                          values.property_category
+                        ).map(
                           (
                             {
                               name,
@@ -276,7 +301,7 @@ const MintNFTS = () => {
                             },
                             i
                           ) => (
-                            <Box pt={3} key={name + i}>
+                            <Box pt={3} key={name}>
                               {component ? (
                                 component
                               ) : (
@@ -297,21 +322,6 @@ const MintNFTS = () => {
                         )}
                         {/* {values.propertyType === "building" && ( */}
                         <>
-                          {/* <Box
-                              display="flex"
-                              flexDirection="column"
-                              rowGap={3}
-                              pt={3}
-                            >
-                              <Box>
-                                <CustomInputField
-                                  name="floorNo"
-                                  label="Floor No:"
-                                  placeholder="Enter floor no"
-                                  select={false}
-                                />
-                              </Box>
-                            </Box> */}
                           <Box
                             display="flex"
                             flexDirection="column"
