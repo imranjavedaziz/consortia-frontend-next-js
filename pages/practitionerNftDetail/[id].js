@@ -7,6 +7,7 @@ import {
   CardMedia,
   Skeleton,
   Avatar,
+  Button,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -15,10 +16,12 @@ import TransactiionHistoryTable from "../../src/components/transactiionHistoryTa
 import {
   GET_PROPERTY_NFTS,
   PRACTITIONER_NFT_DETAIL,
+  PRACTITIONER_NFT_BLOCKCHAIN_DATA,
 } from "../../src/constants/endpoints";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
+import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -52,10 +55,11 @@ const PractitionerDetailPage = () => {
 
   const [propertyNftsData, setPropertyNftsData] = useState([]);
 
-  const [loading, setLoading] = useState([])
+  const [loading, setLoading] = useState([]);
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
+  const [blockchainDataModal, setBlockchainDataModal] = useState(false);
 
   useEffect(() => {
     // debugger
@@ -67,7 +71,7 @@ const PractitionerDetailPage = () => {
 
   const getNftData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await publicAxios.get(
         `${PRACTITIONER_NFT_DETAIL}/${query?.id}`,
         {
@@ -78,22 +82,22 @@ const PractitionerDetailPage = () => {
       );
       // console.log('res', res)
       setNftDetail(res?.data?.data);
-      setLoading(false)
+      setLoading(false);
       // console.log("res", res?.data?.nfts);
 
       // setUserData(res?.data?.data?.user);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
 
       console.log(error);
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -115,20 +119,22 @@ const PractitionerDetailPage = () => {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
 
   const CopyPrivateTextRef = useRef(null);
   const CopyPrivateTextHandler = () => {
-    toast.success("copied");
     const text = CopyPrivateTextRef.current.innerText;
-    navigator.clipboard.writeText(text);
+    if (text) {
+      toast.success("copied");
+      navigator.clipboard.writeText(text);
+    }
   };
 
   const headerData = [
@@ -140,7 +146,7 @@ const PractitionerDetailPage = () => {
   ];
   const rowData = propertyNftsData?.map((item, i) => {
     return {
-      text1: `${item.tx_id?.slice(0, 12)}...`,
+      text1: item.tx_id ? `${item.tx_id?.slice(0, 12)}...` : "_ _",
       text2: item.address,
       text3: item.title,
       text4: item.docCategory,
@@ -150,6 +156,15 @@ const PractitionerDetailPage = () => {
   // console.log("rowData", rowData);
   return (
     <>
+      <DialogForBlockchainData
+        open={blockchainDataModal}
+        setOpen={setBlockchainDataModal}
+        title="Blockchain Data"
+        endpoint={PRACTITIONER_NFT_BLOCKCHAIN_DATA}
+        // text="Please enter your email address and we will email you a link to reset your password."
+        // btnText="Send Request"
+        placeholder="Mail@example.com"
+      />
       <Box>
         <Box>
           <Typography variant="h3">Practitioner NFT Details</Typography>
@@ -171,14 +186,23 @@ const PractitionerDetailPage = () => {
                 <Box>
                   <Box>
                     {/* <Image src={nftDetail?.image} height={149} width={149} alt='image' /> */}
-                   {loading ?  <Skeleton animation="wave" variant="circular" width={150} height={150} /> : <Avatar
-                      alt="nft card Icon"
-                      src={nftDetail?.image}
-                      sx={{
-                        height: "150px",
-                        width: "150px",
-                      }}
-                    />}
+                    {loading ? (
+                      <Skeleton
+                        animation="wave"
+                        variant="circular"
+                        width={150}
+                        height={150}
+                      />
+                    ) : (
+                      <Avatar
+                        alt="nft card Icon"
+                        src={nftDetail?.image}
+                        sx={{
+                          height: "150px",
+                          width: "150px",
+                        }}
+                      />
+                    )}
                   </Box>
                 </Box>
               </Grid>
@@ -217,7 +241,11 @@ const PractitionerDetailPage = () => {
                         Wallet Address:
                       </Typography>
                       <Typography variant="subtitle1" ref={CopyPrivateTextRef}>
-                        {loading ?  <Skeleton animation="wave" variant="circular" width={150} height={150} /> : nftDetail?.wallet_address}
+                        {loading ? (
+                          <Skeleton />
+                        ) : (
+                          nftDetail?.wallet_address?.replaceAll("-", "")
+                        )}
                       </Typography>
                       <Box sx={{ paddingLeft: "10px", cursor: "pointer" }}>
                         <Image
@@ -229,6 +257,15 @@ const PractitionerDetailPage = () => {
                         />
                       </Box>
                     </Box>
+                  </Box>
+                  <Box sx={{ maxWidth: "220px", padding: "14px 0px 0px 0px" }}>
+                    <Button
+                      variant="gradient"
+                      size="large"
+                      onClick={() => setBlockchainDataModal(true)}
+                    >
+                      View Blockchain Data
+                    </Button>
                   </Box>
                 </Box>
               </Grid>

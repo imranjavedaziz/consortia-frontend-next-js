@@ -1,24 +1,21 @@
-// import React from 'react'
-// import ComingSoon from '../../src/components/common/comingSoon/ComingSoon'
-
-// function DetailPage() {
-//   return (
-//     <><ComingSoon /></>
-//   )
-// }
-
-// export default DetailPage
-
 import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
+import {
+  Box,
+  Typography,
+  styled,
+  Grid,
+  CardMedia,
+  Button,
+} from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
-import { PROPERTY_NFT_DETAIL } from "../../src/constants/endpoints";
+import { PROPERTY_NFT_DETAIL,PROPERTY_NFT_BLOCKCHAIN_DATA } from "../../src/constants/endpoints";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
+import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData"
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -53,6 +50,9 @@ const PractitionerDetailPage = () => {
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
+
+  const [blockchainDataModal, setBlockchainDataModal] = useState(false);
+
   console.log("nftDetail", nftDetail);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const PractitionerDetailPage = () => {
 
   const getNftData = async () => {
     // debugger
-    if(query?.id){
+    if (query?.id) {
       try {
         const res = await publicAxios.get(
           `${PROPERTY_NFT_DETAIL}/${query?.id}`,
@@ -75,35 +75,45 @@ const PractitionerDetailPage = () => {
         );
         // console.log('res', res)
         setNftDetail(res?.data?.data);
-  
+
         // console.log("res", res?.data?.nfts);
-  
+
         // setUserData(res?.data?.data?.user);
       } catch (error) {
         console.log(error);
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
       }
     }
-    
   };
-  const headerData = ["Token ID", "Action","Document Type","Timestamp", ];
+  const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
-      {text1: `${nftDetail?.tx_id?.slice(0, 12)}...`,
-      text2: nftDetail?.is_minted ? 'Mint' : '_ _',
+    {
+      text1: nftDetail.tx_id ? `${nftDetail.tx_id?.slice(0, 12)}...` : "_ _",
+      text2: nftDetail?.is_minted ? "Mint" : "_ _",
       text3: nftDetail?.docCategory,
-      text4: nftDetail?.updated_at,}]
-    
-  
+      text4: nftDetail?.updated_at,
+    },
+  ];
+
   return (
     <>
+     <DialogForBlockchainData
+        open={blockchainDataModal}
+        setOpen={setBlockchainDataModal}
+        title="Blockchain Data"
+        endpoint={PROPERTY_NFT_BLOCKCHAIN_DATA}
+        // text="Please enter your email address and we will email you a link to reset your password."
+        // btnText="Send Request"
+        placeholder="Mail@example.com"
+      />
       <Box>
         <Box>
           <Typography variant="h3">Property NFT Details</Typography>
@@ -192,6 +202,15 @@ const PractitionerDetailPage = () => {
                       </Box>
                     </Box>
                   </Box>
+                  <Box sx={{maxWidth:'220px',padding:'10px 0px 0px 0px'}}>
+                    <Button
+                      variant="gradient"
+                      size="large"
+                      onClick={() => setBlockchainDataModal(true)}
+                    >
+                      View Blockchain Data
+                    </Button>
+                  </Box>
                 </Box>
                 <Box>
                   <Box
@@ -213,7 +232,7 @@ const PractitionerDetailPage = () => {
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
                 <Box sx={{ paddingTop: "40px" }}>
-                <TransactiionHistoryTable
+                  <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}
                   />
