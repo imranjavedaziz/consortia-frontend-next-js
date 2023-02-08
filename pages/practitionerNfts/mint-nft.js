@@ -21,11 +21,13 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
-import { NFT_PRACTITIONER } from "../../src/constants/endpoints";
+import { MINT_PRACTITIONER_NFT } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../../src/context/AuthContext";
+import CreditCardInput from "../../src/components/CreditCardInput";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -42,7 +44,7 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     padding: "40px 281px",
   },
-  [theme.breakpoints.between("xs","lg")]: {
+  [theme.breakpoints.between("xs", "lg")]: {
     padding: "40px 12%",
   },
 }));
@@ -57,17 +59,25 @@ const CheckboxStyled = styled(Box)(({ theme }) => ({
 
 const MintNFTS = () => {
   const { push } = useRouter();
+  const {
+    isCreditCardModalOpen,
+    setIsCreditCardModalOpen,
+    handleCreditCardModalClose,
+  } = useAuthContext();
 
   useTitle("Mint NFTs");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
-  const [profileInfo, setProfileInfo] = useState();
+  const [profileInfo, setProfileInfo] = useState({});
   const [headShot, setHeadshot] = useState("");
+  const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
+  const [data, setData] = useState({});
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const localData = JSON.parse(localStorage.getItem("profile_info"));
       setProfileInfo(localData);
+      setHeadshot(localData?.user?.headshot);
       setLicenseTypeValue(localData?.user?.practitionerType);
     }
   }, []);
@@ -86,6 +96,7 @@ const MintNFTS = () => {
         name: "name",
         label: "Name:",
         placeholder: "Enter Your Name",
+        disabled: true,
       },
       {
         name: "email",
@@ -132,40 +143,54 @@ const MintNFTS = () => {
     // licenseType,
     licenseNumber,
   }) => {
-    // debugger
-    if (headShot.length == 0) {
+    if (false) {
       toast.error("Please upload profile");
     } else {
-      try {
-        const res = await publicAxios.post(
-          `${NFT_PRACTITIONER}`,
-          {
-            name,
-            email,
-            address,
-            image: headShot,
-            bio,
-            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      setData({
+        name,
+        email,
+        address,
+        image: headShot,
+        bio,
+        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+        licenseType: licenseTypeValue,
+        licenseNumber,
+      });
+      setIsCreditCardModalOpen(true);
+      // try {
+      //   const res = await publicAxios.post(
+      //     `${MINT_PRACTITIONER_NFT}`,
+      //     {
+      //       name,
+      //       email,
+      //       address,
+      //       image: headShot,
+      //       bio,
+      //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
 
-            // role: profileInfo.user.role ? "practitioner" : "consumer",
-            licenseType: licenseTypeValue,
-            licenseNumber,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-        toast.success("practitionar nft is minted successfully");
-        push("/nftWallet/NftWallet");
-      } catch (error) {
-        if (error?.data?.message) {
-          toast.error(error?.data?.message);
-        } else {
-          toast.error(error?.data?.err?.msg);
-        }
-      }
+      //       // role: profileInfo.user.role ? "practitioner" : "consumer",
+      //       licenseType: licenseTypeValue,
+      //       licenseNumber,
+      //     },
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //       },
+      //     }
+      //   );
+      //   toast.success("practitionar nft is minted successfully");
+      //   push("/nftWallet/NftWallet");
+      // } catch (error) {
+      //   if (Array.isArray(error?.data?.message)) {
+      //     toast.error(error?.data?.message?.error?.[0]);
+      //   } else {
+      //     if(typeof(error?.data?.message) === 'string'){
+          //   toast.error(error?.data?.message);
+          // }else{
+          //   toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          // }
+      //   }
+      // }
     }
   };
   return (
@@ -178,18 +203,21 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Mint Practitioner NFTs
+                Step One: Property Information
               </Typography>
             </Box>
             <Box>
               <Formik
                 initialValues={{
-                  name: "",
+                  name:
+                    profileInfo &&
+                    profileInfo?.user?.firstName +
+                      ` ${profileInfo?.user?.lastName}`,
                   email: profileInfo && profileInfo?.user?.email,
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
-                  licenseNumber: profileInfo?.user?.licenseNumber,
+                  licenseNumber: "",
                 }}
                 enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -269,10 +297,14 @@ const MintNFTS = () => {
                             </Typography>
                           </Box>
                           <CustomFileUpload
+                            uploadingToS3={uploadingHeadshot}
+                            setUploadingToS3={setUploadingHeadshot}
                             s3Url={headShot}
                             setS3Url={setHeadshot}
                             borderRadius="24px"
                             width="100%"
+                            // componentFor="Practitioner"
+                            practitioner={true}
                           />
                         </Box>
                         <Box pt={3}>
@@ -283,8 +315,8 @@ const MintNFTS = () => {
                             disabled={true}
                             // select={select}
                             // options={options}
-                            // rows={maxRows}
-                            // multiline={multiline}
+                            rows={3}
+                            multiline={true}
                           />
                         </Box>
                         <Box pt={3}>
@@ -293,7 +325,7 @@ const MintNFTS = () => {
                             sx={{
                               display: "flex",
                               justifyContent: "space-between",
-                              flexWrap:'wrap'
+                              flexWrap: "wrap",
                             }}
                           >
                             {radioBoxList.map((item, i) => {
@@ -341,7 +373,7 @@ const MintNFTS = () => {
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
-                            disabled={true}
+                            // disabled={true}
                             // select={select}
                             // options={options}
                             // rows={maxRows}
@@ -354,7 +386,7 @@ const MintNFTS = () => {
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={headShot.length < 1}
+                            disabled={uploadingHeadshot}
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,
@@ -372,6 +404,7 @@ const MintNFTS = () => {
           </MintPropertyNfts>
         </GradientMintPropertyNfts>
       </Box>
+      <CreditCardInput isPractitionerNFT={true} mintNFTData={data} />
     </>
   );
 };

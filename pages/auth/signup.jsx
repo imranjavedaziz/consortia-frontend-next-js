@@ -1,6 +1,13 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { Box, Button, Grid, InputLabel, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  InputLabel,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
@@ -11,11 +18,13 @@ import toast, { Toaster } from "react-hot-toast";
 import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogTextInput";
 import countries from "../../src/listOfCountriesAndStates.json";
 import { useRouter } from "next/router";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { ImageLogo } from "../../src/layout/header/Header";
+import {
+  AUTH_REGISTER,
+  EDIT_USER_PROFILE,
+} from "../../src/constants/endpoints";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -36,6 +45,7 @@ const inputFields = [
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "+12345678900",
+    inputType: "phone",
   },
   {
     name: "password",
@@ -81,7 +91,9 @@ const secondFormInputFields = [
 ];
 
 const SignUp = () => {
-  const belowSm = useMediaQuery((theme) => theme.breakpoints.between('xs', 'sm'))
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   useTitle("Signup");
   const {
@@ -102,25 +114,36 @@ const SignUp = () => {
     email,
     phoneNumber,
     password,
+    confirm_password,
   }) => {
-    try {
-      const res = await publicAxios.post("auth/register", {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        password,
-        role: isPractitioner ? "practitioner" : "user",
-      });
-      toast.success("Welcome to Consortia! Please verify your email");
-      setEmail(email);
-      setEmailVerificationOpen(true);
-    } catch (error) {
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
-      } else {
-        toast.error(error?.data?.err?.msg);
+    if (phoneNumber.length > 1) {
+      try {
+        const res = await publicAxios.post(`${AUTH_REGISTER}`, {
+          firstName,
+          lastName,
+          email: email.toLowerCase(),
+          phoneNumber: `+${phoneNumber}`,
+          password,
+          confirm_password,
+          role: isPractitioner ? "Practitioner" : "Consumer",
+        });
+        toast.success("Welcome to Consortia! Please verify your email");
+        setEmail(email);
+        setEmailVerificationOpen(true);
+        console.log(res);
+      } catch (error) {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+        }
       }
+    } else {
+      toast.error("Please enter valid phone number");
     }
   };
   const completeDetails = async ({
@@ -130,27 +153,51 @@ const SignUp = () => {
     state,
     companyName,
   }) => {
+    debugger;
     try {
-      const res = await publicAxios.put(
-        "user/update",
+      const res = await publicAxios.patch(
+        `${EDIT_USER_PROFILE}/${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
         {
+          create_profile: true,
           practitionerType: practitioner,
           state: state,
           country: country,
-          ...(license.length > 1 && { licenseNumber: license }),
+          ...(license?.length > 1 && { licenseNumber: license }),
           companyName: companyName,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
+      const old_profile_info = JSON.parse(localStorage.getItem("profile_info"));
+      const new_profile_info = {
+        ...old_profile_info,
+        user: {
+          ...old_profile_info.user,
+          practitionerType: practitioner,
+          state: state,
+          country: country,
+          ...(license?.length > 1 && { licenseNumber: license }),
+          companyName: companyName,
+        },
+      };
+      localStorage.setItem("profile_info", JSON.stringify(new_profile_info));
       toast.success("Details Added Successfully");
       setTimeout(() => push("/dashboard/landing"), 2500);
     } catch (error) {
-      console.log(error);
-      toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
     }
   };
   return (
@@ -184,7 +231,7 @@ const SignUp = () => {
           sx={{
             background: " url(/assets/images/signupbackground.jpg) no-repeat",
             backgroundSize: "100% 100%",
-            display: {xs:'none', md:'flex'},
+            display: { xs: "none", md: "flex" },
             // width:"100%"
           }}
         >
@@ -195,7 +242,7 @@ const SignUp = () => {
               background: "rgba(24, 10, 91, 0.8)",
               display: "flex",
               justifyContent: "center",
-              width:'100%'
+              width: "100%",
             }}
           >
             <Box sx={{ ":hover": { cursor: "pointer" } }}>
@@ -209,8 +256,15 @@ const SignUp = () => {
             </Box>
           </Box>
         </Grid>
-        {belowSm && <ImageLogo
-            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"},display:'flex',justifyContent:'center',width:'100%'}}
+        {belowSm && (
+          <ImageLogo
+            sx={{
+              ":hover": { cursor: "pointer" },
+              padding: { xs: "24px 0px 32px 0px", md: "0px" },
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+            }}
             onClick={() => push("/")}
           >
             <Image
@@ -219,7 +273,8 @@ const SignUp = () => {
               height={belowSm ? 54 : 125}
               alt="Logo"
             />
-          </ImageLogo>}
+          </ImageLogo>
+        )}
         {!showSecondForm ? (
           <Grid
             item
@@ -231,7 +286,7 @@ const SignUp = () => {
             rowGap={3}
             justifyContent="center"
           >
-             {/* <ImageLogo
+            {/* <ImageLogo
             sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
             onClick={() => push("/")}
           >
@@ -272,14 +327,13 @@ const SignUp = () => {
                     "Last Name can only contain alphabets"
                   ),
                 email: Yup.string()
-                  .email("Email Should be a valid email")
+                  .email("Email should be a valid email")
                   .required("Email is required"),
-                phoneNumber: Yup.string()
-                  .required("Phone number is required")
-                  .matches(
-                    /^\+([0-9]){11,12}$/gm,
-                    "Please enter a valid phone number"
-                  ),
+                phoneNumber: Yup.string().required("Phone number is required"),
+                // .matches(
+                //   /^\+([0-9]){11,12}$/gm,
+                //   "Please enter a valid phone number"
+                // ),
                 password: Yup.string()
                   .required("Password is required")
                   .min(8, "Password should have a minimum of 8 characters")
@@ -293,12 +347,12 @@ const SignUp = () => {
               })}
             >
               {(props) => {
-                const { isSubmitting, handleSubmit } = props;
+                const { isSubmitting, handleSubmit, setFieldValue } = props;
                 return (
                   <form
                     onSubmit={handleSubmit}
                     autoComplete="off"
-                    style={{ width: {md:"80%",xs:"100%"} }}
+                    style={{ width: { md: "80%", xs: "100%" } }}
                   >
                     <Box
                       display="flex"
@@ -329,12 +383,14 @@ const SignUp = () => {
                           />
                         </Box>
                       </Box>
+
                       {inputFields.map(
                         ({
                           name,
                           label,
                           placeholder,
                           sensitive,
+                          inputType,
                           onCutCopyPaste,
                         }) => (
                           <CustomInputField
@@ -346,6 +402,8 @@ const SignUp = () => {
                             onCutHandler={onCutCopyPaste}
                             onCopyHandler={onCutCopyPaste}
                             onPasteHandler={onCutCopyPaste}
+                            inputType={inputType}
+                            setFieldValue={setFieldValue}
                           />
                         )
                       )}
@@ -456,7 +514,7 @@ const SignUp = () => {
                       margin="auto"
                       // paddingX={2}
                       rowGap={3}
-                      sx={{ width: {md:"80%",xs:"100%"} }}
+                      sx={{ width: { md: "80%", xs: "100%" } }}
                     >
                       {secondFormInputFields.map(
                         ({ name, label, placeholder, select, options }) => (

@@ -1,24 +1,17 @@
 import { Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRef } from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useState } from "react";
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
-
-const S3_BUCKET = "consortiamedia";
-const REGION = "us-east-1";
+import CircularProgress from "@mui/material/CircularProgress";
 
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
   secretAccessKey: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
-});
-
-const myBucket = new AWS.S3({
-  params: { Bucket: S3_BUCKET },
-  region: REGION,
 });
 
 const CustomFileUpload = ({
@@ -27,33 +20,62 @@ const CustomFileUpload = ({
   borderRadius,
   width,
   allowPdf = false,
+  privateBucket = false,
+  practitioner,
+  uploadingToS3, 
+  setUploadingToS3
 }) => {
   const [file, setFile] = useState("");
+  const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
+  // const [uploadingToS3, setUploadingToS3] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
+
+  console.log("userData", userData);
+  const myBucket = new AWS.S3({
+    params: {
+      Bucket: privateBucket
+        ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+        : process.env.NEXT_PUBLIC_BUCKET_NAME,
+    },
+    region: process.env.REGION,
+  });
+
   const validImage = (img) =>
     allowPdf
       ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
       : ["jpg", "png"].some((char) => img?.endsWith(char));
 
+  useEffect(() => {
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    if (practitioner && profileInfo?.user?.role === "Practitioner") {
+      setFile(profileInfo?.user?.headshot);
+    }
+    setuserData(profileInfo);
+  }, []);
+
   const handleChange = (e) => {
-    debugger;
     if (validImage(e.target.files[0]?.name)) {
       if (e.target.files[0].size < 1048576) {
+        setUploadingToS3(true);
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
         myBucket.upload(
           {
-            Bucket: S3_BUCKET,
-            Key: e.target.files[0].name,
+            Bucket: privateBucket
+              ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+              : process.env.NEXT_PUBLIC_BUCKET_NAME,
+            Key: Date.now() + e.target.files[0].name,
             Body: e.target.files[0],
           },
           async (err, data) => {
             if (err) {
+              setUploadingToS3(false);
               console.log(err);
             } else {
               setS3Url(data?.Location);
+              setUploadingToS3(false);
             }
           }
         );
@@ -75,7 +97,6 @@ const CustomFileUpload = ({
     ref.current.click();
   };
   const handleDrop = (event) => {
-    debugger;
     event.preventDefault();
     const files = event.dataTransfer.files;
     console.log({ files });
@@ -120,7 +141,10 @@ const CustomFileUpload = ({
             justifyContent: "center",
             alignItems: "center",
             borderRadius: borderRadius ?? "4px",
-            cursor: "pointer",
+            cursor:
+              practitioner && userData?.user?.role === "Practitioner"
+                ? "arrow"
+                : "pointer",
           }}
           onClick={handleClick}
         >
@@ -137,6 +161,8 @@ const CustomFileUpload = ({
                 Click to upload photo
               </Typography>
             </Stack>
+          ) : uploadingToS3 ? (
+            <CircularProgress color="primary" />
           ) : fileType == "application/pdf" ? (
             <iframe src={file} width="auto" height="100%"></iframe>
           ) : (
@@ -146,6 +172,11 @@ const CustomFileUpload = ({
         <input
           type="file"
           ref={ref}
+          disabled={
+            practitioner && userData?.user?.role === "Practitioner"
+              ? true
+              : false
+          }
           hidden
           width={"100%"}
           height="100%"

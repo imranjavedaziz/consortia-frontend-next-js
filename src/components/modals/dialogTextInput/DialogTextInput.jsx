@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../../context/AuthContext";
+import { RESEND_OTP, VERIFY_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -58,36 +59,65 @@ function DialogTextInput({
     try {
       if (code.length > 0) {
         setFetching(true);
-        const res = await publicAxios.post("auth/verify", {
+        const res = await publicAxios.post(VERIFY_OTP, {
           email,
-          verificationCode: code,
+          otp: code,
+          otp_type: "Email",
         });
         setFetching(false);
-        localStorage.setItem("access_token", res?.data?.data?.token);
+        localStorage.setItem("access", res?.data?.access);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
         toast.success(res?.data?.message);
-        if (!isPractitioner) {
-          return setTimeout(() => {
-            window.open(res?.data?.data?.accountLink?.url);
-          }, 2500);
+        if(res?.data?.data?.user?.role === "Practitioner" && !res.data?.data?.user?.practitionerType){
+          setShowSecondForm(true);
+          push('/auth/signup')
+        }else{
+          if (!isPractitioner) {
+            return setTimeout(() => {
+              // window.open(res?.data?.data?.accountLink?.url);
+              push('/dashboard/landing')
+            }, 2500);
+          }
         }
         setShowSecondForm(true);
         push('/auth/signup')
+       
+        
         handleClose();
       } else {
         toast.error("Please enter OTP");
       }
     } catch (error) {
       setFetching(false);
-      toast.error(error?.data?.message);
       console.log(error);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+      }
     }
   };
   const resendCode = async (email) => {
-    const res = await publicAxios.post("auth/resend", {
-      email,
-    });
-    toast.success(res?.data?.message);
+    try {
+      const res = await publicAxios.post(RESEND_OTP, {
+        email,
+      });
+      toast.success(res?.data?.message);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+      }
+    }
   };
   return (
     <>

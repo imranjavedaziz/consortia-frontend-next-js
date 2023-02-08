@@ -23,6 +23,9 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
+import CreditCardInput from "../../src/components/CreditCardInput";
+import { useAuthContext } from "../../src/context/AuthContext";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -46,13 +49,20 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
 
 const MintNFTS = () => {
   const { push } = useRouter();
-
+  const {
+    isCreditCardModalOpen,
+    setIsCreditCardModalOpen,
+    handleCreditCardModalClose,
+  } = useAuthContext();
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [isSubmitting, setisSubmitting] = useState(false);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
+  const [data, setData] = useState({});
+  const [uploadingHousePhoto, setUploadingHousePhoto] = useState(false);
+  const [uploadingDocument, setUploadingDocument] = useState(false);
 
   const propertyList = [
     { value: "building", label: "Building" },
@@ -67,13 +77,13 @@ const MintNFTS = () => {
         sublabel: "Exact Name as it appears on title",
         placeholder: "Enter the exact name",
       },
-      {
-        name: "propertyType",
-        label: "Select property category:",
-        placeholder: "Select your property",
-        options: propertyList,
-        select: true,
-      },
+      // {
+      //   name: "propertyType",
+      //   label: "Select property category:",
+      //   placeholder: "Select your property",
+      //   options: propertyList,
+      //   select: true,
+      // },
 
       {
         component: (
@@ -113,16 +123,6 @@ const MintNFTS = () => {
           key: categoryDocument.split("/").at(-1),
           title: values.name,
           address: values.address,
-          // address: getSubLocationsFromLocation(
-          //   [
-          //     "street-address",
-          //     "locality",
-          //     "region",
-          //     "postal-code",
-          //     "country-name",
-          //   ],
-          //   latLngPlusCode.detailedAddress
-          // ),
         }
       );
       if (response?.data?.status == "failed") {
@@ -130,38 +130,71 @@ const MintNFTS = () => {
         setVerifyModalOpen(false);
         return;
       }
-      const res = await publicAxios.post(
-        "nft/mint",
-        {
-          name: values.name,
-          title:
-            values.propertyType === "building"
-              ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
-              : latLngPlusCode.plusCode,
-          price: 10,
-          image: housePhoto,
-          description: "description",
-          address: values.address,
-          document: categoryDocument,
-          docCategory: values.category,
-          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
 
-      toast.success("NFT minted successfully");
       setVerifyModalOpen(false);
+      setData({
+        name: values.name,
+        title: values.apartmentNo
+          ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+          : latLngPlusCode.plusCode,
+        price: 10,
+        image: housePhoto,
+        description: "description",
+        address: values.address,
+        document: categoryDocument,
+        docCategory: values.category,
+        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      });
+      setIsCreditCardModalOpen(true);
 
-      resetForm();
-      push("/nftWallet/NftWallet");
+      // const res = await publicAxios.post(
+      //   MINT_PROPERTY_NFT,
+      //   {
+      //     name: values.name,
+      //     title:
+      //       values.propertyType === "building"
+      //         ? `${latLngPlusCode.plusCode}@f${values.floorNo}_a${values.apartmentNo}`
+      //         : latLngPlusCode.plusCode,
+      //     price: 10,
+      //     image: housePhoto,
+      //     description: "description",
+      //     address: values.address,
+      //     document: categoryDocument,
+      //     docCategory: values.category,
+      //     agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //     },
+      //   }
+      // );
+      // toast.success("NFT minted successfully");
+      // setVerifyModalOpen(false);
+      // resetForm();
+      // push("/nftWallet/NftWallet");
     } catch (error) {
+      console.log(error);
+      if (error?.code == "ERR_NETWORK") {
+        toast.error("Verification failed. Please try again");
+        setVerifyModalOpen(false);
+        return;
+      }
+      if (typeof error?.data?.message == "string") {
+        toast.error(error?.data?.message);
+      } else {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+        }
+      }
       setVerifyModalOpen(false);
       console.log(error);
-      toast.error(error?.data?.message);
     }
   };
 
@@ -175,18 +208,18 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Mint Property NFTs
+                Step One: Property Information
               </Typography>
             </Box>
             <Box>
               <Formik
                 initialValues={{
                   name: "",
-                  propertyType: "",
+                  // propertyType: "",
                   agent: "",
                   price: "",
                   apartmentNo: "",
-                  floorNo: "",
+                  // floorNo: "",
                   address: "",
                   category: "",
                 }}
@@ -196,19 +229,21 @@ const MintNFTS = () => {
                 validationSchema={Yup.object().shape({
                   // agent: Yup.string().required("Agent is required"),
                   // price: Yup.string().required("Price is required"),
-                  propertyType: Yup.string().required(
-                    "Property Type is required"
-                  ),
-                  floorNo: Yup.string().when(["propertyType"], {
-                    is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("Floor No. is required"),
-                    otherwise: Yup.string().optional(),
-                  }),
-                  apartmentNo: Yup.string().when(["propertyType"], {
-                    is: (propertyType) => propertyType == "building",
-                    then: Yup.string().required("Apartment No. is required"),
-                    otherwise: Yup.string().optional(),
-                  }),
+                  // propertyType: Yup.string().required(
+                  //   "Property Type is required"
+                  // ),
+                  // floorNo: Yup.string().when(["propertyType"], {
+                  //   is: (propertyType) => propertyType == "building",
+                  //   then: Yup.string().required("Floor No. is required"),
+                  //   otherwise: Yup.string().optional(),
+                  // }),
+                  apartmentNo: Yup.string().optional(),
+
+                  // .when(["propertyType"], {
+                  //   is: (propertyType) => propertyType == "building",
+                  //   then: Yup.string().required("Apartment No. is required"),
+                  //   otherwise: Yup.string()
+                  // }),
                   address: Yup.string().required("Address is required"),
                   category: Yup.string().required(
                     "Please choose a document category"
@@ -260,9 +295,9 @@ const MintNFTS = () => {
                             </Box>
                           )
                         )}
-                        {values.propertyType === "building" && (
-                          <>
-                            <Box
+                        {/* {values.propertyType === "building" && ( */}
+                        <>
+                          {/* <Box
                               display="flex"
                               flexDirection="column"
                               rowGap={3}
@@ -276,24 +311,24 @@ const MintNFTS = () => {
                                   select={false}
                                 />
                               </Box>
+                            </Box> */}
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            rowGap={3}
+                            pt={3}
+                          >
+                            <Box>
+                              <CustomInputField
+                                name="apartmentNo"
+                                label="Apartment No:"
+                                placeholder="Enter apartment no"
+                                select={false}
+                              />
                             </Box>
-                            <Box
-                              display="flex"
-                              flexDirection="column"
-                              rowGap={3}
-                              pt={3}
-                            >
-                              <Box>
-                                <CustomInputField
-                                  name="apartmentNo"
-                                  label="Apartment No:"
-                                  placeholder="Enter apartment no"
-                                  select={false}
-                                />
-                              </Box>
-                            </Box>
-                          </>
-                        )}
+                          </Box>
+                        </>
+                        {/* // )} */}
 
                         <Box
                           display="flex"
@@ -316,6 +351,9 @@ const MintNFTS = () => {
                               Files types supported: JPG, PNG Max Size: 1MB
                             </Typography>
                             <CustomFileUpload
+                              // isUploading = {}
+                              uploadingToS3={uploadingHousePhoto}
+                              setUploadingToS3={setUploadingHousePhoto}
                               s3Url={housePhoto}
                               setS3Url={setHousePhoto}
                               borderRadius="24px"
@@ -332,8 +370,8 @@ const MintNFTS = () => {
                             <Box>
                               <InputLabel shrink>
                                 {values.category == "deed"
-                                  ? "Upload a photo of the deed:"
-                                  : "Upload a photo of the Settlement Statement"}
+                                  ? "Upload a copy of the deed:"
+                                  : "Upload a copy of the Settlement Statement"}
                               </InputLabel>
                               <Typography
                                 variant="subtitle1"
@@ -348,10 +386,13 @@ const MintNFTS = () => {
                               </Typography>
                               <CustomFileUpload
                                 allowPdf={true}
+                                uploadingToS3={uploadingDocument}
+                                setUploadingToS3={setUploadingDocument}
                                 s3Url={categoryDocument}
                                 setS3Url={setCategoryDocument}
                                 borderRadius="24px"
                                 width="100%"
+                                privateBucket={true}
                               />
                             </Box>
                           )}
@@ -365,7 +406,9 @@ const MintNFTS = () => {
                               disabled={
                                 !(
                                   housePhoto.length > 1 &&
-                                  categoryDocument.length > 1
+                                  categoryDocument.length > 1 &&
+                                  !uploadingDocument &&
+                                  !uploadingHousePhoto
                                 )
                               }
                               sx={{
@@ -373,7 +416,7 @@ const MintNFTS = () => {
                                 fontWeight: 600,
                               }}
                             >
-                              Mint
+                              Verify Document
                             </LoadingButton>
                           </Box>
                         </Box>
@@ -414,6 +457,7 @@ const MintNFTS = () => {
           <CircularProgress size={70} />
         </Box>
       </Dialog>
+      <CreditCardInput mintNFTData={data} />
     </>
   );
 };

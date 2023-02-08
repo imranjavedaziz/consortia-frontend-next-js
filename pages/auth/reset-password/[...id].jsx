@@ -27,6 +27,7 @@ import { useRouter } from "next/router";
 import CustomInputField from "../../../src/components/common/CustomInputField";
 import { publicAxios } from "../../../src/api";
 import { useTitle } from "../../../src/utils/Title";
+import { RESET_PASSWORD } from "../../../src/constants/endpoints";
 
 const inputFields = [
   {
@@ -34,12 +35,14 @@ const inputFields = [
     label: "Password",
     placeholder: "Minimum of 8 characters",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
   {
     name: "confirm_password",
     label: "Confirm Password",
     placeholder: "Confirm Password",
     sensitive: true,
+    onCutCopyPaste: (e) => e.preventDefault(),
   },
 ];
 
@@ -47,21 +50,31 @@ const SignUp = () => {
   const {
     push,
     query: { id },
+    route,
+    asPath,
   } = useRouter();
   useTitle("Reset Password");
-
-  const resetPassword = async ({ password }) => {
+  console.log(id, route, asPath);
+  const resetPassword = async ({ password, confirm_password }) => {
     try {
-      const res = await publicAxios.post("auth/reset-password", {
-        newPassword: password,
-        verificationCode: id,
+      const res = await publicAxios.post(`${RESET_PASSWORD}/${id.join("/")}`, {
+        password,
+        confirm_password,
       });
       toast.success("Password set successfully");
-      localStorage.setItem("access_token", res?.data?.data?.token);
-      setTimeout(() => push("/"), 2500);
+      // localStorage.getItem("access", res?.data?.data?.token);
+      setTimeout(() => push("/auth/login"), 2500);
     } catch (error) {
-      toast.error(error?.data?.message);
-      console.log(error?.data?.message);
+      // toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+      }
     }
   };
 
@@ -147,13 +160,16 @@ const SignUp = () => {
                     rowGap={3}
                   >
                     {inputFields.map(
-                      ({ name, label, placeholder, sensitive }) => (
+                      ({ name, label, placeholder, sensitive,onCutCopyPaste }) => (
                         <CustomInputField
                           key={name}
                           name={name}
                           label={label}
                           placeholder={placeholder}
                           sensitive={sensitive}
+                          onCutHandler={onCutCopyPaste}
+                            onCopyHandler={onCutCopyPaste}
+                            onPasteHandler={onCutCopyPaste}
                         />
                       )
                     )}

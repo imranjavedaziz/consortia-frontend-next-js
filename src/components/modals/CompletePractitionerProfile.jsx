@@ -27,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../api";
 import toast from "react-hot-toast";
 import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
+import { EDIT_USER_PROFILE } from "../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,7 +64,10 @@ function CompletePractitionerProfile({
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
 
-  const [headShot, setHeadshot] = useState("");
+  const [headshot, setHeadshot] = useState("");
+  const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
+  const [showLicenseSince, setShowLicenseSince] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [verifyCodeOpen, setVerifyCodeOpen] = useState(false);
   const [updatedUserData, setUpdatedUserData] = useState({});
@@ -74,17 +78,20 @@ function CompletePractitionerProfile({
   const completePractitionerDetails = async () => {
     setIsLoading(true);
     try {
-      const res = await publicAxios.put(
-        "user/update",
+      const res = await publicAxios.patch(
+        `${EDIT_USER_PROFILE}/${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
         {
           bio,
-          headShot,
-          licenseSince: dayjs(date).unix(),
-          country:""
+          headshot,
+          ...(showLicenseSince && {
+            licenseSince: dayjs(date).unix(),
+          }),
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
@@ -93,21 +100,29 @@ function CompletePractitionerProfile({
       toast.success("Verification code has been sent to your email");
       setUpdatedUserData({
         bio,
-        headShot,
-        licenseSince: dayjs(date).unix(),
+        headshot,
+        ...(showLicenseSince && {
+          licenseSince: dayjs(date).unix(),
+        }),
       });
       setVerifyCodeOpen(true);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
-      toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
     }
   };
   useEffect(() => {
-    const {
-      user: { email },
-    } = JSON.parse(localStorage.getItem("profile_info"));
-    setEmail(email);
+    const user = JSON.parse(localStorage.getItem("profile_info"))?.user;
+    setEmail(user?.email);
+    setShowLicenseSince(!!user?.licenseNumber);
   }, []);
   return (
     <>
@@ -145,11 +160,16 @@ function CompletePractitionerProfile({
             "&::-webkit-scrollbar": {
               width: "6px",
             },
-            "&::-webkit-scrollbar-track": {
-              background: "#f1f1f1",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#9f9dc9",
+            // "&::-webkit-scrollbar-track": {
+            //   background: "#f1f1f1",
+            // },
+            // "&::-webkit-scrollbar-thumb": {
+            //   background: "#9f9dc9",
+            // },
+            "& textarea::-webkit-scrollbar": {
+              // display: "none",
+              // overflow: "hidden",
+              display: "none",
             },
           }}
         >
@@ -173,7 +193,18 @@ function CompletePractitionerProfile({
             >
               <Box>
                 <InputLabel shrink>Bio</InputLabel>
-                <div
+                <Box
+                  sx={{
+                    "&::-webkit-scrollbar": {
+                      width: "6px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "#f1f1f1",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#9f9dc9",
+                    },
+                  }}
                   style={{
                     background:
                       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
@@ -185,19 +216,51 @@ function CompletePractitionerProfile({
                 >
                   <GradiantTextField
                     value={bio}
+                    sx={{
+                      // overflow: "hidden",
+                      "&::-webkit-scrollbar ": {},
+                    }}
                     onChange={(e) => setBio(e.target.value)}
                     fullWidth
                     variant="standard"
+                    inputProps={{
+                      overflow: "hidden",
+                      "&::-webkit-scrollbar": {
+                        width: "6px",
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        background: "#f1f1f1",
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        background: "#9f9dc9",
+                      },
+                    }}
                     InputProps={{
                       disableUnderline: true,
+                      style: {
+                        overflow: "hidden",
+
+                        "&::-webkit-scrollbar": {
+                          width: "6px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f1f1f1",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#9f9dc9",
+                        },
+                      },
                     }}
                     style={{
                       background: "rgba(29, 6, 104, 1)",
                       margin: "2px 2px 2px 2px",
                       borderRadius: "24px",
                     }}
+                    rows={3}
+                    maxRows={10}
+                    multiline={true}
                   />
-                </div>
+                </Box>
               </Box>
               <Box>
                 <InputLabel shrink>Headshot:</InputLabel>
@@ -208,56 +271,66 @@ function CompletePractitionerProfile({
                   Files types supported: JPG, PNG, GIF, SVG, Max Size: 1MB
                 </Typography>
                 <CustomFileUpload
-                  s3Url={headShot}
+                  uploadingToS3={uploadingHeadshot}
+                  setUploadingToS3={setUploadingHeadshot}
+                  s3Url={headshot}
                   setS3Url={setHeadshot}
                   width="100%"
                 />
               </Box>
-              <Box>
-                <InputLabel shrink>License Since Date:</InputLabel>
-                <div
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    display: "flex",
-                    justifyContent: "center",
-                    borderRadius: "24px",
-                    alignItems: "center",
-                  }}
-                >
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DesktopDatePicker
-                      label=""
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
-                      disableFuture
-                      value={date}
-                      onChange={(newValue) => {
-                        setDate(newValue);
-                      }}
-                      renderInput={(params) => (
-                        <GradiantTextField
-                          variant="standard"
-                          onKeyDown={(e) => e.preventDefault()}
-                          fullWidth
-                          style={{
-                            background: "rgba(29, 6, 104, 1)",
-                            margin: "2px 2px 2px 2px",
-                            borderRadius: "24px",
-                          }}
-                          {...params}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                </div>
-              </Box>
+              {showLicenseSince && (
+                <Box>
+                  <InputLabel shrink>License Since Date:</InputLabel>
+                  <div
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                      display: "flex",
+                      justifyContent: "center",
+                      borderRadius: "24px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DesktopDatePicker
+                        label=""
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        disableFuture
+                        value={date}
+                        onChange={(newValue) => {
+                          setDate(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <GradiantTextField
+                            variant="standard"
+                            onKeyDown={(e) => e.preventDefault()}
+                            fullWidth
+                            style={{
+                              background: "rgba(29, 6, 104, 1)",
+                              margin: "2px 2px 2px 2px",
+                              borderRadius: "24px",
+                            }}
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </Box>
+              )}
               <Box display="flex" flexDirection="column" mt={{ md: 4 }}>
                 <LoadingButton
                   onClick={completePractitionerDetails}
                   loading={isLoading}
-                  disabled={!(headShot.length > 1 && bio.length > 1)}
+                  disabled={
+                    !(
+                      headshot.length > 1 &&
+                      bio.length > 1 &&
+                      !uploadingHeadshot
+                    )
+                  }
                   variant="gradient"
                   size="large"
                   sx={{ fontSize: { xs: "10px", md: "20px" } }}
@@ -278,6 +351,7 @@ function CompletePractitionerProfile({
         placeholder="Enter your verification code"
         updatedUserData={updatedUserData}
         profileUpdate={true}
+        isParentModal={true}
         handleParentClose={handleClose}
         email={email}
         inputTypeCode

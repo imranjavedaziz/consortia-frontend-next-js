@@ -13,6 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { VERIFY_OTP, RESEND_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,7 +44,10 @@ function VerifyCodeForProfileUpdate({
   updatedUserData,
   fetchUpdatedData,
   profileUpdate,
+  endPoint,
   email,
+  isParentModal,
+  editProfileKey,
   handleParentClose,
 }) {
   const [code, setCode] = useState("");
@@ -72,7 +76,7 @@ function VerifyCodeForProfileUpdate({
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           }
         );
@@ -95,19 +99,28 @@ function VerifyCodeForProfileUpdate({
     try {
       if (code.length > 0) {
         setFetching(true);
-        const res = await publicAxios.put(
-          "user/update",
+        const res = await publicAxios.post(
+          endPoint || "verify_complete_profile",
           {
             ...updatedUserData,
-            verificationCode: code,
+            otp: code,
+            otp_type: "Email",
+            ...(editProfileKey
+              ? {
+                  edit_profile: true,
+                }
+              : {
+                  complete: true,
+                }),
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
             },
           }
         );
         setFetching(false);
+        debugger;
         const user = res?.data?.data?.user;
         toast.success(res?.data?.message);
         const profile_info = JSON.parse(localStorage.getItem("profile_info"));
@@ -117,16 +130,20 @@ function VerifyCodeForProfileUpdate({
         };
         localStorage.setItem("profile_info", JSON.stringify(newProfileData));
         handleClose();
-        handleParentClose();
+        isParentModal && handleParentClose();
       } else {
         toast.error("Please enter OTP");
       }
     } catch (error) {
       setFetching(false);
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(error?.data?.err?.msg);
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -134,11 +151,24 @@ function VerifyCodeForProfileUpdate({
   const resendCode = async (
     email = JSON.parse(localStorage.getItem("profile_info"))?.user?.email
   ) => {
-    const res = await publicAxios.post("auth/resend", {
-      email: email,
-    });
-    toast.success(res?.data?.message);
+    try {
+      const res = await publicAxios.post(RESEND_OTP, {
+        email,
+      });
+      toast.success(res?.data?.message);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
+    }
   };
+  console.log("editProfileKey", editProfileKey);
   return (
     <>
       <Dialog
