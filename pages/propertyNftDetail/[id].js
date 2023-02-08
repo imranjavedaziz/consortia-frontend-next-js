@@ -6,6 +6,7 @@ import {
   Grid,
   CardMedia,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -102,6 +103,9 @@ const PractitionerDetailPage = () => {
       text4: nftDetail?.updated_at,
     },
   ];
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   return (
     <>
@@ -123,14 +127,17 @@ const PractitionerDetailPage = () => {
             <Grid container>
               <Grid
                 item
-                xs={12}
+                xs={6}
                 md={5}
                 lg={3}
-                sx={{ display: "flex", order: { xs: 2, md: 1 } }}
+                sx={{ display: "flex", 
+                // order: { xs: 2, md: 1 } 
+              }
+              }
               >
                 <CardMedia
                   component="img"
-                  height="328px"
+                  height="159px"
                   // width="250px"
                   alt="nft card Icon"
                   image={nftDetail?.image}
@@ -149,7 +156,7 @@ const PractitionerDetailPage = () => {
               </Grid>
               <Grid
                 item
-                xs={12}
+                xs={6}
                 md={7}
                 lg={9}
                 sx={{
@@ -157,7 +164,7 @@ const PractitionerDetailPage = () => {
                   paddingBottom: { md: "0px", xs: "20px" },
                   display: "flex",
                   justifyContent: "space-between",
-                  order: { xs: 1, md: 2 },
+                  // order: { xs: 1, md: 2 },
                 }}
               >
                 <Box sx={{ width: "100%" }}>
@@ -213,7 +220,7 @@ const PractitionerDetailPage = () => {
                   </Box>
                 </Box>
                 <Box>
-                  <Box
+                {!belowSm&&<Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     {/* <Typography variant="h5">Transaction History</Typography> */}
@@ -222,14 +229,24 @@ const PractitionerDetailPage = () => {
                       height={40}
                       width={40}
                     />
-                  </Box>
+                  </Box>}
                 </Box>
               </Grid>
             </Grid>
             <Grid container>
               <Grid item xs={12} sx={{ padding: "40px 0px" }}>
-                <Box>
+                <Box sx={{display:'flex',justifyContent:'space-between'}}>
                   <Typography variant="h5">Transaction History</Typography>
+                  {belowSm&&<Box
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {/* <Typography variant="h5">Transaction History</Typography> */}
+                    <Image
+                      src="/assets/icons/export.svg"
+                      height={40}
+                      width={40}
+                    />
+                  </Box>}
                 </Box>
                 <Box sx={{ paddingTop: "40px" }}>
                   <TransactiionHistoryTable

@@ -53,10 +53,11 @@ function TextAndDoubleButtons({
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: "24px",
-            width: "571px",
-            height: height,
-            padding: "40px",
+            borderRadius: {xs:'12px',md:"24px"},
+            width: {xs:"272px",md:"571px"},
+            height: {xs:'138px', md:height},
+            padding: {xs:"16px",md:"40px"},
+            margin:{xs:'16px', md:'32px'}
           },
         }}
       >
@@ -86,12 +87,12 @@ function TextAndDoubleButtons({
             )}
           </Box>
         </DialogTitle>
-        <DialogContent sx={{ padding: "16px 0px" }}>
+        <DialogContent sx={{ padding: "0px 0px 16px 0px" }}>
           <DialogContentText id="alert-dialog-slide-description">
-            <Typography variant="body1">{text}</Typography>
+            <Typography variant="body1" >{text}</Typography>
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ padding: "16px 0px" }}>
+        <DialogActions sx={{ padding: "16px 0px 0px 0px" }}>
           <Box
             sx={{
               width: "100%",
@@ -106,11 +107,11 @@ function TextAndDoubleButtons({
                 background:
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
-                fontSize: "20px",
+                fontSize: {xs:'10px',md:"20px"},
                 textTransform: "capitalize",
                 // width: "100%",
-                width: "230px",
-                padding: "13px 61px",    
+                width: {xs:'116px',md:"230px"},
+                padding: {xs:'8px 31px',md:"13px 61px"},    
               }}
               onClick={() => {
                 setIsPractitioner(false);
@@ -126,11 +127,12 @@ function TextAndDoubleButtons({
                 background:
                   "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                 borderRadius: "24px",
-                fontSize: "20px",
+                fontSize: {xs:'10px',md:"20px"},
                 textTransform: "capitalize",
                 // width: "100%",
-                width: "230px",
-                padding: "13px 61px",
+                width: {xs:'116px',md:"230px"},
+                padding: {xs:'8px 31px',md:"13px 61px"},    
+
               }}
               onClick={() => {
                 setIsPractitioner(true);

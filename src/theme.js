@@ -178,9 +178,9 @@ export const darkTheme = createTheme({
         fontSize: "20px !important",
       },
       [theme.breakpoints.between("xs", "sm")]: {
-        fontSize: "10px",
-        fontWeight: 300,
-        lineHeight: "15px",
+        fontSize: "8px",
+        fontWeight: 400,
+        lineHeight: "12px",
       },
     },
     body2: {

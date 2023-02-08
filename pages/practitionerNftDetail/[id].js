@@ -67,65 +67,71 @@ const PractitionerDetailPage = () => {
     // setLocalData(profileInfo);
     getNftData();
     getPropertyNftData();
-  }, []);
+  }, [query?.id]);
 
   const getNftData = async () => {
-    try {
-      setLoading(true);
-      const res = await publicAxios.get(
-        `${PRACTITIONER_NFT_DETAIL}/${query?.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-      // console.log('res', res)
-      setNftDetail(res?.data?.data);
-      setLoading(false);
-      // console.log("res", res?.data?.nfts);
-
-      // setUserData(res?.data?.data?.user);
-    } catch (error) {
-      setLoading(false);
-
-      console.log(error);
-      if (Array.isArray(error?.data?.message)) {
-        toast.error(error?.data?.message?.error?.[0]);
-      } else {
-        if (typeof error?.data?.message === "string") {
-          toast.error(error?.data?.message);
+    if(query?.id){
+      try {
+        setLoading(true);
+        const res = await publicAxios.get(
+          `${PRACTITIONER_NFT_DETAIL}/${query?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        // console.log('res', res)
+        setNftDetail(res?.data?.data);
+        setLoading(false);
+        // console.log("res", res?.data?.nfts);
+  
+        // setUserData(res?.data?.data?.user);
+      } catch (error) {
+        setLoading(false);
+  
+        console.log(error);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
         }
       }
     }
+   
   };
 
   const getPropertyNftData = async () => {
-    try {
-      const res = await publicAxios.get(GET_PROPERTY_NFTS, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      });
-      setPropertyNftsData(res?.data?.results);
-
-      // console.log("res", res?.data?.nfts);
-
-      // setUserData(res?.data?.data?.user);
-    } catch (error) {
-      console.log(error);
-      if (Array.isArray(error?.data?.message)) {
-        toast.error(error?.data?.message?.error?.[0]);
-      } else {
-        if (typeof error?.data?.message === "string") {
-          toast.error(error?.data?.message);
+    if(query?.id){
+      try {
+        const res = await publicAxios.get(GET_PROPERTY_NFTS, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        });
+        setPropertyNftsData(res?.data?.results);
+  
+        // console.log("res", res?.data?.nfts);
+  
+        // setUserData(res?.data?.data?.user);
+      } catch (error) {
+        console.log(error);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
         } else {
-          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
         }
       }
     }
+    
   };
 
   const CopyPrivateTextRef = useRef(null);
@@ -145,6 +151,7 @@ const PractitionerDetailPage = () => {
     "Timestamp",
   ];
   const rowData = propertyNftsData?.map((item, i) => {
+    // console.log('item?.tx',item, item?.tx)
     return {
       text1: item.tx_id ? `${item.tx_id?.slice(0, 12)}...` : "_ _",
       text2: item.address,

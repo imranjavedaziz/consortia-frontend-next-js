@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -33,6 +33,10 @@ const inputFields = [
 
 function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
   const { push } = useRouter();
+
+  const belowSm = useMediaQuery((theme) =>
+  theme.breakpoints.between("xs", "sm")
+);
 
   const handleClose = () => {
     setOpen(false);
@@ -74,14 +78,14 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: "24px",
-            width: "571px",
-            // height: "397px",
-            padding: "40px",
+            borderRadius: {xs:'12px',md:"24px"},
+            width: {xs:"272px",md:"571px"},
+            padding: {xs:"16px",md:"40px"},
+            margin:{xs:'16px', md:'32px'}
           },
         }}
       >
-        <DialogTitle sx={{ padding: "0px 0px 16px 0px" }}>
+        <DialogTitle sx={{ padding: {xs:"0px 0px 12px 0px",md:"0px 0px 16px 0px"} }} >
           <Box
             sx={{
               display: "flex",
@@ -102,8 +106,8 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
             >
               <Image
                 src="/assets/icons/cross.svg"
-                height={22}
-                width={22}
+                height={belowSm ? 12:22}
+                width={belowSm ? 12:22}
                 alt=""
               />
             </Box>
@@ -136,22 +140,10 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
                 style={{ width: { md: "100%", xs: "100%" } }}
               >
                 <DialogContent
-                // sx={{ padding: "20px 0px" }}
+                sx={{ padding: "20px 0px" }}
                 >
-                  <Typography variant="body1">{text}</Typography>
+                  <Typography variant="body1" sx={{paddingBottom:'10px'}}>{text}</Typography>
                   <Box>
-                    {/* <TextFieldWrapper> */}
-
-                    {/* <TextField
-                sx={{
-                  "& .MuiInputLabel-root": { color: "green" },
-                  borderColor:
-                    "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                  borderRadius: 1,
-                }}
-              /> */}
-                    {/* </TextFieldWrapper> */}
-
                     <Box
                       display="flex"
                       flexDirection="column"
@@ -159,7 +151,8 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
                       width="100%"
                       margin="auto"
                       // paddingX={2}
-                      rowGap={3}
+                      rowGap={{xs:2,md:3}}
+
                     >
                       {inputFields.map(
                         ({
@@ -189,7 +182,7 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
                     </Box>
                   </Box>
                 </DialogContent>
-                <DialogActions sx={{ padding: "16px 0px" }}>
+                <DialogActions sx={{ padding: {xs:'0px 0px 0px 0px',  md:"16px 0px"} }}>
                   <Box sx={{ width: "100%" }}>
                     <LoadingButton
                       loading={fetching}
@@ -202,6 +195,7 @@ function DialogOTPSend({ open, setOpen, text, title, btnText, email }) {
                         width: "100%",
                         padding: "10px 0px",
                         textTransform: "capitalize",
+                        fontSize:{xs:'10px',md:'15px'}
                       }}
                       type="submit"
                       disabled={isSubmitting}
