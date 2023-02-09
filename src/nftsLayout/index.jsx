@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
@@ -34,6 +34,9 @@ function NftsLayout({ children }) {
     openVerificationFailure,
     setOpenVerificationFailure,
     successData,
+    stripeVerificationCode,
+    setStripeVerificationCode,
+    stripe,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
@@ -86,7 +89,47 @@ function NftsLayout({ children }) {
     ) {
       setCompleteProfileOpen(true);
     }
+
+    if (stripeVerificationCode.length > 1) {
+      const [nft, User_token] = stripeVerificationCode;
+      const verifyStripeIdentity = async () => {
+        try {
+          const { data } = await publicAxios.post(
+            "nft_data_for_identity_verification",
+            {
+              nft,
+              User_token,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          const { error } = await stripe.verifyIdentity(data?.data);
+          if (error) {
+            toast.success("Thank you for verifying your identity");
+          } else {
+            toast.error("Unable to verify identity at this time!");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      verifyStripeIdentity();
+    }
+    console.log(stripe);
   }, []);
+
+  const verifyStripeIdentity = async () => {
+    const { error } = await stripe.verifyIdentity("___________");
+    if (error) {
+      toast.success("Thank you for verifying your identity with Stripe");
+    } else {
+      toast.error("Unable to verify identity at this time!");
+    }
+  };
 
   return (
     <>
