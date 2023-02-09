@@ -63,7 +63,7 @@ const PractitionerDetailPage = () => {
 
   const getNftData = async () => {
     // debugger
-    if(query?.id){
+    if (query?.id) {
       try {
         const res = await publicAxios.get(
           `${PROPERTY_NFT_DETAIL}/${query?.id}`,
@@ -75,33 +75,34 @@ const PractitionerDetailPage = () => {
         );
         // console.log('res', res)
         setNftDetail(res?.data?.data);
-  
+
         // console.log("res", res?.data?.nfts);
-  
+
         // setUserData(res?.data?.data?.user);
       } catch (error) {
         console.log(error);
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
       }
     }
-    
   };
-  const headerData = ["Token ID", "Action","Document Type","Timestamp", ];
+  const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
-      {text1: `${nftDetail?.tx_id?.slice(0, 12)}...`,
-      text2: nftDetail?.is_minted ? 'Mint' : '_ _',
+    {
+      text1: nftDetail?.tx_id ? `${nftDetail?.tx_id?.slice(0, 12)}...` : "_ _",
+      text2: nftDetail?.is_minted ? "Mint" : "_ _",
       text3: nftDetail?.docCategory,
-      text4: nftDetail?.updated_at,}]
-    
-  
+      text4: nftDetail?.updated_at,
+    },
+  ];
+
   return (
     <>
       <Box>
@@ -213,7 +214,7 @@ const PractitionerDetailPage = () => {
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
                 <Box sx={{ paddingTop: "40px" }}>
-                <TransactiionHistoryTable
+                  <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}
                   />

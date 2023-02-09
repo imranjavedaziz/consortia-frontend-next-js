@@ -22,8 +22,8 @@ const CustomFileUpload = ({
   allowPdf = false,
   privateBucket = false,
   practitioner,
-  uploadingToS3, 
-  setUploadingToS3
+  uploadingToS3,
+  setUploadingToS3,
 }) => {
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
@@ -57,7 +57,7 @@ const CustomFileUpload = ({
 
   const handleChange = (e) => {
     if (validImage(e.target.files[0]?.name)) {
-      if (e.target.files[0].size < 1048576) {
+      if (e.target.files[0].size < 1048576 || true) {
         setUploadingToS3(true);
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
@@ -66,15 +66,16 @@ const CustomFileUpload = ({
             Bucket: privateBucket
               ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
               : process.env.NEXT_PUBLIC_BUCKET_NAME,
-            Key: Date.now() + e.target.files[0].name,
+            Key: Date.now() + e.target.files[0].name.replaceAll(" ", "_"),
             Body: e.target.files[0],
           },
           async (err, data) => {
             if (err) {
               setUploadingToS3(false);
-              console.log(err);
+              console.log("err", err);
             } else {
               setS3Url(data?.Location);
+              console.log("s3url", data?.Location);
               setUploadingToS3(false);
             }
           }

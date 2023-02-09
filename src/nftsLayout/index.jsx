@@ -33,6 +33,7 @@ function NftsLayout({ children }) {
     setOpenVerificationSuccess,
     openVerificationFailure,
     setOpenVerificationFailure,
+    successData,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
@@ -101,7 +102,11 @@ function NftsLayout({ children }) {
         setOpen={setOpenVerificationSuccess}
         title="Congratulations!"
         imageSrc="/assets/icons/verificationSuccessIcon.svg"
-        text="Your identity has been successfully verified"
+        text={
+          successData.length > 1
+            ? successData
+            : "THANK YOU FOR YOUR ORDER. YOUR PROPERTY NFT WILL BE MINTED AS SOON AS THE VERIFICATION PROCESS IS COMPLETE, FOR YOUR SECURITY THE IDENTIFICATION PROCESS MAY TAKE UP TO THREE DAYS"
+        }
       />
       <CompletePractitionerProfile
         open={completeProfileOpen}
