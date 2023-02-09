@@ -85,11 +85,6 @@ const MintNFTS = () => {
     setLicenseTypeValue(event.target.value);
   };
 
-  const agentsList = [
-    { value: "agent-1", label: "Agent 1" },
-    { value: "agent-2", label: "Agent 2" },
-    { value: "no-agent", label: "No Agent" },
-  ];
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -128,12 +123,6 @@ const MintNFTS = () => {
     { value: "mortgage broker", label: "Mortgage Broker" },
     { value: "appraiser", label: "Appraiser" },
   ];
-  // const radioBoxList = [
-  //   { label: "Realter", name: "realter" },
-  //   { label: "Loan Officer", name: "loan-officer" },
-  //   { label: "Title/Escrow", name: "titel-escrow" },
-  //   { label: "Appraiser", name: "appraiser" },
-  // ];
   const mintPractitionarNfts = async ({
     name,
     email,
@@ -143,55 +132,103 @@ const MintNFTS = () => {
     // licenseType,
     licenseNumber,
   }) => {
-    if (false) {
-      toast.error("Please upload profile");
-    } else {
-      setData({
-        name,
-        email,
-        address,
-        image: headShot,
-        bio,
-        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-        licenseType: licenseTypeValue,
-        licenseNumber,
-      });
-      setIsCreditCardModalOpen(true);
-      // try {
-      //   const res = await publicAxios.post(
-      //     `${MINT_PRACTITIONER_NFT}`,
-      //     {
-      //       name,
-      //       email,
-      //       address,
-      //       image: headShot,
-      //       bio,
-      //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+    try {
+      if (false) {
+        toast.error("Please upload profile");
+      } else {
+        
+        // try {
+        //   const res = await publicAxios.post(
+        //     `${MINT_PRACTITIONER_NFT}`,
+        //     {
+        //       name,
+        //       email,
+        //       address,
+        //       image: headShot,
+        //       bio,
+        //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+  
+        //       // role: profileInfo.user.role ? "practitioner" : "consumer",
+        //       licenseType: licenseTypeValue,
+        //       licenseNumber,
+        //     },
+        //     {
+        //       headers: {
+        //         Authorization: `Bearer ${localStorage.getItem("access")}`,
+        //       },
+        //     }
+        //   );
+        //   toast.success("practitionar nft is minted successfully");
+        //   push("/nftWallet/NftWallet");
+        // } catch (error) {
+        //   if (Array.isArray(error?.data?.message)) {
+        //     toast.error(error?.data?.message?.error?.[0]);
+        //   } else {
+        //     if(typeof(error?.data?.message) === 'string'){
+            //   toast.error(error?.data?.message);
+            // }else{
+            //   toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            // }
+        //   }
+        // }
+  
+  
+  
+  
+          const res = await publicAxios.post(
+          "create_practitioner_nft",
+          {
+            name,
+          email,
+          address,
+          image: headShot,
+          bio,
+          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          licenseType: licenseTypeValue,
+          licenseNumber,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        setData({
+          name,
+          email,
+          address,
+          image: headShot,
+          bio,
+          id: res?.data?.data?.id,
+          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          licenseType: licenseTypeValue,
+          licenseNumber,
+        });
+        console.log(res );
+        toast.success(res?.data?.message);
 
-      //       // role: profileInfo.user.role ? "practitioner" : "consumer",
-      //       licenseType: licenseTypeValue,
-      //       licenseNumber,
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${localStorage.getItem("access")}`,
-      //       },
-      //     }
-      //   );
-      //   toast.success("practitionar nft is minted successfully");
-      //   push("/nftWallet/NftWallet");
-      // } catch (error) {
-      //   if (Array.isArray(error?.data?.message)) {
-      //     toast.error(error?.data?.message?.error?.[0]);
-      //   } else {
-      //     if(typeof(error?.data?.message) === 'string'){
-          //   toast.error(error?.data?.message);
-          // }else{
-          //   toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          // }
-      //   }
-      // }
+        setIsCreditCardModalOpen(true);
+  
+  
+        // setVerifyModalOpen(false);
+      }
+    } catch (error) {
+      console.log('error', error)
+      if (typeof error?.data?.message == "string") {
+        if (error?.data?.message.includes(":")) {
+          toast.error(error?.data?.message?.split(":")[1]);
+        } else {
+          toast.error(error?.data?.message);
+        }
+      } else {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
     }
+    
   };
   return (
     <>
