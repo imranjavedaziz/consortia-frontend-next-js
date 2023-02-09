@@ -35,7 +35,7 @@ function VerificationModal({ open, setOpen, text, title, imageSrc }) {
 
   const handleClose = () => {
     setOpen(false);
-    // push("/nftWallet/NftWallet");
+    push("/dashboard/landing");
   };
 
   return (
