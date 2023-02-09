@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAuthContext } from "../../src/context/AuthContext";
+import AuthLayout from "../../src/authLayout/index";
 
 const StripeVerificationCode = () => {
   const {
@@ -26,3 +27,6 @@ const StripeVerificationCode = () => {
 };
 
 export default StripeVerificationCode;
+StripeVerificationCode.getLayout = function (page) {
+  return <AuthLayout>{page}</AuthLayout>;
+};
