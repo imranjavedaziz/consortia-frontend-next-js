@@ -32,7 +32,6 @@ const CustomFileUpload = ({
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
 
-  console.log("userData", userData);
   const myBucket = new AWS.S3({
     params: {
       Bucket: privateBucket
@@ -75,7 +74,6 @@ const CustomFileUpload = ({
               console.log("err", err);
             } else {
               setS3Url(data?.Location);
-              console.log("s3url", data?.Location);
               setUploadingToS3(false);
             }
           }
@@ -100,14 +98,12 @@ const CustomFileUpload = ({
   const handleDrop = (event) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    console.log({ files });
     handleChange({
       target: {
         files: files,
       },
     });
     // setFiles(files);
-    console.log(event.dataTransfer);
   };
 
   const handleDragOver = (event) => {

@@ -48,10 +48,6 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
-  console.log(
-    "show details",
-    !!process.env.NEXT_PUBLIC_SHOW_BLOCKCHAIN_DETAILS
-  );
   const { push } = useRouter();
   const {
     isCreditCardModalOpen,
@@ -74,11 +70,6 @@ const MintNFTS = () => {
     { value: false, label: "No" },
   ]);
 
-  // const propertyCategoryOptions = [
-  //   { value: true, label: "Yes" },
-  //   { value: false, label: "No" },
-  // ];
-
   const getVerifiedCompanies = async () => {
     try {
       const response = await publicAxios.get("verify_company_list", {
@@ -86,7 +77,6 @@ const MintNFTS = () => {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
-      console.log(response?.data?.data);
       const verifiedCompanies = response?.data?.data?.map((company) => {
         return { value: company.id, label: company.companyName };
       });
@@ -224,69 +214,36 @@ const MintNFTS = () => {
     try {
       // setVerifyModalOpen(true);
       setisSubmitting(true);
-
-      // const res = await publicAxios.post(
-      //   "create_property_nft",
-      //   {
-      //     name: values.name,
-      //     title: values.apartmentNo
-      //       ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
-      //       : latLngPlusCode.plusCode,
-      //     ...(values.property_category == true && {
-      //       companyName: values.entity,
-      //       company_document:
-      //         "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
-      //     }),
-      //     ...(typeof values.property_category == "number" && {
-      //       company_id: values.property_category,
-      //     }),
-      //     price: 10,
-      //     image: housePhoto,
-      //     description: "description",
-      //     address: values.address,
-      //     document:
-      //       "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
-      //     docCategory: values.category,
-      //     agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-      //     },
-      //   }
-      // );
-      console.log({ res });
-      // const entityVerification = await publicAxios.post(
-      //   "verify_company",
-      //   {
-      //     name: values.name,
-      //     companyName: values.entity,
-      //     document: setUploadingEntity.split("/").at(-1),
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-      //     },
-      //   }
-      // );
-      // console.log(entityDocument);
-
-      // const response = await axios.post(
-      //   "https://6qhuvhjahl.execute-api.us-east-1.amazonaws.com/ocr",
-      //   {
-      //     key: categoryDocument.split("/").at(-1),
-      //     title: values.name,
-      //     address: values.address,
-      //   }
-      // );
-
-      // if (response?.data?.status == "failed") {
-      //   toast.error(response?.data?.message);
-      //   setVerifyModalOpen(false);
-      //   return;
-      // }
-
-      // setVerifyModalOpen(false);
+      const res = await publicAxios.post(
+        "create_property_nft",
+        {
+          name: values.name,
+          title: values.apartmentNo
+            ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+            : latLngPlusCode.plusCode,
+          ...(values.property_category == true && {
+            companyName: values.entity,
+            company_document:
+              "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
+          }),
+          ...(typeof values.property_category == "number" && {
+            company_id: values.property_category,
+          }),
+          price: 10,
+          image: housePhoto,
+          description: "description",
+          address: values.address.replace(", USA", ""),
+          document:
+            "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
+          docCategory: values.category,
+          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
       setData({
         stripe_identity_status: res?.data?.data?.stripe_identity_status,
         id: res?.data?.data?.id,
@@ -299,10 +256,13 @@ const MintNFTS = () => {
           company_document:
             "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
         }),
+        ...(typeof values.property_category == "number" && {
+          company_id: values.property_category,
+        }),
         price: 10,
         image: housePhoto,
         description: "description",
-        address: values.address,
+        address: values.address.replace(", USA", ""),
         document:
           "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
         docCategory: values.category,
@@ -312,13 +272,7 @@ const MintNFTS = () => {
       setIsCreditCardModalOpen(true);
     } catch (error) {
       setisSubmitting(false);
-
       console.log(error);
-      if (error?.code == "ERR_NETWORK") {
-        toast.error("Verification failed. Please try again");
-        setVerifyModalOpen(false);
-        return;
-      }
       if (typeof error?.data?.message == "string") {
         toast.error(error?.data?.message);
       } else {
@@ -332,8 +286,6 @@ const MintNFTS = () => {
           }
         }
       }
-      setVerifyModalOpen(false);
-      console.log(error);
     }
   };
   console.log({ data });
