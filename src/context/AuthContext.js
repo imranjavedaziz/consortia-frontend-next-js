@@ -5,30 +5,42 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 const Context = createContext();
 
 export const AuthContext = ({ children }) => {
+  const [stripe, setStripe] = useState({});
+
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [choosePractitionerOpen, setChoosePractitionerOpen] = useState(true);
   const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);
   const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
   const [isVerifyIdentityModalOpen, setIsVerifyIdentityModalOpen] =
     useState(false);
-    const [openVerficationModal, setOpenVerficationModal] = useState(false)
-    const [openVerificationSuccess,setOpenVerificationSuccess] = useState(false)
-  const [openVerificationFailure,setOpenVerificationFailure] = useState(false)
+  const [openVerficationModal, setOpenVerficationModal] = useState(false);
+  const [openVerificationSuccess, setOpenVerificationSuccess] = useState(false);
+  const [openVerificationFailure, setOpenVerificationFailure] = useState(false);
+  const [isCreditCardProcessing, setIsCreditCardProcessing] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [successData, setSuccessData] = useState("");
 
   const handleCreditCardModalClose = () => {
+    setIsCreditCardProcessing(false);
     setIsCreditCardModalOpen(false);
   };
   const handleVerifyIdentityModalClose = () => {
     setIsVerifyIdentityModalOpen(false);
   };
 
-
+  const getStripe = async () => {
+    setStripe(await stripePromise);
+  };
 
   useEffect(() => {
     // if (localStorage.getItem("access")) {
@@ -36,7 +48,7 @@ export const AuthContext = ({ children }) => {
     // } else {
     //   setIsLoggedIn(false);
     // }
-    const token = localStorage.getItem("access")
+    const token = localStorage.getItem("access");
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (profileInfo?.user?.role === "Practitioner") {
       if (token && profileInfo?.user?.practitionerType) {
@@ -48,10 +60,11 @@ export const AuthContext = ({ children }) => {
     } else {
       if (token) {
         setIsLoggedIn(true);
-      }else{
+      } else {
         setIsLoggedIn(false);
       }
     }
+    getStripe();
   }, []);
   return (
     <Context.Provider
@@ -75,7 +88,13 @@ export const AuthContext = ({ children }) => {
         openVerificationSuccess,
         setOpenVerificationSuccess,
         openVerificationFailure,
-        setOpenVerificationFailure
+        setOpenVerificationFailure,
+        stripe,
+        setStripe,
+        isCreditCardProcessing,
+        setIsCreditCardProcessing,
+        successData,
+        setSuccessData,
       }}
     >
       {children}

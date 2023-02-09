@@ -9,7 +9,7 @@ import {
   Dialog,
   CircularProgress,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
@@ -48,6 +48,10 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
+  console.log(
+    "show details",
+    !!process.env.NEXT_PUBLIC_SHOW_BLOCKCHAIN_DETAILS
+  );
   const { push } = useRouter();
   const {
     isCreditCardModalOpen,
@@ -57,19 +61,57 @@ const MintNFTS = () => {
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
+  const [entityDocument, setEntityDocument] = useState("");
   const [latLngPlusCode, setLatLngPlusCode] = useState({});
   const [isSubmitting, setisSubmitting] = useState(false);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
   const [data, setData] = useState({});
   const [uploadingHousePhoto, setUploadingHousePhoto] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
-
-  const propertyCategoryOptions = [
+  const [uploadingEntity, setUploadingEntity] = useState(false);
+  const [propertyCategoryOptions, setPropertyCategoryOptions] = useState([
     { value: true, label: "Yes" },
     { value: false, label: "No" },
-  ];
+  ]);
+
+  // const propertyCategoryOptions = [
+  //   { value: true, label: "Yes" },
+  //   { value: false, label: "No" },
+  // ];
+
+  const getVerifiedCompanies = async () => {
+    try {
+      const response = await publicAxios.get("verify_company_list", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+      console.log(response?.data?.data);
+      const verifiedCompanies = response?.data?.data?.map((company) => {
+        return { value: company.id, label: company.companyName };
+      });
+      setPropertyCategoryOptions((initalCompanies) => [
+        ...[
+          { value: true, label: "Yes" },
+          { value: false, label: "No" },
+        ],
+        ...verifiedCompanies,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getVerifiedCompanies();
+    // return () =>
+    //   setPropertyCategoryOptions(
+    //     { value: true, label: "Yes" },
+    //     { value: false, label: "No" }
+    //   );
+  }, []);
+
   const itemsFunction = (setFieldValue, propertyStatus) => {
-    if (propertyStatus) {
+    if (propertyStatus === true) {
       const propertyNftsForm = [
         {
           name: "name",
@@ -92,31 +134,32 @@ const MintNFTS = () => {
           placeholder: "Enter the entity name",
         },
         {
-          component: (<><InputLabel shrink>
-            Upload a legal document for entity:
-          </InputLabel>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              color: "#FAFBFC",
-              opacity: 0.5,
-              marginBottom: 1,
-            }}
-          >
-            Files types supported: JPG, PNG Max Size: 1MB
-          </Typography>
-          <CustomFileUpload
-              allowPdf={true}
-              uploadingToS3={uploadingDocument}
-              setUploadingToS3={setUploadingDocument}
-              s3Url={categoryDocument}
-              setS3Url={setCategoryDocument}
-              borderRadius="24px"
-              width="100%"
-              privateBucket={true}
-            />
-          </>
-            
+          component: (
+            <>
+              <InputLabel shrink>
+                Upload a legal document for entity:
+              </InputLabel>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  color: "#FAFBFC",
+                  opacity: 0.5,
+                  marginBottom: 1,
+                }}
+              >
+                Files types supported: JPG, PNG, PDF, Max Size: 1MB
+              </Typography>
+              <CustomFileUpload
+                allowPdf={true}
+                uploadingToS3={uploadingEntity}
+                setUploadingToS3={setUploadingEntity}
+                s3Url={entityDocument}
+                setS3Url={setEntityDocument}
+                borderRadius="24px"
+                width="100%"
+                privateBucket={true}
+              />
+            </>
           ),
         },
         {
@@ -179,37 +222,97 @@ const MintNFTS = () => {
     }
 
     try {
-      setVerifyModalOpen(true);
-      const response = await axios.post(
-        "https://6qhuvhjahl.execute-api.us-east-1.amazonaws.com/ocr",
-        {
-          key: categoryDocument.split("/").at(-1),
-          title: values.name,
-          address: values.address,
-        }
-      );
-      if (response?.data?.status == "failed") {
-        toast.error(response?.data?.message);
-        setVerifyModalOpen(false);
-        return;
-      }
+      // setVerifyModalOpen(true);
+      setisSubmitting(true);
 
-      setVerifyModalOpen(false);
+      // const res = await publicAxios.post(
+      //   "create_property_nft",
+      //   {
+      //     name: values.name,
+      //     title: values.apartmentNo
+      //       ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+      //       : latLngPlusCode.plusCode,
+      //     ...(values.property_category == true && {
+      //       companyName: values.entity,
+      //       company_document:
+      //         "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
+      //     }),
+      //     ...(typeof values.property_category == "number" && {
+      //       company_id: values.property_category,
+      //     }),
+      //     price: 10,
+      //     image: housePhoto,
+      //     description: "description",
+      //     address: values.address,
+      //     document:
+      //       "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
+      //     docCategory: values.category,
+      //     agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //     },
+      //   }
+      // );
+      console.log({ res });
+      // const entityVerification = await publicAxios.post(
+      //   "verify_company",
+      //   {
+      //     name: values.name,
+      //     companyName: values.entity,
+      //     document: setUploadingEntity.split("/").at(-1),
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+      //     },
+      //   }
+      // );
+      // console.log(entityDocument);
+
+      // const response = await axios.post(
+      //   "https://6qhuvhjahl.execute-api.us-east-1.amazonaws.com/ocr",
+      //   {
+      //     key: categoryDocument.split("/").at(-1),
+      //     title: values.name,
+      //     address: values.address,
+      //   }
+      // );
+
+      // if (response?.data?.status == "failed") {
+      //   toast.error(response?.data?.message);
+      //   setVerifyModalOpen(false);
+      //   return;
+      // }
+
+      // setVerifyModalOpen(false);
       setData({
+        stripe_identity_status: res?.data?.data?.stripe_identity_status,
+        id: res?.data?.data?.id,
         name: values.name,
         title: values.apartmentNo
           ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
           : latLngPlusCode.plusCode,
+        ...(values.property_category == true && {
+          companyName: values.entity,
+          company_document:
+            "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
+        }),
         price: 10,
         image: housePhoto,
         description: "description",
         address: values.address,
-        document: categoryDocument,
+        document:
+          "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
         docCategory: values.category,
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
+      setisSubmitting(false);
       setIsCreditCardModalOpen(true);
     } catch (error) {
+      setisSubmitting(false);
+
       console.log(error);
       if (error?.code == "ERR_NETWORK") {
         toast.error("Verification failed. Please try again");
@@ -233,7 +336,7 @@ const MintNFTS = () => {
       console.log(error);
     }
   };
-
+  console.log({ data });
   return (
     <>
       <Box>
@@ -252,6 +355,7 @@ const MintNFTS = () => {
                 initialValues={{
                   name: "",
                   property_category: false,
+                  entity: "",
                   agent: "",
                   price: "",
                   apartmentNo: "",
@@ -271,11 +375,24 @@ const MintNFTS = () => {
                     "Please choose a property category"
                   ),
                   name: Yup.string().required("Please enter a name"),
+                  entity: Yup.string().when(["property_category"], {
+                    is: (property_category) => {
+                      console.log("validation", property_category == "true");
+                      return property_category == "true";
+                    },
+                    then: Yup.string().required("Entity Name is required"),
+                    // .min(1, "Entity Name is required"),
+                    otherwise: Yup.string().optional(),
+                  }),
                 })}
               >
                 {(props) => {
                   const { handleSubmit, setFieldValue, values } = props;
-
+                  console.log(
+                    "test",
+                    values.property_category == true,
+                    typeof values.property_category
+                  );
                   return (
                     <form
                       onSubmit={handleSubmit}
