@@ -229,7 +229,7 @@ const MintNFTS = () => {
           ...(typeof values.property_category == "number" && {
             company_id: values.property_category,
           }),
-          price: 10,
+          price: 20,
           image: housePhoto,
           description: "description",
           address: values.address.replace(", USA", ""),
@@ -259,7 +259,7 @@ const MintNFTS = () => {
         ...(typeof values.property_category == "number" && {
           company_id: values.property_category,
         }),
-        price: 10,
+        price: 20,
         image: housePhoto,
         description: "description",
         address: values.address.replace(", USA", ""),

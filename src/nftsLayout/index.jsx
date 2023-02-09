@@ -108,9 +108,11 @@ function NftsLayout({ children }) {
           );
           const { error } = await stripe.verifyIdentity(data?.data);
           if (error) {
-            toast.success("Thank you for verifying your identity");
-          } else {
+            setStripeVerificationCode([]);
             toast.error("Unable to verify identity at this time!");
+          } else {
+            toast.success("Thank you for verifying your identity");
+            setStripeVerificationCode([]);
           }
         } catch (error) {
           console.log(error);
@@ -121,15 +123,6 @@ function NftsLayout({ children }) {
     }
     console.log(stripe);
   }, []);
-
-  const verifyStripeIdentity = async () => {
-    const { error } = await stripe.verifyIdentity("___________");
-    if (error) {
-      toast.success("Thank you for verifying your identity with Stripe");
-    } else {
-      toast.error("Unable to verify identity at this time!");
-    }
-  };
 
   return (
     <>
