@@ -97,7 +97,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     }
     setData({ ...data, [target.name]: target.value });
   };
-  
+
   // Start Payment Processing
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,7 +143,8 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             {
               payment_intent_id: result?.id,
               "3d_secure": false,
-              property_nft_id: mintNFTData?.id,
+              [isPractitionerNFT ? practitioner_nft_id : property_nft_id]:
+                mintNFTData?.id,
             },
             {
               headers: {
@@ -171,7 +172,8 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               {
                 payment_intent_id: confirmationData?.paymentIntent?.id,
                 "3d_secure": true,
-                property_nft_id: mintNFTData?.id,
+                [isPractitionerNFT ? practitioner_nft_id : property_nft_id]:
+                  mintNFTData?.id,
               },
               {
                 headers: {
