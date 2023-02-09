@@ -26,6 +26,7 @@ export const AuthContext = ({ children }) => {
   const [openVerificationSuccess, setOpenVerificationSuccess] = useState(false);
   const [openVerificationFailure, setOpenVerificationFailure] = useState(false);
   const [isCreditCardProcessing, setIsCreditCardProcessing] = useState(false);
+  const [stripeVerificationCode, setStripeVerificationCode] = useState([]);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [successData, setSuccessData] = useState("");
@@ -95,6 +96,8 @@ export const AuthContext = ({ children }) => {
         setIsCreditCardProcessing,
         successData,
         setSuccessData,
+        stripeVerificationCode,
+        setStripeVerificationCode,
       }}
     >
       {children}

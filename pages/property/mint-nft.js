@@ -212,7 +212,6 @@ const MintNFTS = () => {
     }
 
     try {
-      // setVerifyModalOpen(true);
       setisSubmitting(true);
       const res = await publicAxios.post(
         "create_property_nft",
@@ -288,7 +287,6 @@ const MintNFTS = () => {
       }
     }
   };
-  console.log({ data });
   return (
     <>
       <Box>
