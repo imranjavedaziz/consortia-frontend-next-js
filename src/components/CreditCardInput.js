@@ -127,17 +127,10 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       .then(async (result) => {
         if (result?.error) {
           setIsCreditCardProcessing(false);
-          // setVerifyModalOpen(false);
-
           toast.error(result?.error?.message);
           return;
         }
         try {
-          // if (mintNFTData?.stripe_identity_status) {
-          //   setIsCreditCardProcessing(false);
-          //   setVerifyModalOpen(true);
-          // }
-
           const res = await publicAxios.post(
             isPractitionerNFT ? MINT_PRACTITIONER_NFT : MINT_PROPERTY_NFT,
             {
@@ -152,11 +145,6 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               },
             }
           );
-          console.log(res);
-          // setIsCreditCardProcessing(false);
-          // setOpenVerificationSuccess(true);
-          // handleCreditCardModalClose();
-
           if (res?.data?.data?.requires_action) {
             const confirmationData = await stripe.confirmCardPayment(
               res?.data?.data?.payment_intent_client_secret
@@ -182,26 +170,16 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               }
             );
             console.log("mintNftAfterPayment", mintNftAfterPayment);
-            toast.success(mintNftAfterPayment?.data?.message);
+            // toast.success(mintNftAfterPayment?.data?.message);
+            setIsCreditCardProcessing(false);
+            setOpenVerificationSuccess(true);
           }
 
-          if (mintNFTData?.stripe_identity_status) {
-            setIsCreditCardProcessing(false);
-            setVerifyModalOpen(true);
-          }
+          // if (mintNFTData?.stripe_identity_status) {
+          //   setIsCreditCardProcessing(true);
+          //   setVerifyModalOpen(true);
+          // }
           if (res?.data?.data?.identity_secret) {
-            // const { data } = await publicAxios.post(
-            //   "create-verification-session",
-            //   {
-            //     [isPractitionerNFT ? "practitioner_nft" : "property_nft"]:
-            //       res?.data?.data?.identity_secret,
-            //   },
-            //   {
-            //     headers: {
-            //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-            //     },
-            //   }
-            // );
             const { error } = await stripe.verifyIdentity(
               res?.data?.data?.identity_secret
             );
@@ -219,9 +197,9 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             }
           }
           if (res?.data?.data == "") {
+            handleCreditCardModalClose();
             setIsCreditCardProcessing(false);
             setOpenVerificationSuccess(true);
-            handleCreditCardModalClose();
           }
         } catch (error) {
           console.log(error);
@@ -265,7 +243,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       >
         <DialogTitle>
           <Typography variant="h3">
-            {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $1"}
+            {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $20"}
           </Typography>
         </DialogTitle>
         <DialogContent>
