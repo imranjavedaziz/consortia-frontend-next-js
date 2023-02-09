@@ -21,7 +21,10 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
-import { MINT_PRACTITIONER_NFT } from "../../src/constants/endpoints";
+import {
+  GET_PROFILE_BY_USERID,
+  MINT_PRACTITIONER_NFT,
+} from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
@@ -63,6 +66,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
+    setSuccessData
   } = useAuthContext();
 
   useTitle("Mint NFTs");
@@ -72,6 +76,7 @@ const MintNFTS = () => {
   const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,6 +85,7 @@ const MintNFTS = () => {
       setHeadshot(localData?.user?.headshot);
       setLicenseTypeValue(localData?.user?.practitionerType);
     }
+    getUserData();
   }, []);
   const handleChange = (event) => {
     setLicenseTypeValue(event.target.value);
@@ -136,84 +142,52 @@ const MintNFTS = () => {
       if (false) {
         toast.error("Please upload profile");
       } else {
-        
-        // try {
-        //   const res = await publicAxios.post(
-        //     `${MINT_PRACTITIONER_NFT}`,
-        //     {
-        //       name,
-        //       email,
-        //       address,
-        //       image: headShot,
-        //       bio,
-        //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-  
-        //       // role: profileInfo.user.role ? "practitioner" : "consumer",
-        //       licenseType: licenseTypeValue,
-        //       licenseNumber,
-        //     },
-        //     {
-        //       headers: {
-        //         Authorization: `Bearer ${localStorage.getItem("access")}`,
-        //       },
-        //     }
-        //   );
-        //   toast.success("practitionar nft is minted successfully");
-        //   push("/nftWallet/NftWallet");
-        // } catch (error) {
-        //   if (Array.isArray(error?.data?.message)) {
-        //     toast.error(error?.data?.message?.error?.[0]);
-        //   } else {
-        //     if(typeof(error?.data?.message) === 'string'){
-            //   toast.error(error?.data?.message);
-            // }else{
-            //   toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-            // }
-        //   }
-        // }
-  
-  
-  
-  
-          const res = await publicAxios.post(
-          "create_practitioner_nft",
-          {
-            name,
-          email,
-          address,
-          image: headShot,
-          bio,
-          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-          licenseType: licenseTypeValue,
-          licenseNumber,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          }
-        );
-        setData({
-          name,
-          email,
-          address,
-          image: headShot,
-          bio,
-          id: res?.data?.data?.id,
-          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-          licenseType: licenseTypeValue,
-          licenseNumber,
-        });
-        console.log(res );
-        toast.success(res?.data?.message);
+        if(userData?.stripe_user_block){
+          toast.error("User has been blocked");
 
-        setIsCreditCardModalOpen(true);
+        }else{
+          const res = await publicAxios.post(
+            "create_practitioner_nft",
+            {
+              name,
+              email,
+              address,
+              image: headShot,
+              bio,
+              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+              licenseType: licenseTypeValue,
+              licenseNumber,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          setData({
+            name,
+            email,
+            address,
+            image: headShot,
+            bio,
+            id: res?.data?.data?.id,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+            licenseType: licenseTypeValue,
+            licenseNumber,
+          });
+          console.log(res);
+          toast.success(res?.data?.message);
+
+          setSuccessData("Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted.")
   
-  
+          setIsCreditCardModalOpen(true);
+        }
+       
+
         // setVerifyModalOpen(false);
       }
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
       if (typeof error?.data?.message == "string") {
         if (error?.data?.message.includes(":")) {
           toast.error(error?.data?.message?.split(":")[1]);
@@ -228,8 +202,37 @@ const MintNFTS = () => {
         }
       }
     }
-    
   };
+  const getUserData = async () => {
+    try {
+      const res = await publicAxios.get(
+        `${GET_PROFILE_BY_USERID}?user_id=${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      console.log("resddd", res);
+      if (res?.data?.data?.user?.stripe_user_block) {
+        toast.error("User has been blocked");
+      }
+      setUserData(res?.data?.data?.user);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
+    }
+  };
+  console.log("userData", userData);
   return (
     <>
       <Box>
@@ -423,7 +426,9 @@ const MintNFTS = () => {
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={uploadingHeadshot}
+                            disabled={
+                               uploadingHeadshot
+                            }
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,

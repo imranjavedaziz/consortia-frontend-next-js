@@ -53,6 +53,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
+    setSuccessData
   } = useAuthContext();
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
@@ -267,6 +268,7 @@ const MintNFTS = () => {
         docCategory: values.category,
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
+      setSuccessData("THANK YOU FOR YOUR ORDER. YOUR PROPERTY NFT WILL BE MINTED AS SOON AS THE VERIFICATION PROCESS IS COMPLETE, FOR YOUR SECURITY THE IDENTIFICATION PROCESS MAY TAKE UP TO THREE DAYS")
       setisSubmitting(false);
       setIsCreditCardModalOpen(true);
     } catch (error) {
