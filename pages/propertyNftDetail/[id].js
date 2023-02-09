@@ -12,11 +12,14 @@ import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
-import { PROPERTY_NFT_DETAIL,PROPERTY_NFT_BLOCKCHAIN_DATA } from "../../src/constants/endpoints";
+import {
+  PROPERTY_NFT_DETAIL,
+  PROPERTY_NFT_BLOCKCHAIN_DATA,
+} from "../../src/constants/endpoints";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
-import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData"
+import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -25,12 +28,20 @@ const GradientBorderContainer = styled(Box)(({ theme }) => ({
   padding: "1px",
   marginTop: "40px",
   marginBottom: "48px",
+  "@media only screen and (max-width:425px)": {
+    background: "none",
+    marginTop: "16px",
+    padding: "0px",
+  },
 }));
 const NftDetailPageContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   background: theme.palette.background.default,
   borderRadius: "24px",
   padding: "33px 40px 40px 40px",
+  "@media only screen and (max-width:425px)": {
+    padding: "16px 13px 40px 13px",
+  },
 }));
 const CheckboxStyled = styled(Box)(({ theme }) => ({
   // '& .MuiCheckbox-root':{
@@ -109,7 +120,7 @@ const PractitionerDetailPage = () => {
 
   return (
     <>
-     <DialogForBlockchainData
+      <DialogForBlockchainData
         open={blockchainDataModal}
         setOpen={setBlockchainDataModal}
         title="Blockchain Data"
@@ -130,14 +141,14 @@ const PractitionerDetailPage = () => {
                 xs={6}
                 md={5}
                 lg={3}
-                sx={{ display: "flex", 
-                // order: { xs: 2, md: 1 } 
-              }
-              }
+                sx={{
+                  display: "flex",
+                  // order: { xs: 2, md: 1 }
+                }}
               >
                 <CardMedia
                   component="img"
-                  height="159px"
+                  height={belowSm ? "159px" : "328px"}
                   // width="250px"
                   alt="nft card Icon"
                   image={nftDetail?.image}
@@ -167,7 +178,9 @@ const PractitionerDetailPage = () => {
                   // order: { xs: 1, md: 2 },
                 }}
               >
-                <Box sx={{ width: "100%" }}>
+                <Box
+                  sx={{ width: "100%", paddingLeft: { md: "0px", xs: "12px" } }}
+                >
                   <Typography variant="h5" sx={{ padding: "0px 0px 12px 0px" }}>
                     {nftDetail?.title}
                   </Typography>
@@ -209,46 +222,54 @@ const PractitionerDetailPage = () => {
                       </Box>
                     </Box>
                   </Box>
-                  <Box sx={{maxWidth:'220px',padding:'10px 0px 0px 0px'}}>
+                  <Box sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}>
                     <Button
                       variant="gradient"
                       size="large"
                       onClick={() => setBlockchainDataModal(true)}
                     >
-                      View Blockchain Data
+                      {belowSm ? "Blochchain" : "View Blockchain Data"}
                     </Button>
                   </Box>
                 </Box>
                 <Box>
-                {!belowSm&&<Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    {/* <Typography variant="h5">Transaction History</Typography> */}
-                    <Image
-                      src="/assets/icons/export.svg"
-                      height={40}
-                      width={40}
-                    />
-                  </Box>}
+                  {!belowSm && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      {/* <Typography variant="h5">Transaction History</Typography> */}
+                      <Image
+                        src="/assets/icons/export.svg"
+                        height={40}
+                        width={40}
+                      />
+                    </Box>
+                  )}
                 </Box>
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} sx={{ padding: "40px 0px" }}>
-                <Box sx={{display:'flex',justifyContent:'space-between'}}>
+              <Grid
+                item
+                xs={12}
+                sx={{ padding: { md: "40px 0px", xs: "0px 0px" } }}
+              >
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography variant="h5">Transaction History</Typography>
-                  {belowSm&&<Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    {/* <Typography variant="h5">Transaction History</Typography> */}
-                    <Image
-                      src="/assets/icons/export.svg"
-                      height={40}
-                      width={40}
-                    />
-                  </Box>}
+                  {belowSm && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      {/* <Typography variant="h5">Transaction History</Typography> */}
+                      <Image
+                        src="/assets/icons/export.svg"
+                        height={40}
+                        width={40}
+                      />
+                    </Box>
+                  )}
                 </Box>
-                <Box sx={{ paddingTop: "40px" }}>
+                <Box sx={{ paddingTop: { md: "40px", xs: "0px" } }}>
                   <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}
