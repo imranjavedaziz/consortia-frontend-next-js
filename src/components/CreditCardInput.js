@@ -169,10 +169,27 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                 },
               }
             );
-            console.log("mintNftAfterPayment", mintNftAfterPayment);
-            // toast.success(mintNftAfterPayment?.data?.message);
-            setIsCreditCardProcessing(false);
-            setOpenVerificationSuccess(true);
+
+            if (mintNftAfterPayment?.data?.data?.identity_secret) {
+              const { error } = await stripe.verifyIdentity(
+                mintNftAfterPayment?.data?.data?.identity_secret
+              );
+              if (error) {
+                setOpenVerificationFailure(true);
+                console.log("[error]", error);
+              } else {
+                setOpenVerificationSuccess(true);
+              }
+              setIsCreditCardProcessing(false);
+              handleCreditCardModalClose();
+              return;
+            }
+            if (mintNftAfterPayment?.data?.data == "") {
+              handleCreditCardModalClose();
+              setIsCreditCardProcessing(false);
+              setOpenVerificationSuccess(true);
+              return;
+            }
           }
 
           // if (mintNFTData?.stripe_identity_status) {
