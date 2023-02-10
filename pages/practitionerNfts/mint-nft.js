@@ -66,7 +66,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
-    setSuccessData
+    setSuccessData,
   } = useAuthContext();
 
   useTitle("Mint NFTs");
@@ -142,10 +142,9 @@ const MintNFTS = () => {
       if (false) {
         toast.error("Please upload profile");
       } else {
-        if(userData?.stripe_user_block){
+        if (userData?.stripe_user_block) {
           toast.error("User has been blocked");
-
-        }else{
+        } else {
           const res = await publicAxios.post(
             "create_practitioner_nft",
             {
@@ -154,7 +153,8 @@ const MintNFTS = () => {
               address,
               image: headShot,
               bio,
-              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user
+                ?.id,
               licenseType: licenseTypeValue,
               licenseNumber,
             },
@@ -178,11 +178,12 @@ const MintNFTS = () => {
           console.log(res);
           // toast.success(res?.data?.message);
 
-          setSuccessData("Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted.")
-  
+          setSuccessData(
+            "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
+          );
+
           setIsCreditCardModalOpen(true);
         }
-       
 
         // setVerifyModalOpen(false);
       }
@@ -243,7 +244,7 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Step One: Property Information
+                Step One: Practitioner Information
               </Typography>
             </Box>
             <Box>
@@ -426,9 +427,7 @@ const MintNFTS = () => {
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={
-                               uploadingHeadshot
-                            }
+                            disabled={uploadingHeadshot}
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,

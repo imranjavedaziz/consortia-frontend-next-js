@@ -141,7 +141,7 @@ function NftsLayout({ children }) {
         text={
           successData.length > 1
             ? successData
-            : "THANK YOU FOR YOUR ORDER. YOUR PROPERTY NFT WILL BE MINTED AS SOON AS THE VERIFICATION PROCESS IS COMPLETE, FOR YOUR SECURITY THE IDENTIFICATION PROCESS MAY TAKE UP TO THREE DAYS"
+            : "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
         }
       />
       <CompletePractitionerProfile
