@@ -53,7 +53,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
-    setSuccessData
+    setSuccessData,
   } = useAuthContext();
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
@@ -141,6 +141,7 @@ const MintNFTS = () => {
                 Files types supported: JPG, PNG, PDF, Max Size: 1MB
               </Typography>
               <CustomFileUpload
+                maxUploadSizeMB={100}
                 allowPdf={true}
                 uploadingToS3={uploadingEntity}
                 setUploadingToS3={setUploadingEntity}
@@ -268,7 +269,9 @@ const MintNFTS = () => {
         docCategory: values.category,
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
-      setSuccessData("THANK YOU FOR YOUR ORDER. YOUR PROPERTY NFT WILL BE MINTED AS SOON AS THE VERIFICATION PROCESS IS COMPLETE, FOR YOUR SECURITY THE IDENTIFICATION PROCESS MAY TAKE UP TO THREE DAYS")
+      setSuccessData(
+        "THANK YOU FOR YOUR ORDER. YOUR PROPERTY NFT WILL BE MINTED AS SOON AS THE VERIFICATION PROCESS IS COMPLETE, FOR YOUR SECURITY THE IDENTIFICATION PROCESS MAY TAKE UP TO THREE DAYS"
+      );
       setisSubmitting(false);
       setIsCreditCardModalOpen(true);
     } catch (error) {

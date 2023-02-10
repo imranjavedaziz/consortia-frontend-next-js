@@ -184,17 +184,14 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               res?.data?.data?.identity_secret
             );
             if (error) {
-              setIsCreditCardProcessing(false);
               setOpenVerificationFailure(true);
-              handleCreditCardModalClose();
               console.log("[error]", error);
-              return;
             } else {
-              setIsCreditCardProcessing(false);
               setOpenVerificationSuccess(true);
-              handleCreditCardModalClose();
-              return;
             }
+            setIsCreditCardProcessing(false);
+            handleCreditCardModalClose();
+            return;
           }
           if (res?.data?.data == "") {
             handleCreditCardModalClose();

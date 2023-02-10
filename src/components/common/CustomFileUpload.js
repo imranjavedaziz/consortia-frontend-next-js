@@ -24,6 +24,7 @@ const CustomFileUpload = ({
   practitioner,
   uploadingToS3,
   setUploadingToS3,
+  maxUploadSizeMB,
 }) => {
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
@@ -41,10 +42,10 @@ const CustomFileUpload = ({
     region: process.env.REGION,
   });
 
-  const validImage = (img) =>
+  const isValidFileType = (fileName) =>
     allowPdf
-      ? ["jpg", "png", "pdf"].some((char) => img?.endsWith(char))
-      : ["jpg", "png"].some((char) => img?.endsWith(char));
+      ? ["jpg", "png", "pdf"].some((char) => fileName?.endsWith(char))
+      : ["jpg", "png"].some((char) => fileName?.endsWith(char));
 
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
@@ -55,8 +56,13 @@ const CustomFileUpload = ({
   }, []);
 
   const handleChange = (e) => {
-    if (validImage(e.target.files[0]?.name)) {
-      if (e.target.files[0].size < 1048576 || true) {
+    if (isValidFileType(e.target.files[0]?.name)) {
+      // 1MB = 1048576 Bytes
+      if (
+        e.target.files[0].size < maxUploadSizeMB
+          ? maxUploadSizeMB * 1048576
+          : 1048576
+      ) {
         setUploadingToS3(true);
         setFileType(e.target.files[0].type);
         setFile(URL.createObjectURL(e.target.files[0]));
@@ -81,7 +87,11 @@ const CustomFileUpload = ({
       } else {
         e.target.value = null;
         allowPdf
-          ? toast.error("Image/File size should be less than 1MB")
+          ? toast.error(
+              `Image/File size should be less than ${
+                maxUploadSizeMB ? maxUploadSizeMB : 1
+              } MB`
+            )
           : toast.error("Image size should be less than 1MB");
       }
     } else {
