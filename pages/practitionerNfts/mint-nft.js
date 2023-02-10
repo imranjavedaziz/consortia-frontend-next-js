@@ -66,7 +66,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
-    setSuccessData
+    setSuccessData,
   } = useAuthContext();
 
   useTitle("Mint NFTs");
@@ -142,10 +142,9 @@ const MintNFTS = () => {
       if (false) {
         toast.error("Please upload profile");
       } else {
-        if(userData?.stripe_user_block){
+        if (userData?.stripe_user_block) {
           toast.error("User has been blocked");
-
-        }else{
+        } else {
           const res = await publicAxios.post(
             "create_practitioner_nft",
             {
@@ -154,7 +153,8 @@ const MintNFTS = () => {
               address,
               image: headShot,
               bio,
-              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user
+                ?.id,
               licenseType: licenseTypeValue,
               licenseNumber,
             },
@@ -178,11 +178,12 @@ const MintNFTS = () => {
           console.log(res);
           // toast.success(res?.data?.message);
 
-          setSuccessData("Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted.")
-  
+          setSuccessData(
+            "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
+          );
+
           setIsCreditCardModalOpen(true);
         }
-       
 
         // setVerifyModalOpen(false);
       }
@@ -243,7 +244,7 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Step One: Property Information
+                Step One: Practitioner Information
               </Typography>
             </Box>
             <Box>
@@ -257,6 +258,8 @@ const MintNFTS = () => {
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
+                  // state:"",
+                  // licenseSince: "",
                   licenseNumber: "",
                 }}
                 enableReinitialize={true}
@@ -271,6 +274,10 @@ const MintNFTS = () => {
                   address: Yup.string().required("Address is required"),
                   // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
+                  // state: Yup.string().required("State is required"),
+                  // licenseSince: Yup.string().required(
+                  //   "License Date is required"
+                  // ),
                   licenseNumber: Yup.string().required(
                     "License Number is required"
                   ),
@@ -347,7 +354,19 @@ const MintNFTS = () => {
                             practitioner={true}
                           />
                         </Box>
-                        <Box pt={3}>
+                        <Box
+                          pt={3}
+                          sx={{
+                            "& textarea": {
+                              fontSize: "14px",
+                            },
+                            "& textarea::-webkit-scrollbar": {
+                              // display: "none",
+                              // overflow: "hidden",
+                              display: "none",
+                            },
+                          }}
+                        >
                           <CustomInputField
                             name="bio"
                             label="Bio:"
@@ -408,27 +427,35 @@ const MintNFTS = () => {
                             })}
                           </Box>
                         </Box>
+                        {/* <Box pt={3}>
+                          <CustomInputField
+                            name="state"
+                            label="State:"
+                            placeholder="Enter Your State"
+                          />
+                        </Box>
+                        <Box pt={3}>
+                          <CustomInputField
+                            name="licenseSince"
+                            label="License Date:"
+                            placeholder="Enter Your License Date"
+                          />
+                        </Box> */}
                         <Box pt={3}>
                           <CustomInputField
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
-                            // disabled={true}
-                            // select={select}
-                            // options={options}
-                            // rows={maxRows}
-                            // multiline={multiline}
                           />
                         </Box>
+
                         <Box display="flex" pt={7}>
                           <LoadingButton
                             loading={isSubmitting}
                             variant="gradient"
                             size="large"
                             type="submit"
-                            disabled={
-                               uploadingHeadshot
-                            }
+                            disabled={uploadingHeadshot}
                             sx={{
                               fontSize: "20px",
                               fontWeight: 600,
