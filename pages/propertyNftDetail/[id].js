@@ -108,22 +108,15 @@ const PractitionerDetailPage = () => {
   const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
     {
-<<<<<<< HEAD
       text1: nftDetail.tx_id ? `${nftDetail.tx_id?.slice(0, 12)}...` : "_ _",
-=======
-      text1: nftDetail?.tx_id ? `${nftDetail?.tx_id?.slice(0, 12)}...` : "_ _",
->>>>>>> 645207036dc3595da00522da98e2624c5c252091
       text2: nftDetail?.is_minted ? "Mint" : "_ _",
       text3: nftDetail?.docCategory,
       text4: nftDetail?.updated_at,
     },
   ];
-<<<<<<< HEAD
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
-=======
->>>>>>> 645207036dc3595da00522da98e2624c5c252091
 
   return (
     <>
@@ -276,11 +269,7 @@ const PractitionerDetailPage = () => {
                     </Box>
                   )}
                 </Box>
-<<<<<<< HEAD
                 <Box sx={{ paddingTop: { md: "40px", xs: "0px" } }}>
-=======
-                <Box sx={{ paddingTop: "40px" }}>
->>>>>>> 645207036dc3595da00522da98e2624c5c252091
                   <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}

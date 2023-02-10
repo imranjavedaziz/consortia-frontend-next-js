@@ -176,7 +176,7 @@ const MintNFTS = () => {
             licenseNumber,
           });
           console.log(res);
-          toast.success(res?.data?.message);
+          // toast.success(res?.data?.message);
 
           setSuccessData("Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted.")
   
