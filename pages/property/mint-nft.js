@@ -141,7 +141,6 @@ const MintNFTS = () => {
                 Files types supported: JPG, PNG, PDF, Max Size: 1MB
               </Typography>
               <CustomFileUpload
-                maxUploadSizeMB={100}
                 allowPdf={true}
                 uploadingToS3={uploadingEntity}
                 setUploadingToS3={setUploadingEntity}
@@ -224,8 +223,7 @@ const MintNFTS = () => {
             : latLngPlusCode.plusCode,
           ...(values.property_category == true && {
             companyName: values.entity,
-            company_document:
-              "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
+            company_document: entityDocument,
           }),
           ...(typeof values.property_category == "number" && {
             company_id: values.property_category,
@@ -234,8 +232,7 @@ const MintNFTS = () => {
           image: housePhoto,
           description: "description",
           address: values.address.replace(", USA", ""),
-          document:
-            "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
+          document: categoryDocument,
           docCategory: values.category,
           agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
         },
@@ -254,8 +251,7 @@ const MintNFTS = () => {
           : latLngPlusCode.plusCode,
         ...(values.property_category == true && {
           companyName: values.entity,
-          company_document:
-            "https://consortialockablecontent.s3.amazonaws.com/Company_Operating_Agreement_Tresa.pdf",
+          company_document: entityDocument,
         }),
         ...(typeof values.property_category == "number" && {
           company_id: values.property_category,
@@ -264,8 +260,7 @@ const MintNFTS = () => {
         image: housePhoto,
         description: "description",
         address: values.address.replace(", USA", ""),
-        document:
-          "https://consortialockablecontent.s3.amazonaws.com/Alton_Deeds.pdf",
+        document: categoryDocument,
         docCategory: values.category,
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
@@ -464,9 +459,10 @@ const MintNFTS = () => {
                                 }}
                               >
                                 Files types supported: JPG, PNG, PDF, Max Size:
-                                1MB
+                                100 MB
                               </Typography>
                               <CustomFileUpload
+                                maxUploadSizeMB={100}
                                 allowPdf={true}
                                 uploadingToS3={uploadingDocument}
                                 setUploadingToS3={setUploadingDocument}
