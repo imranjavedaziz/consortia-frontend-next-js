@@ -46,7 +46,9 @@ const CustomFileUpload = ({
     allowPdf
       ? ["jpg", "png", "pdf"].some((char) => fileName?.endsWith(char))
       : ["jpg", "png"].some((char) => fileName?.endsWith(char));
-
+  // 1MB = 1048576 Bytes
+  const isValidFileSize = (fileSize) =>
+    fileSize < (maxUploadSizeMB ? maxUploadSizeMB * 1048576 : 1048576);
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (practitioner && profileInfo?.user?.role === "Practitioner") {
@@ -56,50 +58,47 @@ const CustomFileUpload = ({
   }, []);
 
   const handleChange = (e) => {
-    if (isValidFileType(e.target.files[0]?.name)) {
-      // 1MB = 1048576 Bytes
-      if (
-        e.target.files[0].size < maxUploadSizeMB
-          ? maxUploadSizeMB * 1048576
-          : 1048576
-      ) {
-        setUploadingToS3(true);
-        setFileType(e.target.files[0].type);
-        setFile(URL.createObjectURL(e.target.files[0]));
-        myBucket.upload(
-          {
-            Bucket: privateBucket
-              ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
-              : process.env.NEXT_PUBLIC_BUCKET_NAME,
-            Key: Date.now() + e.target.files[0].name.replaceAll(" ", "_"),
-            Body: e.target.files[0],
-          },
-          async (err, data) => {
-            if (err) {
-              setUploadingToS3(false);
-              console.log("err", err);
-            } else {
-              setS3Url(data?.Location);
-              setUploadingToS3(false);
-            }
-          }
-        );
-      } else {
-        e.target.value = null;
-        allowPdf
-          ? toast.error(
-              `Image/File size should be less than ${
-                maxUploadSizeMB ? maxUploadSizeMB : 1
-              } MB`
-            )
-          : toast.error("Image size should be less than 1MB");
-      }
-    } else {
+    if (!isValidFileType(e.target.files[0]?.name)) {
       e.target.value = null;
       allowPdf
         ? toast.error("Only pdf,jpg and png files are allowed")
         : toast.error("Only jpg and png  files are allowed");
+      return;
     }
+
+    if (!isValidFileSize(e.target.files[0].size)) {
+      e.target.value = null;
+      allowPdf
+        ? toast.error(
+            `Image/File size should be less than ${
+              maxUploadSizeMB ? maxUploadSizeMB : 1
+            } MB`
+          )
+        : toast.error("Image size should be less than 1MB");
+      return;
+    }
+
+    setUploadingToS3(true);
+    setFileType(e.target.files[0].type);
+    setFile(URL.createObjectURL(e.target.files[0]));
+    myBucket.upload(
+      {
+        Bucket: privateBucket
+          ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
+          : process.env.NEXT_PUBLIC_BUCKET_NAME,
+        Key: Date.now() + e.target.files[0].name.replaceAll(" ", "_"),
+        Body: e.target.files[0],
+      },
+      async (err, data) => {
+        if (err) {
+          setUploadingToS3(false);
+          console.log("err", err);
+        } else {
+          setS3Url(data?.Location);
+          setUploadingToS3(false);
+        }
+      }
+    );
   };
 
   const handleClick = (e) => {
