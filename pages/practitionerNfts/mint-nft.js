@@ -33,7 +33,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
 
-
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
   background: theme.palette.border.default,
@@ -81,7 +80,6 @@ const MintNFTS = () => {
   const [data, setData] = useState({});
   const [userData, setUserData] = useState({});
   const [date, setDate] = useState(null);
-
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -163,8 +161,6 @@ const MintNFTS = () => {
                 ?.id,
               licenseType: licenseTypeValue,
               licenseNumber,
-            licenseSince: dayjs(date).unix(),
-            state,
             },
             {
               headers: {
@@ -182,8 +178,6 @@ const MintNFTS = () => {
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
             licenseType: licenseTypeValue,
             licenseNumber,
-            licenseSince: dayjs(date).unix(),
-            state,
           });
           // toast.success(res?.data?.message);
 
@@ -266,8 +260,7 @@ const MintNFTS = () => {
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
-                  state:"",
-                  // licenseSince: "",
+
                   licenseNumber: "",
                 }}
                 enableReinitialize={true}
@@ -282,10 +275,7 @@ const MintNFTS = () => {
                   address: Yup.string().required("Address is required"),
                   // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
-                  state: Yup.string().required("State is required"),
-                  // licenseSince: Yup.string().required(
-                  //   "License Date is required"
-                  // ),
+
                   licenseNumber: Yup.string().required(
                     "License Number is required"
                   ),
@@ -435,65 +425,6 @@ const MintNFTS = () => {
                             })}
                           </Box>
                         </Box>
-                        <Box pt={3}>
-                          <CustomInputField
-                            name="state"
-                            label="State:"
-                            placeholder="Enter Your State"
-                          />
-                        </Box>
-                        
-                        <Box pt={3}>
-                  <InputLabel shrink>License Since Date:</InputLabel>
-                  <div
-                    style={{
-                      background:
-                        "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                      display: "flex",
-                      justifyContent: "center",
-                      borderRadius: "24px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DesktopDatePicker
-                        label=""
-                        InputProps={{
-                          disableUnderline: true,
-                        }}
-                        disableFuture
-                        value={date}
-                        onChange={(newValue) => {
-                          setDate(newValue);
-                        }}
-                        renderInput={(params) => (
-                          <GradiantTextField
-                            variant="standard"
-                            sx={{
-                              "& input::placeholder": {
-                                fontSize: "12px",
-                                fontWeight: 400,
-                              },
-                              "& input":{
-                              fontSize:'12px',
-                              padding:'10px 0px'
-                            }}}
-                            placeholder="mm/dd/yyyy"
-                            onKeyDown={(e) => e.preventDefault()}
-                            fullWidth
-                            style={{
-                              background: "rgba(29, 6, 104, 1)",
-                              margin: "2px 2px 2px 2px",
-                              borderRadius: "24px",
-                            }}
-                            {...params}
-                          />
-                        )}
-                      />
-                    </LocalizationProvider>
-                  </div>
-                </Box>
-
 
                         <Box pt={3}>
                           <CustomInputField

@@ -11,10 +11,15 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
+const stripeLivePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
+);
+
 const Context = createContext();
 
 export const AuthContext = ({ children }) => {
   const [stripe, setStripe] = useState({});
+  const [liveStripe, setLiveStripe] = useState({});
 
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [choosePractitionerOpen, setChoosePractitionerOpen] = useState(true);
@@ -60,6 +65,10 @@ export const AuthContext = ({ children }) => {
     setStripe(await stripePromise);
   };
 
+  const getLiveStripe = async () => {
+    setLiveStripe(await stripeLivePromise);
+  };
+
   useEffect(() => {
     // if (localStorage.getItem("access")) {
     //   setIsLoggedIn(true);
@@ -83,6 +92,7 @@ export const AuthContext = ({ children }) => {
       }
     }
     getStripe();
+    !!process.env.NEXT_PUBLIC_IS_LIVE_STRIPE && getLiveStripe();
   }, []);
   return (
     <Context.Provider
@@ -108,6 +118,7 @@ export const AuthContext = ({ children }) => {
         openVerificationFailure,
         setOpenVerificationFailure,
         stripe,
+        liveStripe,
         setStripe,
         isCreditCardProcessing,
         setIsCreditCardProcessing,

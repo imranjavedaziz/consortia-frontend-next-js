@@ -176,7 +176,6 @@ const [reset, setReset] = useState(false)
           openOnFocus={true}
           name="address"
           onChange={(e, value) => {
-            console.log('value', value)
             props.setFieldValue("address", value);
             setReset(prev=>!prev)
             setSelectedValue(value);

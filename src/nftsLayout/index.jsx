@@ -37,6 +37,7 @@ function NftsLayout({ children }) {
     stripeVerificationCode,
     setStripeVerificationCode,
     stripe,
+    liveStripe,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
@@ -62,7 +63,6 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log(profile_info?.user?.stripe_identity_status);
     if (!profile_info?.user?.stripe_identity_status) {
       // setIsStripeModalOpen(true);
     }
@@ -106,7 +106,11 @@ function NftsLayout({ children }) {
               },
             }
           );
-          const { error } = await stripe.verifyIdentity(data?.data);
+          const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+          "true"
+            ? liveStripe
+            : stripe
+          ).verifyIdentity(data?.data);
           if (error) {
             setStripeVerificationCode([]);
             toast.error("Unable to verify identity at this time!");
@@ -121,7 +125,6 @@ function NftsLayout({ children }) {
 
       verifyStripeIdentity();
     }
-    console.log(stripe);
   }, []);
 
   return (

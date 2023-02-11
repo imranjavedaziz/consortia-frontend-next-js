@@ -23,7 +23,10 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { GET_PROFILE_BY_USERID, MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
+import {
+  GET_PROFILE_BY_USERID,
+  MINT_PROPERTY_NFT,
+} from "../../src/constants/endpoints";
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
@@ -72,7 +75,6 @@ const MintNFTS = () => {
   ]);
   const [userData, setUserData] = useState({});
 
-
   const getVerifiedCompanies = async () => {
     try {
       const response = await publicAxios.get("verify_company_list", {
@@ -101,10 +103,14 @@ const MintNFTS = () => {
     //     { value: true, label: "Yes" },
     //     { value: false, label: "No" }
     //   );
-    getUserData()
+    getUserData();
   }, []);
 
-console.log('categoryDocument', categoryDocument,categoryDocument.replace("%28|%29","(|)"))
+  console.log(
+    "categoryDocument",
+    categoryDocument,
+    categoryDocument.replace("%28|%29", "(|)")
+  );
   const itemsFunction = (setFieldValue, propertyStatus) => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
@@ -204,7 +210,6 @@ console.log('categoryDocument', categoryDocument,categoryDocument.replace("%28|%
     { value: "deed", label: "Deed" },
     { value: "settlement", label: "Settlement Statement" },
   ];
-console.log('latLngPlusCode.plusCode', latLngPlusCode.plusCode)
   const handleSubmit = async (values, resetForm) => {
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");
@@ -216,8 +221,8 @@ console.log('latLngPlusCode.plusCode', latLngPlusCode.plusCode)
       return;
     }
     if (userData?.stripe_user_block) {
-    return  toast.error("User has been blocked");
-    } 
+      return toast.error("User has been blocked");
+    }
     try {
       setisSubmitting(true);
       const res = await publicAxios.post(
@@ -371,11 +376,7 @@ console.log('latLngPlusCode.plusCode', latLngPlusCode.plusCode)
               >
                 {(props) => {
                   const { handleSubmit, setFieldValue, values } = props;
-                  console.log(
-                    "test",
-                    values.property_category == true,
-                    typeof values.property_category
-                  );
+                  
                   return (
                     <form
                       onSubmit={handleSubmit}

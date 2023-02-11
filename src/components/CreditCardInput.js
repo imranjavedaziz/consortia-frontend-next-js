@@ -68,6 +68,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     setSuccessData,
     creditCardData,
     setCreditCardData,
+    liveStripe,
   } = useAuthContext();
   const [open, setOpen] = useState(true);
 
@@ -95,12 +96,16 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
   // Start Payment Processing
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setIsCreditCardProcessing(true);
     // setVerifyModalOpen(true);
     var myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
-      "Bearer " + process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+      "Bearer " +
+        (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE == "true"
+          ? process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
+          : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
     );
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     var cardData = qs.stringify({
@@ -140,9 +145,11 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             }
           );
           if (res?.data?.data?.requires_action) {
-            const confirmationData = await stripe.confirmCardPayment(
-              res?.data?.data?.payment_intent_client_secret
-            );
+            const confirmationData = await (process.env
+              .NEXT_PUBLIC_IS_LIVE_STRIPE == "true"
+              ? liveStripe
+              : stripe
+            ).confirmCardPayment(res?.data?.data?.payment_intent_client_secret);
 
             if (confirmationData?.error) {
               toast.error(confirmationData?.error?.message);
@@ -165,7 +172,11 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             );
 
             if (mintNftAfterPayment?.data?.data?.identity_secret) {
-              const { error } = await stripe.verifyIdentity(
+              const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+              "true"
+                ? liveStripe
+                : stripe
+              ).verifyIdentity(
                 mintNftAfterPayment?.data?.data?.identity_secret
               );
               if (error) {
@@ -191,9 +202,11 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
           //   setVerifyModalOpen(true);
           // }
           if (res?.data?.data?.identity_secret) {
-            const { error } = await stripe.verifyIdentity(
-              res?.data?.data?.identity_secret
-            );
+            const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+            "true"
+              ? liveStripe
+              : stripe
+            ).verifyIdentity(res?.data?.data?.identity_secret);
             if (error) {
               setOpenVerificationFailure(true);
               console.log("[error]", error);
