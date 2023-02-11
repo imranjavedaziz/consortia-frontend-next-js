@@ -327,7 +327,6 @@ const MintNFTS = () => {
                   name: Yup.string().required("Please enter a name"),
                   entity: Yup.string().when(["property_category"], {
                     is: (property_category) => {
-                      console.log("validation", property_category == "true");
                       return property_category == "true";
                     },
                     then: Yup.string().required("Entity Name is required"),

@@ -95,7 +95,6 @@ const CustomFileUpload = ({
           console.log("err", err);
         } else {
           setS3Url(data?.Location);
-          console.log("s3URL", data);
           setUploadingToS3(false);
         }
       }

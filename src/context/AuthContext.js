@@ -27,7 +27,6 @@ export const AuthContext = ({ children }) => {
   const [openVerificationFailure, setOpenVerificationFailure] = useState(false);
   const [isCreditCardProcessing, setIsCreditCardProcessing] = useState(false);
   const [stripeVerificationCode, setStripeVerificationCode] = useState([]);
-
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [successData, setSuccessData] = useState("");
   const [creditCardData, setCreditCardData] = useState({

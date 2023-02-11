@@ -175,7 +175,6 @@ const MintNFTS = () => {
             licenseType: licenseTypeValue,
             licenseNumber,
           });
-          console.log(res);
           // toast.success(res?.data?.message);
 
           setSuccessData(
@@ -216,7 +215,6 @@ const MintNFTS = () => {
           },
         }
       );
-      console.log("resddd", res);
       if (res?.data?.data?.user?.stripe_user_block) {
         toast.error("User has been blocked");
       }
@@ -233,7 +231,6 @@ const MintNFTS = () => {
       }
     }
   };
-  console.log("userData", userData);
   return (
     <>
       <Box>

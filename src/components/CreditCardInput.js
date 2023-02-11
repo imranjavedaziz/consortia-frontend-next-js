@@ -230,7 +230,6 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       .catch((error) => console.log(error));
   };
 
-
   return (
     <>
       <Dialog
@@ -304,6 +303,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                         name={name}
                         placeholder={placeholder}
                         pattern={pattern}
+                        value={creditCardData[name]}
                         required
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
@@ -322,7 +322,11 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                   )
                 )}
 
-                <input type="hidden" name="issuer" value={creditCardData.issuer} />
+                <input
+                  type="hidden"
+                  name="issuer"
+                  value={creditCardData.issuer}
+                />
                 <LoadingButton
                   loading={isCreditCardProcessing}
                   variant="gradient"

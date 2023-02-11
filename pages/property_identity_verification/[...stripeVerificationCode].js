@@ -14,7 +14,6 @@ const StripeVerificationCode = () => {
 
   useEffect(() => {
     const verificationCode = query?.stripeVerificationCode;
-    console.log(verificationCode);
     if (verificationCode) setStripeVerificationCode(verificationCode);
     if (isLoggedIn) {
       push("/dashboard/landing");

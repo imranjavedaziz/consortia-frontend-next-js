@@ -130,7 +130,6 @@ const SignUp = () => {
         toast.success("Welcome to Consortia! Please verify your email");
         setEmail(email);
         setEmailVerificationOpen(true);
-        console.log(res);
       } catch (error) {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
@@ -299,7 +298,12 @@ const SignUp = () => {
               alt="Logo"
             />
           </ImageLogo> */}
-            <Typography variant="h3" sx={{paddingLeft:{xs:'24px',sm:'0px'}}}>User Registration</Typography>
+            <Typography
+              variant="h3"
+              sx={{ paddingLeft: { xs: "24px", sm: "0px" } }}
+            >
+              User Registration
+            </Typography>
             <Formik
               initialValues={{
                 isPractitioner: isPractitioner,
@@ -361,7 +365,7 @@ const SignUp = () => {
                       flexDirection="column"
                       boxSizing="border-box"
                       // width="80%"
-                      sx={{width: { md: "80%", xs: "85%" } }}
+                      sx={{ width: { md: "80%", xs: "85%" } }}
                       margin="auto"
                       // paddingX={2}
                       rowGap={3}
