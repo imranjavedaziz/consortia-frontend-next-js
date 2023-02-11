@@ -204,7 +204,7 @@ console.log('categoryDocument', categoryDocument,categoryDocument.replace("%28|%
     { value: "deed", label: "Deed" },
     { value: "settlement", label: "Settlement Statement" },
   ];
-
+console.log('latLngPlusCode.plusCode', latLngPlusCode.plusCode)
   const handleSubmit = async (values, resetForm) => {
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");

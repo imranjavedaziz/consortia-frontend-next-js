@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import { useField } from "formik";
+import toast from "react-hot-toast";
 var OpenLocationCode = require("open-location-code").OpenLocationCode;
+import Geocode from "react-geocode";
 
 export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
   // paddingRight: "20px",
@@ -62,12 +64,13 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
 export default function GoogleMapAutoComplete(props) {
   const ref = useRef(null);
   const [selectedValue, setSelectedValue] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [adrString, setAdrString] = useState("");
-
+const [reset, setReset] = useState(false)
   const [field, meta] = useField(props);
   const [htmlText, setHtmlText] = useState({});
   var openLocationCode = new OpenLocationCode();
+  Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
   // var options = {
   //   types: ['(cities)'],
   //   componentRestrictions: {country: "us"}
@@ -83,18 +86,50 @@ export default function GoogleMapAutoComplete(props) {
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
+// console.log('penLocationCode?.encode'
+//               // placeDetails?.geometry?.location?.lat(),
+//               // placeDetails?.geometry?.location?.lng()
+//             , openLocationCode?.encode(
+//               38.8936126,
+//               -90.1715018
+//             ),)
+// console.log('placePredictions', placePredictions)
+// console.log('selectedValue', selectedValue)
   React.useEffect(() => {
+    // debugger
     // fetch place details for the first element in placePredictions array
-    if (placePredictions.length)
+    if(placePredictions.find(
+      (item) => item.description == selectedValue
+    )?.place_id == undefined){
+      // debugger
+      Geocode.fromAddress(selectedValue).then(
+        (response) => {
+          const { lat, lng } = response.results[0].geometry.location;
+          return props.setLatLngPlusCode({
+            lat: lat,
+            lng: lng,
+            plusCode: openLocationCode?.encode(
+              lat,
+              lng
+            ),
+            // place_id: placeDetails?.place_id,
+            // detailedAddress: placeDetails?.adr_address,
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }else{
+      if (placePredictions?.length>=1)
       placesService?.getDetails(
         {
           placeId: placePredictions.find(
-            (item) => item.description === selectedValue
+            (item) => item.description == selectedValue
           )?.place_id,
         },
         (placeDetails) => {
           setAdrString(placeDetails?.adr_address);
-          // console.log("placeDetails", placeDetails?.adr_address);
           return props.setLatLngPlusCode({
             lat: placeDetails?.geometry?.location?.lat(),
             lng: placeDetails?.geometry?.location?.lng(),
@@ -107,7 +142,10 @@ export default function GoogleMapAutoComplete(props) {
           });
         }
       );
-  }, [selectedValue]);
+    }
+    
+
+  }, [selectedValue, reset]);
   // console.log('latLngPlusCode', latLngPlusCode)
   return (
     <>
@@ -126,7 +164,7 @@ export default function GoogleMapAutoComplete(props) {
         <GradiantAutocomplete
           sx={{ width: "100%", border: "none" }}
           freeSolo
-          // id="free-solo-2-demo"
+          // id="open-on-focus"
           disableClearable
           open={open}
           onOpen={() => {
@@ -135,12 +173,15 @@ export default function GoogleMapAutoComplete(props) {
           onClose={() => {
             setOpen(false);
           }}
+          openOnFocus={true}
           name="address"
           onChange={(e, value) => {
+            console.log('value', value)
             props.setFieldValue("address", value);
+            setReset(prev=>!prev)
             setSelectedValue(value);
           }}
-          options={placePredictions.map((option) => option.description)}
+          options={placePredictions?.map((option) => option?.description)}
           error={meta.touched && Boolean(meta.error)}
           //   {...field}
           //   {...props}
