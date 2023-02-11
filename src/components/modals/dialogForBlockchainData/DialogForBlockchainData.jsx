@@ -56,36 +56,35 @@ function DialogForBlockchainData({
 
   const resetPassword = async (values) => {
     // if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-        if(query?.id){
-            try {
-                setFetching(true);
-                const res = await publicAxios.get(endpoint + `?id=${query?.id}`, {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access")}`,
-                  },
-                });
-                console.log("resdfsf", res.data.data);
-                setFetching(false);
-                setResData(res?.data?.data);
-                //   toast.success(res?.data?.message);
-                //   setOtpModalOpen(true);
-                // handleClose();
-              } catch (error) {
-                setFetching(false);
-                if (Array.isArray(error?.data?.message)) {
-                  toast.error(error?.data?.message?.error?.[0]);
-                } else {
-                  if (typeof error?.data?.message === "string") {
-                    toast.error(error?.data?.message);
-                  } else {
-                    if (error?.data?.message) {
-                      toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-                    }
-                  }
-                }
-              }
+    if (query?.id) {
+      try {
+        setFetching(true);
+        const res = await publicAxios.get(endpoint + `?id=${query?.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        });
+        setFetching(false);
+        setResData(res?.data?.data);
+        //   toast.success(res?.data?.message);
+        //   setOtpModalOpen(true);
+        // handleClose();
+      } catch (error) {
+        setFetching(false);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            if (error?.data?.message) {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
         }
-    
+      }
+    }
+
     // }else{
     // setIsValidEmail(false)
     // toast.error('Please enter a valid email!')
@@ -107,10 +106,10 @@ function DialogForBlockchainData({
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: {xs:'12px',md:"24px"},
-            width: {xs:"272px",md:"571px"},
-            padding: {xs:"16px",md:"40px"},
-            margin:{xs:'16px', md:'32px'}
+            borderRadius: { xs: "12px", md: "24px" },
+            width: { xs: "272px", md: "571px" },
+            padding: { xs: "16px", md: "40px" },
+            margin: { xs: "16px", md: "32px" },
           },
         }}
       >
@@ -144,9 +143,7 @@ function DialogForBlockchainData({
         </DialogTitle>
         <DialogContent>
           <Box sx={{ width: "100%" }}>{JSON.stringify(resData?.nftDetail)}</Box>
-          <Box sx={{ width: "100%" }}>
-              {JSON.stringify(blockchainData)}
-          </Box>
+          <Box sx={{ width: "100%" }}>{JSON.stringify(blockchainData)}</Box>
         </DialogContent>
       </Dialog>
     </>

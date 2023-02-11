@@ -86,7 +86,7 @@ const CustomFileUpload = ({
         Bucket: privateBucket
           ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
           : process.env.NEXT_PUBLIC_BUCKET_NAME,
-        Key: Date.now() + e.target.files[0].name.replaceAll(" ", "_"),
+        Key: Date.now() + e.target.files[0].name.replace(/[^./a-zA-Z0-9]/g, ""),
         Body: e.target.files[0],
       },
       async (err, data) => {

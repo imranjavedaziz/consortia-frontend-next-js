@@ -95,7 +95,6 @@ export default function GoogleMapAutoComplete(props) {
         (placeDetails) => {
           setAdrString(placeDetails?.adr_address);
           // console.log("placeDetails", placeDetails?.adr_address);
-          console.log("placeDetails", placeDetails?.place_id);
           return props.setLatLngPlusCode({
             lat: placeDetails?.geometry?.location?.lat(),
             lng: placeDetails?.geometry?.location?.lng(),

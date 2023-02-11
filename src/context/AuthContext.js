@@ -27,13 +27,30 @@ export const AuthContext = ({ children }) => {
   const [openVerificationFailure, setOpenVerificationFailure] = useState(false);
   const [isCreditCardProcessing, setIsCreditCardProcessing] = useState(false);
   const [stripeVerificationCode, setStripeVerificationCode] = useState([]);
-
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [successData, setSuccessData] = useState("");
+  const [creditCardData, setCreditCardData] = useState({
+    number: "",
+    name: "",
+    expiry: "",
+    cvc: "",
+    issuer: "",
+    focused: "",
+    formData: null,
+  });
 
   const handleCreditCardModalClose = () => {
     setIsCreditCardProcessing(false);
     setIsCreditCardModalOpen(false);
+    setCreditCardData({
+      number: "",
+      name: "",
+      expiry: "",
+      cvc: "",
+      issuer: "",
+      focused: "",
+      formData: null,
+    });
   };
   const handleVerifyIdentityModalClose = () => {
     setIsVerifyIdentityModalOpen(false);
@@ -98,6 +115,8 @@ export const AuthContext = ({ children }) => {
         setSuccessData,
         stripeVerificationCode,
         setStripeVerificationCode,
+        creditCardData,
+        setCreditCardData,
       }}
     >
       {children}

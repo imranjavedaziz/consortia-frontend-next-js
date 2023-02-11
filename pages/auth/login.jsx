@@ -56,7 +56,6 @@ function Login() {
         password,
         rememberMe: remember,
       });
-      console.log(res?.data?.data);
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access", res?.data?.data?.access);
       toast.success("Welcome Back!");
@@ -75,9 +74,9 @@ function Login() {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
@@ -89,11 +88,11 @@ function Login() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };

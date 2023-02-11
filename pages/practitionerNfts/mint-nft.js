@@ -185,7 +185,6 @@ const MintNFTS = () => {
             licenseSince: dayjs(date).unix(),
             state,
           });
-          console.log(res);
           // toast.success(res?.data?.message);
 
           setSuccessData(
@@ -243,7 +242,6 @@ const MintNFTS = () => {
       }
     }
   };
-  console.log("userData", userData);
   return (
     <>
       <Box>

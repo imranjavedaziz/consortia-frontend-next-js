@@ -168,7 +168,6 @@ function VerifyCodeForProfileUpdate({
       }
     }
   };
-  console.log("editProfileKey", editProfileKey);
   return (
     <>
       <Dialog

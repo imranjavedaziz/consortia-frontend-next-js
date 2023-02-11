@@ -65,8 +65,6 @@ const PractitionerDetailPage = () => {
 
   const [blockchainDataModal, setBlockchainDataModal] = useState(false);
 
-  console.log("nftDetail", nftDetail);
-
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     setLocalData(profileInfo);
