@@ -306,6 +306,15 @@ function CompletePractitionerProfile({
                           <GradiantTextField
                             variant="standard"
                             placeholder="mm/dd/yyyy"
+                            sx={{
+                              "& input::placeholder": {
+                                fontSize: "12px",
+                                fontWeight: 400,
+                              },
+                              "& input":{
+                              fontSize:'14px',
+                              padding:'10px 0px'
+                            }}}
                             onKeyDown={(e) => e.preventDefault()}
                             fullWidth
                             style={{

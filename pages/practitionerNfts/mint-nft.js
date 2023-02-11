@@ -2,25 +2,23 @@ import {
   Box,
   Typography,
   styled,
-  Button,
   Radio,
-  Checkbox,
-  Grid,
-  TextField,
-  Autocomplete,
   FormControl,
   RadioGroup,
   FormControlLabel,
+  InputLabel,
+  TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 import {
   GET_PROFILE_BY_USERID,
   MINT_PRACTITIONER_NFT,
@@ -31,6 +29,10 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../src/context/AuthContext";
 import CreditCardInput from "../../src/components/CreditCardInput";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import dayjs from "dayjs";
+
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -51,13 +53,14 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
     padding: "40px 12%",
   },
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
+const GradiantTextField = styled(TextField)(({}) => ({
+  "& .MuiInput-root": {
+    padding: "0 20px",
+  },
+  "& input::placeholder": {
+    fontSize: "16px",
+    fontWeight: 400,
+  },
 }));
 
 const MintNFTS = () => {
@@ -77,6 +80,8 @@ const MintNFTS = () => {
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
   const [userData, setUserData] = useState({});
+  const [date, setDate] = useState(null);
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -136,6 +141,7 @@ const MintNFTS = () => {
     bio,
     // image,
     // licenseType,
+    state,
     licenseNumber,
   }) => {
     try {
@@ -157,6 +163,8 @@ const MintNFTS = () => {
                 ?.id,
               licenseType: licenseTypeValue,
               licenseNumber,
+            licenseSince: dayjs(date).unix(),
+            state,
             },
             {
               headers: {
@@ -174,6 +182,8 @@ const MintNFTS = () => {
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
             licenseType: licenseTypeValue,
             licenseNumber,
+            licenseSince: dayjs(date).unix(),
+            state,
           });
           console.log(res);
           // toast.success(res?.data?.message);
@@ -216,7 +226,7 @@ const MintNFTS = () => {
           },
         }
       );
-      console.log("resddd", res);
+      // console.log("resddd", res);
       if (res?.data?.data?.user?.stripe_user_block) {
         toast.error("User has been blocked");
       }
@@ -258,7 +268,7 @@ const MintNFTS = () => {
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
-                  // state:"",
+                  state:"",
                   // licenseSince: "",
                   licenseNumber: "",
                 }}
@@ -274,7 +284,7 @@ const MintNFTS = () => {
                   address: Yup.string().required("Address is required"),
                   // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
-                  // state: Yup.string().required("State is required"),
+                  state: Yup.string().required("State is required"),
                   // licenseSince: Yup.string().required(
                   //   "License Date is required"
                   // ),
@@ -358,7 +368,7 @@ const MintNFTS = () => {
                           pt={3}
                           sx={{
                             "& textarea": {
-                              fontSize: "14px",
+                              fontSize: "13px",
                             },
                             "& textarea::-webkit-scrollbar": {
                               // display: "none",
@@ -427,20 +437,66 @@ const MintNFTS = () => {
                             })}
                           </Box>
                         </Box>
-                        {/* <Box pt={3}>
+                        <Box pt={3}>
                           <CustomInputField
                             name="state"
                             label="State:"
                             placeholder="Enter Your State"
                           />
                         </Box>
+                        
                         <Box pt={3}>
-                          <CustomInputField
-                            name="licenseSince"
-                            label="License Date:"
-                            placeholder="Enter Your License Date"
+                  <InputLabel shrink>License Since Date:</InputLabel>
+                  <div
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                      display: "flex",
+                      justifyContent: "center",
+                      borderRadius: "24px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DesktopDatePicker
+                        label=""
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        disableFuture
+                        value={date}
+                        onChange={(newValue) => {
+                          setDate(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <GradiantTextField
+                            variant="standard"
+                            sx={{
+                              "& input::placeholder": {
+                                fontSize: "12px",
+                                fontWeight: 400,
+                              },
+                              "& input":{
+                              fontSize:'12px',
+                              padding:'10px 0px'
+                            }}}
+                            placeholder="mm/dd/yyyy"
+                            onKeyDown={(e) => e.preventDefault()}
+                            fullWidth
+                            style={{
+                              background: "rgba(29, 6, 104, 1)",
+                              margin: "2px 2px 2px 2px",
+                              borderRadius: "24px",
+                            }}
+                            {...params}
                           />
-                        </Box> */}
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </Box>
+
+
                         <Box pt={3}>
                           <CustomInputField
                             name="licenseNumber"

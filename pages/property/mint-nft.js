@@ -23,7 +23,7 @@ import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
+import { GET_PROFILE_BY_USERID, MINT_PROPERTY_NFT } from "../../src/constants/endpoints";
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
@@ -70,6 +70,8 @@ const MintNFTS = () => {
     { value: true, label: "Yes" },
     { value: false, label: "No" },
   ]);
+  const [userData, setUserData] = useState({});
+
 
   const getVerifiedCompanies = async () => {
     try {
@@ -99,8 +101,10 @@ const MintNFTS = () => {
     //     { value: true, label: "Yes" },
     //     { value: false, label: "No" }
     //   );
+    getUserData()
   }, []);
 
+console.log('categoryDocument', categoryDocument,categoryDocument.replace("%28|%29","(|)"))
   const itemsFunction = (setFieldValue, propertyStatus) => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
@@ -211,7 +215,9 @@ const MintNFTS = () => {
       toast.error("Please upload the photo of category document");
       return;
     }
-
+    if (userData?.stripe_user_block) {
+    return  toast.error("User has been blocked");
+    } 
     try {
       setisSubmitting(true);
       const res = await publicAxios.post(
@@ -283,6 +289,34 @@ const MintNFTS = () => {
           } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
+        }
+      }
+    }
+  };
+  const getUserData = async () => {
+    try {
+      const res = await publicAxios.get(
+        `${GET_PROFILE_BY_USERID}?user_id=${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      if (res?.data?.data?.user?.stripe_user_block) {
+        toast.error("User has been blocked");
+      }
+      setUserData(res?.data?.data?.user);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
     }
