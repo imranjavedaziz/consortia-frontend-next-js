@@ -3,13 +3,25 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Box } from "@mui/material";
 import { Toaster } from "react-hot-toast";
+import { useAuthContext } from "../context/AuthContext";
 
 function Index({ children }) {
   const { push } = useRouter();
+  const { setShowSecondForm } = useAuthContext();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) push("/dashboard/landing");
+    const token = localStorage.getItem("access");
+    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+    if (profileInfo?.user?.role === "Practitioner") {
+      if (token && profileInfo?.user?.practitionerType) {
+        push("/dashboard/landing");
+      } else {
+        // setShowSecondForm(true)
+        push("/auth/login");
+      }
+    } else {
+      if (token) push("/dashboard/landing");
+    }
   }, []);
   const sectionStyle = {
     minHeight: "100vh",
@@ -27,7 +39,9 @@ function Index({ children }) {
       </Head>
       <Toaster position="top-center" reverseOrder={false} />
 
-      <Box sx={{ height: "100%", minHeight: "100vh" }} style={sectionStyle}>{children}</Box>
+      <Box sx={{ height: "100%", minHeight: "100vh" }} style={sectionStyle}>
+        {children}
+      </Box>
     </>
   );
 }

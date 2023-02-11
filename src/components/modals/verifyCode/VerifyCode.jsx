@@ -13,6 +13,8 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+import { VERIFY_OTP_PASSWORD,RESEND_OTP } from "../../../constants/endpoints";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -62,15 +64,16 @@ function VerifyCodeModal({
       setFetching(true);
 
       const res = await publicAxios.post(
-        "user/change-password",
+        VERIFY_OTP_PASSWORD,
         {
-          oldPassword,
-          newPassword,
-          verificationCode: code,
+          // oldPassword,
+          password:newPassword,
+          otp: code,
+          otp_type:'Email'
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
@@ -88,10 +91,23 @@ function VerifyCodeModal({
   };
 
   const resendCode = async () => {
-    const res = await publicAxios.post("auth/resend", {
-      email: JSON.parse(localStorage.getItem("profile_info"))?.user?.email,
-    });
-    toast.success(res?.data?.message);
+    try {
+      const res = await publicAxios.post(RESEND_OTP, {
+        email: JSON.parse(localStorage.getItem("profile_info"))?.user?.email,
+      });
+      toast.success(res?.data?.message);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if(typeof(error?.data?.message) === 'string'){
+            toast.error(error?.data?.message);
+          }else{
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+      }
+    }
+    
   };
   return (
     <>

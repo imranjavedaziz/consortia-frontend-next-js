@@ -8,6 +8,7 @@ import { publicAxios } from "../../src/api";
 import toast, { Toaster } from "react-hot-toast";
 import VerifyCodeModal from "../../src/components/modals/verifyCode/VerifyCode";
 import { useTitle } from "../../src/utils/Title";
+import { CHANGE_PASSWORD } from "../../src/constants/endpoints";
 
 const inputFields = [
   {
@@ -38,27 +39,32 @@ const ChangePassword = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
-  const changePassword = async ({ current_password, password }) => {
+  const changePassword = async ({ current_password, password,confirm_password }) => {
     try {
       const res = await publicAxios.post(
-        "user/change-password",
+        CHANGE_PASSWORD,
         {
-          oldPassword: current_password,
-          newPassword: password,
+          current_password: current_password,
+          password: password,
+          confirm_password:confirm_password
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
       toast.success(res?.data?.message);
       setEmailVerificationOpen(true);
     } catch (error) {
-      if (error?.data?.message) {
-        toast.error(error?.data?.message);
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
       } else {
-        toast.error(error?.data?.err?.msg);
+        if(typeof(error?.data?.message) === 'string'){
+          toast.error(error?.data?.message);
+        }else{
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };

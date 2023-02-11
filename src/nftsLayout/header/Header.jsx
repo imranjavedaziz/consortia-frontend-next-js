@@ -16,6 +16,9 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../context/AuthContext";
+// import { publicAxios } from "../../api";
+// import { STRIPE_VERIFY_IDENTITY } from "../../constants/endpoints";
+// import toast from "react-hot-toast";
 
 const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
   borderRadius: "16px",
@@ -37,7 +40,12 @@ export default function Header() {
   const isTablet = useMediaQuery("(max-width:1000px)");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { setChoosePractitionerOpen, setShowSecondForm } = useAuthContext();
+  const {
+    setChoosePractitionerOpen,
+    setShowSecondForm,
+    // setOpenVerificationFailure,
+    // setOpenVerificationSuccess,
+  } = useAuthContext();
 
   const open = Boolean(anchorEl);
   const icons = [
@@ -66,10 +74,82 @@ export default function Header() {
       path: "/assets/icons/changePassword.svg",
       rel: "/dashboard/change-password",
     },
-    { name: "NFT Wallet", path: "/assets/icons/wallet.svg", rel:"/nftWallet/NftWallet"},
+    {
+      name: "NFT Wallet",
+      path: "/assets/icons/wallet.svg",
+      rel: "/nftWallet/NftWallet",
+    },
     { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
+    // { name: "Verify Identity", path: "/assets/icons/profile.svg" },
     { name: "Logout", path: "/assets/icons/logout.svg" },
   ];
+
+  // const verifyStripeIdentity = async () => {
+  //   debugger
+  //   try {
+  //     const { data } = await publicAxios.post(
+  //       "create-verification-session",
+  //       {
+  //         // [true ? "practitioner_nft" : "property_nft"]: res?.data?.data?.id,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //         },
+  //       }
+  //     );
+
+  //     const { error } = await stripe.verifyIdentity(data?.data);
+  //     if (error) {
+  //       const res = await publicAxios.post(
+  //         STRIPE_VERIFY_IDENTITY,
+  //         {
+  //           stripe_identity_progress: "cancelled",
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //           },
+  //         }
+  //       );
+  //       setOpenVerificationFailure(true);
+  //     } else {
+  //       const res = await publicAxios.post(
+  //         STRIPE_VERIFY_IDENTITY,
+  //         {
+  //           stripe_identity_progress: "completed",
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("access")}`,
+  //           },
+  //         }
+  //       );
+  //       const old_profile_info = JSON.parse(
+  //         localStorage.getItem("profile_info")
+  //       );
+  //       const new_profile_info = {
+  //         ...old_profile_info,
+  //         user: {
+  //           ...old_profile_info.user,
+  //           stripe_identity_status: true,
+  //         },
+  //       };
+  //       localStorage.setItem("profile_info", JSON.stringify(new_profile_info));
+  //       setOpenVerificationSuccess(true);
+  //     }
+  //   } catch (error) {
+  //     if (Array.isArray(error?.data?.message)) {
+  //       toast.error(error?.data?.message?.error?.[0]);
+  //     } else {
+  //       if (typeof error?.data?.message === "string") {
+  //         toast.error(error?.data?.message);
+  //       } else {
+  //         toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+  //       }
+  //     }
+  //   }
+  // };
   return (
     <>
       <Box
@@ -163,16 +243,20 @@ export default function Header() {
         {menuItems.map((item, i) => {
           return (
             <>
-            
               <MenuItem
                 onClick={() => {
                   if (item.name === "Logout") {
                     setShowSecondForm(false);
                     setChoosePractitionerOpen(true);
-                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("access");
                     localStorage.removeItem("profile_info");
                     push("/");
                   }
+
+                  // if (item.name === "Verify Identity") {
+                  //   verifyStripeIdentity();
+                  // }
+
                   item?.rel && push(item?.rel);
                   handleClose();
                 }}

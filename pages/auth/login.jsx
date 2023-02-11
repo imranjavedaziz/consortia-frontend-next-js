@@ -34,6 +34,7 @@ import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogT
 import DialogResetPassword from "../../src/components/modals/resetPassword/DialogResetPassword";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
+import { AUTH_LOGIN } from "../../src/constants/endpoints";
 
 function Login() {
   useTitle("Login");
@@ -44,21 +45,23 @@ function Login() {
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const { setShowSecondForm, setChoosePractitionerOpen } = useAuthContext();
 
-  const belowSm = useMediaQuery((theme) => theme.breakpoints.between('xs', 'sm'))
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   const login = async ({ email, password, remember }) => {
     try {
-      const res = await publicAxios.post("auth/login", {
-        email,
+      const res = await publicAxios.post(`${AUTH_LOGIN}`, {
+        email: email.toLowerCase(),
         password,
         rememberMe: remember,
       });
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
-      localStorage.setItem("access_token", res?.data?.data?.token);
+      localStorage.setItem("access", res?.data?.data?.access);
       toast.success("Welcome Back!");
       if (
-        res?.data?.data?.user?.complete ||
-        res?.data?.data?.user?.role == "user"
+        res?.data?.data?.user?.practitionerType ||
+        res?.data?.data?.user?.role == "Consumer"
       ) {
         push("/dashboard/landing");
       } else {
@@ -67,13 +70,30 @@ function Login() {
         push("signup");
       }
     } catch (error) {
-      if (error?.data?.data?.verified === false) {
+      if (error?.data?.email_verified === false) {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+        }
         setEmail(email);
         setEmailVerificationOpen(true);
         return;
       }
-      toast.error(error?.data?.message);
-      console.log(error);
+
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
     }
   };
   return (
@@ -109,7 +129,10 @@ function Login() {
           justifyContent="center"
         >
           <ImageLogo
-            sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
+            sx={{
+              ":hover": { cursor: "pointer" },
+              padding: { xs: "24px 0px 32px 0px", md: "0px" },
+            }}
             onClick={() => push("/")}
           >
             <Image
@@ -248,7 +271,7 @@ function Login() {
         <Grid
           item
           xs={6}
-          display={{md:"flex",xs:"none"}}
+          display={{ md: "flex", xs: "none" }}
           alignItems="center"
           justifyContent="center"
         >

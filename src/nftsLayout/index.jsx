@@ -7,21 +7,37 @@ import Header from "./header/Header";
 import SideBar from "./sideBar/SideBar";
 import { useTheme } from "@emotion/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { IconButton } from "@mui/material";
+import { Dialog, IconButton, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
+import VerificationModal from "../components/modals/verificationModal/VerificationModal";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
 
   const { push } = useRouter();
-  const { isLoggedIn, setIsLoggedIn } = useAuthContext();
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    isStripeModalOpen,
+    setIsStripeModalOpen,
+    setOpenVerficationModal,
+    openVerficationModal,
+    openVerificationSuccess,
+    setOpenVerificationSuccess,
+    openVerificationFailure,
+    setOpenVerificationFailure,
+    successData,
+    stripeVerificationCode,
+    setStripeVerificationCode,
+    stripe,
+  } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
@@ -33,7 +49,7 @@ function NftsLayout({ children }) {
   };
   const theme = useTheme();
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("access");
     if (!token) push("/auth/login");
   }, []);
   const sectionStyle = {
@@ -46,12 +62,15 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log(profile_info);
+    console.log(profile_info?.user?.stripe_identity_status);
+    if (!profile_info?.user?.stripe_identity_status) {
+      // setIsStripeModalOpen(true);
+    }
     // if (!!profile_info && !profile_info?.user?.onBoarded) {
     //   publicAxios
     //     .get("kyc", {
     //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //         Authorization: `Bearer ${localStorage.getItem("access")}`,
     //       },
     //     })
     //     .then((data) => {
@@ -65,15 +84,66 @@ function NftsLayout({ children }) {
 
     if (
       !!profile_info &&
-      profile_info?.user?.role == "practitioner" &&
+      profile_info?.user?.role == "Practitioner" &&
       !profile_info?.user?.bio
     ) {
       setCompleteProfileOpen(true);
     }
+
+    if (stripeVerificationCode.length > 1) {
+      const [nft, User_token] = stripeVerificationCode;
+      const verifyStripeIdentity = async () => {
+        try {
+          const { data } = await publicAxios.post(
+            "nft_data_for_identity_verification",
+            {
+              nft,
+              User_token,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          const { error } = await stripe.verifyIdentity(data?.data);
+          if (error) {
+            setStripeVerificationCode([]);
+            toast.error("Unable to verify identity at this time!");
+          } else {
+            toast.success("Thank you for verifying your identity");
+            setStripeVerificationCode([]);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      verifyStripeIdentity();
+    }
+    console.log(stripe);
   }, []);
 
   return (
     <>
+      <VerificationModal
+        open={openVerificationFailure}
+        setOpen={setOpenVerificationFailure}
+        title="Verification failed!"
+        imageSrc="/assets/icons/verificationFailedIcon.svg"
+        text="Unable to verify your identity at this time. Please try again later."
+      />
+      <VerificationModal
+        open={openVerificationSuccess}
+        setOpen={setOpenVerificationSuccess}
+        title="Congratulations!"
+        imageSrc="/assets/icons/verificationSuccessIcon.svg"
+        text={
+          successData.length > 1
+            ? successData
+            : "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
+        }
+      />
       <CompletePractitionerProfile
         open={completeProfileOpen}
         setOpen={setCompleteProfileOpen}
@@ -82,6 +152,37 @@ function NftsLayout({ children }) {
         btnText1="consumer"
         btnText2="practitioner"
       />
+      <Dialog
+        open={isStripeModalOpen}
+        // TransitionComponent={Transition}
+        keepMounted
+        // onClose={handleClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: "secondary.purpleGray",
+            borderRadius: "24px",
+            // width: "400px",
+            // height: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "40px 38px",
+          },
+        }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={3}
+        >
+          <Typography variant="h5">
+            You need to verify your identity before minting NFTs
+          </Typography>
+        </Box>
+      </Dialog>
+
       <Box
         sx={{
           display: {

@@ -10,42 +10,9 @@ import {
   TableRow,
 } from "@mui/material";
 
-export default function TransactiionHistoryTable() {
+export default function TransactiionHistoryTable({tableHeader,tableRowData=[]}) {
   const headerData = ["Token ID", "Action","From",  "To","Timestamp", "Document Type"];
-  const rowData = [
-    {
-      token_id: "9XsaDc11234",
-      action: "Minted",
-      from:"0x929BEEE...",
-      to:"0xc69B056...",
-      date: "17:15 01/11/2022",
-      category: "Deed",
-    },
-    {
-        token_id: "9XsaDc11234",
-        action: "Listed",
-        from:"0x929BEEE...",
-      to:"0xc69B056...",
-        date: "17:15 01/11/2022",
-        category: "Deed",
-      },
-      {
-        token_id: "9XsaDc11234",
-        action: "Gifted",
-        from:"0x929BEEE...",
-      to:"0xc69B056...",
-        date: "17:15 01/11/2022",
-        category: "Deed",
-      },
-      {
-        token_id: "9XsaDc11234",
-        action: "NFTs Credits",
-        from:"0x929BEEE...",
-      to:"0xc69B056...",
-        date: "17:15 01/11/2022",
-        category: "Deed",
-      },
-  ];
+  
   return (
     <Paper
       sx={{ width: "100%", overflow: "hidden", background: "transparent" }}
@@ -54,7 +21,7 @@ export default function TransactiionHistoryTable() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {headerData.map((column, i) => (
+              {tableHeader?.map((column, i) => (
                 <TableCell
                   key={column + i}
                   //   align={column.align}
@@ -66,39 +33,49 @@ export default function TransactiionHistoryTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowData.map((row, i) => {
+            {tableRowData?.map((row, i) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row + i}>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.token_id}
+                      {row.text1}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.action}
+                      {row.text2}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.from}
+                      {row.text3}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.to}
+                      {row.text4}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  {row.text5 && <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.date}
+                      {row.text5}
                     </Typography>
-                  </TableCell>
-                  <TableCell>
+                  </TableCell>}
+                  {row.text6 && <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.category}
+                      {row.text6}
                     </Typography>
-                  </TableCell>
+                  </TableCell>}
+                 {row.text7 &&  <TableCell>
+                    <Typography variant="body2" color="secondary.gray">
+                      {row.text7}
+                    </Typography>
+                  </TableCell>}
+                 {row.text8 &&   <TableCell>
+                    <Typography variant="body2" color="secondary.gray">
+                      {row.text8}
+                    </Typography>
+                  </TableCell>}
                 </TableRow>
               );
             })}
