@@ -7,16 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Card from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import toast from "react-hot-toast";
-
 import qs from "qs";
-import { loadStripe } from "@stripe/stripe-js";
-
-// import { useStripe } from "@stripe/react-stripe-js";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
-
 import {
   formatCreditCardNumber,
   formatCVC,
@@ -24,7 +15,7 @@ import {
   formatFormData,
 } from "./utils";
 import { publicAxios } from "../api";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { GradiantTextField } from "./common/CustomInputField";
 import { useAuthContext } from "../context/AuthContext";
@@ -64,7 +55,6 @@ const inputFields = [
 
 const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
   const { push } = useRouter();
-
   const {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
@@ -72,36 +62,26 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     setIsVerifyIdentityModalOpen,
     setOpenVerificationSuccess,
     setOpenVerificationFailure,
+    stripe,
+    isCreditCardProcessing,
+    setIsCreditCardProcessing,
+    setSuccessData,
+    creditCardData,
+    setCreditCardData,
+    liveStripe,
   } = useAuthContext();
-
-  const [stripe, setStripe] = useState({});
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(true);
-  const [data, setData] = useState({
-    number: "",
-    name: "",
-    expiry: "",
-    cvc: "",
-    issuer: "",
-    focused: "",
-    formData: null,
-  });
+
   const ref = useRef(null);
-  const getStripe = async () => {
-    setStripe(await stripePromise);
-  };
-  useEffect(() => {
-    getStripe();
-  }, []);
+  const [verifyModalOpen, setVerifyModalOpen] = useState(false);
   const handleCallback = ({ issuer }, isValid) => {
     if (isValid) {
-      setData({ ...data, issuer });
+      setCreditCardData({ ...creditCardData, issuer });
     }
   };
   const handleInputFocus = ({ target }) => {
-    setData({ ...data, focused: target.name });
+    setCreditCardData({ ...creditCardData, focused: target.name });
   };
-
   const handleInputChange = ({ target }) => {
     if (target.name === "number") {
       target.value = formatCreditCardNumber(target.value);
@@ -110,23 +90,29 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     } else if (target.name === "cvc") {
       target.value = formatCVC(target.value);
     }
-    setData({ ...data, [target.name]: target.value });
+    setCreditCardData({ ...creditCardData, [target.name]: target.value });
   };
 
+  // Start Payment Processing
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
+    setIsCreditCardProcessing(true);
+    // setVerifyModalOpen(true);
     var myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
-      "Bearer " + process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+      "Bearer " +
+        (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE == "true"
+          ? process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY
+          : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
     );
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     var cardData = qs.stringify({
-      "card[number]": data.number,
-      "card[exp_month]": data.expiry.split("/")[0],
-      "card[exp_year]": data.expiry.split("/")[1],
-      "card[cvc]": data.cvc,
+      "card[number]": creditCardData.number,
+      "card[exp_month]": creditCardData.expiry.split("/")[0],
+      "card[exp_year]": creditCardData.expiry.split("/")[1],
+      "card[cvc]": creditCardData.cvc,
       type: "card",
     });
     var requestOptions = {
@@ -139,7 +125,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       .then((response) => response.json())
       .then(async (result) => {
         if (result?.error) {
-          setLoading(false);
+          setIsCreditCardProcessing(false);
           toast.error(result?.error?.message);
           return;
         }
@@ -149,7 +135,8 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
             {
               payment_intent_id: result?.id,
               "3d_secure": false,
-              ...mintNFTData,
+              [isPractitionerNFT ? "practitioner_nft_id" : "property_nft_id"]:
+                mintNFTData?.id,
             },
             {
               headers: {
@@ -157,15 +144,16 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               },
             }
           );
-          console.log(res);
           if (res?.data?.data?.requires_action) {
-            const confirmationData = await stripe.confirmCardPayment(
-              res?.data?.data?.payment_intent_client_secret
-            );
+            const confirmationData = await (process.env
+              .NEXT_PUBLIC_IS_LIVE_STRIPE == "true"
+              ? liveStripe
+              : stripe
+            ).confirmCardPayment(res?.data?.data?.payment_intent_client_secret);
 
             if (confirmationData?.error) {
               toast.error(confirmationData?.error?.message);
-              setLoading(false);
+              setIsCreditCardProcessing(false);
               return;
             }
             const mintNftAfterPayment = await publicAxios.post(
@@ -173,8 +161,8 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
               {
                 payment_intent_id: confirmationData?.paymentIntent?.id,
                 "3d_secure": true,
-                name: "Paul",
-                ...mintNFTData,
+                [isPractitionerNFT ? "practitioner_nft_id" : "property_nft_id"]:
+                  mintNFTData?.id,
               },
               {
                 headers: {
@@ -182,83 +170,61 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
                 },
               }
             );
-          }
-          toast.success("NFT Minted Successfully");
-          if (
-            !JSON.parse(localStorage.getItem("profile_info"))?.user
-              ?.stripe_identity_status
-          ) {
-            const { data } = await publicAxios.post(
-              "create-verification-session",
-              {
-                [isPractitionerNFT ? "practitioner_nft" : "property_nft"]:
-                  res?.data?.data?.id,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("access")}`,
-                },
+
+            if (mintNftAfterPayment?.data?.data?.identity_secret) {
+              const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+              "true"
+                ? liveStripe
+                : stripe
+              ).verifyIdentity(
+                mintNftAfterPayment?.data?.data?.identity_secret
+              );
+              if (error) {
+                setOpenVerificationFailure(true);
+                console.log("[error]", error);
+              } else {
+                setOpenVerificationSuccess(true);
               }
-            );
-            const { error } = await stripe.verifyIdentity(data?.data);
-            if (error) {
-              const res = await publicAxios.post(
-                STRIPE_VERIFY_IDENTITY,
-                {
-                  stripe_identity_progress: "cancelled",
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access")}`,
-                  },
-                }
-              );
-              setLoading(false);
-              // toast.error("Verification failed");
-              setOpenVerificationFailure(true);
-              handleCreditCardModalClose();
-              console.log("[error]", error);
-              // push("/nftWallet/NftWallet");
-              return;
-            } else {
-              const res = await publicAxios.post(
-                STRIPE_VERIFY_IDENTITY,
-                {
-                  stripe_identity_progress: "completed",
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access")}`,
-                  },
-                }
-              );
-              const old_profile_info = JSON.parse(
-                localStorage.getItem("profile_info")
-              );
-              const new_profile_info = {
-                ...old_profile_info,
-                user: {
-                  ...old_profile_info.user,
-                  stripe_identity_status: true,
-                },
-              };
-              localStorage.setItem(
-                "profile_info",
-                JSON.stringify(new_profile_info)
-              );
-              // toast.success("Verification submitted!");
-              setOpenVerificationSuccess(true);
-              // push("/nftWallet/NftWallet");
+              setIsCreditCardProcessing(false);
               handleCreditCardModalClose();
               return;
             }
+            if (mintNftAfterPayment?.data?.data == "") {
+              handleCreditCardModalClose();
+              setIsCreditCardProcessing(false);
+              setOpenVerificationSuccess(true);
+              return;
+            }
           }
-          push("/nftWallet/NftWallet");
-          handleCreditCardModalClose();
+
+          // if (mintNFTData?.stripe_identity_status) {
+          //   setIsCreditCardProcessing(true);
+          //   setVerifyModalOpen(true);
+          // }
+          if (res?.data?.data?.identity_secret) {
+            const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+            "true"
+              ? liveStripe
+              : stripe
+            ).verifyIdentity(res?.data?.data?.identity_secret);
+            if (error) {
+              setOpenVerificationFailure(true);
+              console.log("[error]", error);
+            } else {
+              setOpenVerificationSuccess(true);
+            }
+            setIsCreditCardProcessing(false);
+            handleCreditCardModalClose();
+            return;
+          }
+          if (res?.data?.data == "") {
+            handleCreditCardModalClose();
+            setIsCreditCardProcessing(false);
+            setOpenVerificationSuccess(true);
+          }
         } catch (error) {
           console.log(error);
-          setLoading(false);
-
+          setIsCreditCardProcessing(false);
           if (typeof error?.data?.message == "string") {
             if (error?.data?.message.includes(":")) {
               toast.error(error?.data?.message?.split(":")[1]);
@@ -277,112 +243,145 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       .catch((error) => console.log(error));
   };
 
-  console.log(data.formData);
-
   return (
-    <Dialog
-      open={isCreditCardModalOpen}
-      //   TransitionComponent={Transition}
-      keepMounted
-      onClose={handleCreditCardModalClose}
-      PaperProps={{
-        sx: {
-          backgroundColor: "secondary.purpleGray",
-          borderRadius: "24px",
-          //   width: "571px",
-          // height: "397px",
-          padding: "40px 38px",
-        },
-      }}
-    >
-      <DialogTitle>
-        <Typography variant="h3">
-          {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $1"}
-        </Typography>
-      </DialogTitle>
-      <DialogContent>
-        <div className="App-payment">
-          <h4>Please enter your payment information</h4>
-          <Card
-            number={data.number}
-            name={data.name}
-            expiry={data.expiry}
-            cvc={data.cvc}
-            focused={data.focused}
-            callback={handleCallback}
-          />
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            marginTop={2}
-          >
-            <form
-              ref={ref}
-              onSubmit={handleSubmit}
-              style={{
-                width: "80%",
-                display: "flex",
-                flexDirection: "column",
-                alignItmes: "center",
-                justifyContent: "center",
-                rowGap: 10,
-              }}
+    <>
+      <Dialog
+        open={isCreditCardModalOpen}
+        //   TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCreditCardModalClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: "secondary.purpleGray",
+            borderRadius: "24px",
+            //   width: "571px",
+            // height: "397px",
+            padding: "40px 38px",
+          },
+        }}
+      >
+        <DialogTitle>
+          <Typography variant="h3">
+            {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $20"}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <div className="App-payment">
+            <h4>Please enter your payment information</h4>
+            <Card
+              number={creditCardData.number}
+              name={creditCardData.name}
+              expiry={creditCardData.expiry}
+              cvc={creditCardData.cvc}
+              focused={creditCardData.focused}
+              callback={handleCallback}
+            />
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+              marginTop={2}
             >
-              {inputFields.map(
-                ({ name, placeholder, type, pattern }, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      background: false
-                        ? "rgba(255,0,0,0.7)"
-                        : "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                      display: "flex",
-                      justifyContent: "center",
-                      borderRadius: "24px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <GradiantTextField
-                      fullWidth
-                      variant="standard"
-                      type={type}
-                      name={name}
-                      placeholder={placeholder}
-                      pattern={pattern}
-                      required
-                      onChange={handleInputChange}
-                      onFocus={handleInputFocus}
-                      InputProps={{
-                        disableUnderline: true,
-                      }}
+              <form
+                ref={ref}
+                onSubmit={handleSubmit}
+                style={{
+                  width: "80%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItmes: "center",
+                  justifyContent: "center",
+                  rowGap: 10,
+                }}
+              >
+                {inputFields.map(
+                  ({ name, placeholder, type, pattern }, index) => (
+                    <div
+                      key={index}
                       style={{
                         background: false
-                          ? "rgba(29, 6, 104, 1)"
-                          : "rgba(29, 6, 104, 1)",
-                        margin: "2px 2px 2px 2px",
+                          ? "rgba(255,0,0,0.7)"
+                          : "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                        display: "flex",
+                        justifyContent: "center",
                         borderRadius: "24px",
+                        alignItems: "center",
                       }}
-                    />
-                  </div>
-                )
-              )}
+                    >
+                      <GradiantTextField
+                        fullWidth
+                        variant="standard"
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                        pattern={pattern}
+                        value={creditCardData[name]}
+                        required
+                        onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        InputProps={{
+                          disableUnderline: true,
+                        }}
+                        style={{
+                          background: false
+                            ? "rgba(29, 6, 104, 1)"
+                            : "rgba(29, 6, 104, 1)",
+                          margin: "2px 2px 2px 2px",
+                          borderRadius: "24px",
+                        }}
+                      />
+                    </div>
+                  )
+                )}
 
-              <input type="hidden" name="issuer" value={data.issuer} />
-              <LoadingButton
-                loading={loading}
-                variant="gradient"
-                size="large"
-                type="submit"
-              >
-                Pay and continue to verification
-              </LoadingButton>
-            </form>
-          </Box>
-        </div>
-      </DialogContent>
-    </Dialog>
+                <input
+                  type="hidden"
+                  name="issuer"
+                  value={creditCardData.issuer}
+                />
+                <LoadingButton
+                  loading={isCreditCardProcessing}
+                  variant="gradient"
+                  size="large"
+                  type="submit"
+                >
+                  Pay and continue to verification
+                </LoadingButton>
+              </form>
+            </Box>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={verifyModalOpen}
+        // TransitionComponent={Transition}
+        keepMounted
+        // onClose={handleClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: "secondary.purpleGray",
+            borderRadius: "24px",
+            width: "400px",
+            height: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap={3}
+        >
+          <Typography variant="h5">Verifying your documents</Typography>
+          <CircularProgress size={70} />
+        </Box>
+      </Dialog>
+    </>
   );
 };
 

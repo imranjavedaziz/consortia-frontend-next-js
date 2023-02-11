@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useAuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
 import axios from "axios";
 import { publicAxios } from "../api";
@@ -33,6 +33,11 @@ function NftsLayout({ children }) {
     setOpenVerificationSuccess,
     openVerificationFailure,
     setOpenVerificationFailure,
+    successData,
+    stripeVerificationCode,
+    setStripeVerificationCode,
+    stripe,
+    liveStripe,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
 
@@ -58,7 +63,6 @@ function NftsLayout({ children }) {
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
-    console.log(profile_info?.user?.stripe_identity_status);
     if (!profile_info?.user?.stripe_identity_status) {
       // setIsStripeModalOpen(true);
     }
@@ -85,6 +89,42 @@ function NftsLayout({ children }) {
     ) {
       setCompleteProfileOpen(true);
     }
+
+    if (stripeVerificationCode.length > 1) {
+      const [nft, User_token] = stripeVerificationCode;
+      const verifyStripeIdentity = async () => {
+        try {
+          const { data } = await publicAxios.post(
+            "nft_data_for_identity_verification",
+            {
+              nft,
+              User_token,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+          "true"
+            ? liveStripe
+            : stripe
+          ).verifyIdentity(data?.data);
+          if (error) {
+            setStripeVerificationCode([]);
+            toast.error("Unable to verify identity at this time!");
+          } else {
+            toast.success("Thank you for verifying your identity");
+            setStripeVerificationCode([]);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      verifyStripeIdentity();
+    }
   }, []);
 
   return (
@@ -101,7 +141,11 @@ function NftsLayout({ children }) {
         setOpen={setOpenVerificationSuccess}
         title="Congratulations!"
         imageSrc="/assets/icons/verificationSuccessIcon.svg"
-        text="Your identity has been successfully verified"
+        text={
+          successData.length > 1
+            ? successData
+            : "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
+        }
       />
       <CompletePractitionerProfile
         open={completeProfileOpen}

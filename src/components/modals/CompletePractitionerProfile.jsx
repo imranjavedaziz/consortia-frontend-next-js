@@ -60,7 +60,7 @@ function CompletePractitionerProfile({
   height,
   crossButtonEbable,
 }) {
-  const [date, setDate] = useState(dayjs(new Date()));
+  const [date, setDate] = useState(null);
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
 
@@ -305,6 +305,16 @@ function CompletePractitionerProfile({
                         renderInput={(params) => (
                           <GradiantTextField
                             variant="standard"
+                            placeholder="mm/dd/yyyy"
+                            sx={{
+                              "& input::placeholder": {
+                                fontSize: "12px",
+                                fontWeight: 400,
+                              },
+                              "& input":{
+                              fontSize:'14px',
+                              padding:'10px 0px'
+                            }}}
                             onKeyDown={(e) => e.preventDefault()}
                             fullWidth
                             style={{

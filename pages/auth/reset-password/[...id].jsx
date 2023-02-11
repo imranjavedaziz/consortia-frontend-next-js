@@ -54,7 +54,6 @@ const SignUp = () => {
     asPath,
   } = useRouter();
   useTitle("Reset Password");
-  console.log(id, route, asPath);
   const resetPassword = async ({ password, confirm_password }) => {
     try {
       const res = await publicAxios.post(`${RESET_PASSWORD}/${id.join("/")}`, {
@@ -69,11 +68,11 @@ const SignUp = () => {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -160,7 +159,13 @@ const SignUp = () => {
                     rowGap={3}
                   >
                     {inputFields.map(
-                      ({ name, label, placeholder, sensitive,onCutCopyPaste }) => (
+                      ({
+                        name,
+                        label,
+                        placeholder,
+                        sensitive,
+                        onCutCopyPaste,
+                      }) => (
                         <CustomInputField
                           key={name}
                           name={name}
@@ -168,8 +173,8 @@ const SignUp = () => {
                           placeholder={placeholder}
                           sensitive={sensitive}
                           onCutHandler={onCutCopyPaste}
-                            onCopyHandler={onCutCopyPaste}
-                            onPasteHandler={onCutCopyPaste}
+                          onCopyHandler={onCutCopyPaste}
+                          onPasteHandler={onCutCopyPaste}
                         />
                       )
                     )}

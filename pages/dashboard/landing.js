@@ -57,8 +57,8 @@ function Landing() {
       <Box sx={{ marginBottom: { xs: "10px", md: "40px" } }}>
         <Typography variant="h3">
           {profileInfo?.user?.role === "Practitioner"
-            ? "Practitioner"
-            : "Consumer"}
+            ? "Practitioner "
+            : "Consumer "}
           Dashboard
         </Typography>
       </Box>

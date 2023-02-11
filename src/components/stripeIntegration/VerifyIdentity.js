@@ -29,7 +29,6 @@ const VerifyIdentity = () => {
   useEffect(() => {
     getStripe();
   }, []);
-  console.log(stripe);
 
   const handleClick = async (event) => {
     event.preventDefault();
@@ -43,7 +42,6 @@ const VerifyIdentity = () => {
         },
       }
     );
-    console.log(data);
     const { error } = await stripe.verifyIdentity(data?.data);
 
     if (error) {
