@@ -66,11 +66,11 @@ function NftWallet() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -93,9 +93,9 @@ function NftWallet() {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
+        if (typeof error?.data?.message === "string") {
           toast.error(error?.data?.message);
-        }else{
+        } else {
           toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
@@ -121,7 +121,7 @@ function NftWallet() {
               }}
             >
               <Typography variant="h4" fontWeight={600}>
-                Mint Property NFTs
+                Property NFTs
               </Typography>
               {nftData?.length > 4 && (
                 <Box
@@ -214,7 +214,7 @@ function NftWallet() {
                   }}
                 >
                   <Typography variant="h4" fontWeight={600}>
-                    Mint Practitioner NFTs
+                    Practitioner NFTs
                   </Typography>
                   {practitionerNftData?.length > 4 && (
                     <Box
