@@ -1,24 +1,25 @@
-// import React from 'react'
-// import ComingSoon from '../../src/components/common/comingSoon/ComingSoon'
-
-// function DetailPage() {
-//   return (
-//     <><ComingSoon /></>
-//   )
-// }
-
-// export default DetailPage
-
 import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
+import {
+  Box,
+  Typography,
+  styled,
+  Grid,
+  CardMedia,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
 import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
-import { PROPERTY_NFT_DETAIL } from "../../src/constants/endpoints";
+import {
+  PROPERTY_NFT_DETAIL,
+  PROPERTY_NFT_BLOCKCHAIN_DATA,
+} from "../../src/constants/endpoints";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
+import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -27,12 +28,20 @@ const GradientBorderContainer = styled(Box)(({ theme }) => ({
   padding: "1px",
   marginTop: "40px",
   marginBottom: "48px",
+  "@media only screen and (max-width:425px)": {
+    background: "none",
+    marginTop: "16px",
+    padding: "0px",
+  },
 }));
 const NftDetailPageContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   background: theme.palette.background.default,
   borderRadius: "24px",
   padding: "33px 40px 40px 40px",
+  "@media only screen and (max-width:425px)": {
+    padding: "16px 13px 40px 13px",
+  },
 }));
 const CheckboxStyled = styled(Box)(({ theme }) => ({
   // '& .MuiCheckbox-root':{
@@ -53,7 +62,8 @@ const PractitionerDetailPage = () => {
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
-  console.log("nftDetail", nftDetail);
+
+  const [blockchainDataModal, setBlockchainDataModal] = useState(false);
 
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
@@ -63,7 +73,7 @@ const PractitionerDetailPage = () => {
 
   const getNftData = async () => {
     // debugger
-    if(query?.id){
+    if (query?.id) {
       try {
         const res = await publicAxios.get(
           `${PROPERTY_NFT_DETAIL}/${query?.id}`,
@@ -75,35 +85,48 @@ const PractitionerDetailPage = () => {
         );
         // console.log('res', res)
         setNftDetail(res?.data?.data);
-  
+
         // console.log("res", res?.data?.nfts);
-  
+
         // setUserData(res?.data?.data?.user);
       } catch (error) {
         console.log(error);
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
         } else {
-          if(typeof(error?.data?.message) === 'string'){
+          if (typeof error?.data?.message === "string") {
             toast.error(error?.data?.message);
-          }else{
+          } else {
             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
           }
         }
       }
     }
-    
   };
-  const headerData = ["Token ID", "Action","Document Type","Timestamp", ];
+  const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
-      {text1: `${nftDetail?.tx_id?.slice(0, 12)}...`,
-      text2: nftDetail?.is_minted ? 'Mint' : '_ _',
+    {
+      text1: nftDetail.tx_id ? `${nftDetail.tx_id?.slice(0, 12)}...` : "_ _",
+      text2: nftDetail?.is_minted ? "Mint" : "_ _",
       text3: nftDetail?.docCategory,
-      text4: nftDetail?.updated_at,}]
-    
-  
+      text4: nftDetail?.updated_at,
+    },
+  ];
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
+
   return (
     <>
+      <DialogForBlockchainData
+        open={blockchainDataModal}
+        setOpen={setBlockchainDataModal}
+        title="Blockchain Data"
+        endpoint={PROPERTY_NFT_BLOCKCHAIN_DATA}
+        // text="Please enter your email address and we will email you a link to reset your password."
+        // btnText="Send Request"
+        placeholder="Mail@example.com"
+      />
       <Box>
         <Box>
           <Typography variant="h3">Property NFT Details</Typography>
@@ -113,14 +136,17 @@ const PractitionerDetailPage = () => {
             <Grid container>
               <Grid
                 item
-                xs={12}
+                xs={6}
                 md={5}
                 lg={3}
-                sx={{ display: "flex", order: { xs: 2, md: 1 } }}
+                sx={{
+                  display: "flex",
+                  // order: { xs: 2, md: 1 }
+                }}
               >
                 <CardMedia
                   component="img"
-                  height="328px"
+                  height={belowSm ? "159px" : "328px"}
                   // width="250px"
                   alt="nft card Icon"
                   image={nftDetail?.image}
@@ -139,7 +165,7 @@ const PractitionerDetailPage = () => {
               </Grid>
               <Grid
                 item
-                xs={12}
+                xs={6}
                 md={7}
                 lg={9}
                 sx={{
@@ -147,10 +173,12 @@ const PractitionerDetailPage = () => {
                   paddingBottom: { md: "0px", xs: "20px" },
                   display: "flex",
                   justifyContent: "space-between",
-                  order: { xs: 1, md: 2 },
+                  // order: { xs: 1, md: 2 },
                 }}
               >
-                <Box sx={{ width: "100%" }}>
+                <Box
+                  sx={{ width: "100%", paddingLeft: { md: "0px", xs: "12px" } }}
+                >
                   <Typography variant="h5" sx={{ padding: "0px 0px 12px 0px" }}>
                     {nftDetail?.title}
                   </Typography>
@@ -192,28 +220,55 @@ const PractitionerDetailPage = () => {
                       </Box>
                     </Box>
                   </Box>
+                  <Box sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}>
+                    <Button
+                      variant="gradient"
+                      size="large"
+                      onClick={() => setBlockchainDataModal(true)}
+                    >
+                      {belowSm ? "Blochchain" : "View Blockchain Data"}
+                    </Button>
+                  </Box>
                 </Box>
                 <Box>
-                  <Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    {/* <Typography variant="h5">Transaction History</Typography> */}
-                    <Image
-                      src="/assets/icons/export.svg"
-                      height={40}
-                      width={40}
-                    />
-                  </Box>
+                  {!belowSm && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      {/* <Typography variant="h5">Transaction History</Typography> */}
+                      <Image
+                        src="/assets/icons/export.svg"
+                        height={40}
+                        width={40}
+                      />
+                    </Box>
+                  )}
                 </Box>
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} sx={{ padding: "40px 0px" }}>
-                <Box>
+              <Grid
+                item
+                xs={12}
+                sx={{ padding: { md: "40px 0px", xs: "0px 0px" } }}
+              >
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Typography variant="h5">Transaction History</Typography>
+                  {belowSm && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      {/* <Typography variant="h5">Transaction History</Typography> */}
+                      <Image
+                        src="/assets/icons/export.svg"
+                        height={40}
+                        width={40}
+                      />
+                    </Box>
+                  )}
                 </Box>
-                <Box sx={{ paddingTop: "40px" }}>
-                <TransactiionHistoryTable
+                <Box sx={{ paddingTop: { md: "40px", xs: "0px" } }}>
+                  <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}
                   />

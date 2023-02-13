@@ -2,32 +2,36 @@ import {
   Box,
   Typography,
   styled,
-  Button,
   Radio,
-  Checkbox,
-  Grid,
-  TextField,
-  Autocomplete,
   FormControl,
   RadioGroup,
   FormControlLabel,
+  InputLabel,
+  TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
-import { MINT_PRACTITIONER_NFT } from "../../src/constants/endpoints";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import {
+  GET_PROFILE_BY_USERID,
+  MINT_PRACTITIONER_NFT,
+} from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../src/context/AuthContext";
 import CreditCardInput from "../../src/components/CreditCardInput";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import dayjs from "dayjs";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -48,13 +52,14 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
     padding: "40px 12%",
   },
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
+const GradiantTextField = styled(TextField)(({}) => ({
+  "& .MuiInput-root": {
+    padding: "0 20px",
+  },
+  "& input::placeholder": {
+    fontSize: "16px",
+    fontWeight: 400,
+  },
 }));
 
 const MintNFTS = () => {
@@ -63,6 +68,7 @@ const MintNFTS = () => {
     isCreditCardModalOpen,
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
+    setSuccessData,
   } = useAuthContext();
 
   useTitle("Mint NFTs");
@@ -72,6 +78,8 @@ const MintNFTS = () => {
   const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
+  const [userData, setUserData] = useState({});
+  const [date, setDate] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,16 +88,12 @@ const MintNFTS = () => {
       setHeadshot(localData?.user?.headshot);
       setLicenseTypeValue(localData?.user?.practitionerType);
     }
+    getUserData();
   }, []);
   const handleChange = (event) => {
     setLicenseTypeValue(event.target.value);
   };
 
-  const agentsList = [
-    { value: "agent-1", label: "Agent 1" },
-    { value: "agent-2", label: "Agent 2" },
-    { value: "no-agent", label: "No Agent" },
-  ];
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -128,12 +132,6 @@ const MintNFTS = () => {
     { value: "mortgage broker", label: "Mortgage Broker" },
     { value: "appraiser", label: "Appraiser" },
   ];
-  // const radioBoxList = [
-  //   { label: "Realter", name: "realter" },
-  //   { label: "Loan Officer", name: "loan-officer" },
-  //   { label: "Title/Escrow", name: "titel-escrow" },
-  //   { label: "Appraiser", name: "appraiser" },
-  // ];
   const mintPractitionarNfts = async ({
     name,
     email,
@@ -141,56 +139,101 @@ const MintNFTS = () => {
     bio,
     // image,
     // licenseType,
+    state,
     licenseNumber,
   }) => {
-    if (false) {
-      toast.error("Please upload profile");
-    } else {
-      setData({
-        name,
-        email,
-        address,
-        image: headShot,
-        bio,
-        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
-        licenseType: licenseTypeValue,
-        licenseNumber,
-      });
-      setIsCreditCardModalOpen(true);
-      // try {
-      //   const res = await publicAxios.post(
-      //     `${MINT_PRACTITIONER_NFT}`,
-      //     {
-      //       name,
-      //       email,
-      //       address,
-      //       image: headShot,
-      //       bio,
-      //       agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+    try {
+      if (false) {
+        toast.error("Please upload profile");
+      } else {
+        if (userData?.stripe_user_block) {
+          toast.error("User has been blocked");
+        } else {
+          const res = await publicAxios.post(
+            "create_practitioner_nft",
+            {
+              name,
+              email,
+              address,
+              image: headShot,
+              bio,
+              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user
+                ?.id,
+              licenseType: licenseTypeValue,
+              licenseNumber,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          setData({
+            name,
+            email,
+            address,
+            image: headShot,
+            bio,
+            id: res?.data?.data?.id,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+            licenseType: licenseTypeValue,
+            licenseNumber,
+          });
+          // toast.success(res?.data?.message);
 
-      //       // role: profileInfo.user.role ? "practitioner" : "consumer",
-      //       licenseType: licenseTypeValue,
-      //       licenseNumber,
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${localStorage.getItem("access")}`,
-      //       },
-      //     }
-      //   );
-      //   toast.success("practitionar nft is minted successfully");
-      //   push("/nftWallet/NftWallet");
-      // } catch (error) {
-      //   if (Array.isArray(error?.data?.message)) {
-      //     toast.error(error?.data?.message?.error?.[0]);
-      //   } else {
-      //     if(typeof(error?.data?.message) === 'string'){
-          //   toast.error(error?.data?.message);
-          // }else{
-          //   toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          // }
-      //   }
-      // }
+          setSuccessData(
+            "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
+          );
+
+          setIsCreditCardModalOpen(true);
+        }
+
+        // setVerifyModalOpen(false);
+      }
+    } catch (error) {
+      console.log("error", error);
+      if (typeof error?.data?.message == "string") {
+        if (error?.data?.message.includes(":")) {
+          toast.error(error?.data?.message?.split(":")[1]);
+        } else {
+          toast.error(error?.data?.message);
+        }
+      } else {
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
+    }
+  };
+  const getUserData = async () => {
+    try {
+      const res = await publicAxios.get(
+        `${GET_PROFILE_BY_USERID}?user_id=${
+          JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      // console.log("resddd", res);
+      if (res?.data?.data?.user?.stripe_user_block) {
+        toast.error("User has been blocked");
+      }
+      setUserData(res?.data?.data?.user);
+    } catch (error) {
+      if (Array.isArray(error?.data?.message)) {
+        toast.error(error?.data?.message?.error?.[0]);
+      } else {
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
+      }
     }
   };
   return (
@@ -203,7 +246,7 @@ const MintNFTS = () => {
           <MintPropertyNfts>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Step One: Property Information
+                Step One: Practitioner Information
               </Typography>
             </Box>
             <Box>
@@ -217,6 +260,7 @@ const MintNFTS = () => {
                   address: "",
                   // image: "",
                   bio: profileInfo?.user?.bio,
+
                   licenseNumber: "",
                 }}
                 enableReinitialize={true}
@@ -231,6 +275,7 @@ const MintNFTS = () => {
                   address: Yup.string().required("Address is required"),
                   // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
+
                   licenseNumber: Yup.string().required(
                     "License Number is required"
                   ),
@@ -307,7 +352,19 @@ const MintNFTS = () => {
                             practitioner={true}
                           />
                         </Box>
-                        <Box pt={3}>
+                        <Box
+                          pt={3}
+                          sx={{
+                            "& textarea": {
+                              fontSize: "13px",
+                            },
+                            "& textarea::-webkit-scrollbar": {
+                              // display: "none",
+                              // overflow: "hidden",
+                              display: "none",
+                            },
+                          }}
+                        >
                           <CustomInputField
                             name="bio"
                             label="Bio:"
@@ -368,18 +425,15 @@ const MintNFTS = () => {
                             })}
                           </Box>
                         </Box>
+
                         <Box pt={3}>
                           <CustomInputField
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
-                            // disabled={true}
-                            // select={select}
-                            // options={options}
-                            // rows={maxRows}
-                            // multiline={multiline}
                           />
                         </Box>
+
                         <Box display="flex" pt={7}>
                           <LoadingButton
                             loading={isSubmitting}

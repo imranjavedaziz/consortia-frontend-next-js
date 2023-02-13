@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import {IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Box, styled, width } from "@mui/system";
+import { Box, styled } from "@mui/system";
 import Image from "next/image";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
@@ -29,7 +27,7 @@ const GradiantTextField = styled(TextField)(({}) => ({
     paddingLeft: "15px",
   },
   "& input::placeholder": {
-    fontSize: "16px",
+    fontSize: {xs:'8px',md:"16px"},
     fontWeight: 400,
   },
 }));
@@ -54,6 +52,9 @@ function DialogTextInput({
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
   const { showSecondForm, setShowSecondForm } = useAuthContext();
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
 
   const verifyCode = async (email) => {
     try {
@@ -131,14 +132,17 @@ function DialogTextInput({
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: "24px",
-            width: "571px",
+            borderRadius: {xs:'12px',md:"24px"},
+            width: {xs:"272px",md:"571px"},
             // height: "397px",
-            padding: "40px 38px",
+            padding: {xs:"16px",md:"40px 38px"},
+            margin:{xs:'16px', md:'32px'}
+
+
           },
         }}
       >
-        <DialogTitle sx={{ padding: "0px 0px 16px 0px" }}>
+        <DialogTitle sx={{ padding: {xs:"0px 0px 12px 0px",md:"0px 0px 16px 0px"} }}>
           <Box
             sx={{
               display: "flex",
@@ -155,27 +159,16 @@ function DialogTextInput({
             >
               <Image
                 src="/assets/icons/cross.svg"
-                height={22}
-                width={22}
+                height={belowSm ? 12:22}
+                width={belowSm ? 12:22}
                 alt=""
               />
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{ padding: "20px 10px" }}>
+        <DialogContent sx={{padding: {xs:"0px 0px 20px 0px",md:"0px 10px 20px 10px"} }}>
           <Typography variant="body1">{text}</Typography>
-          <Box sx={{ width: "100%", paddingTop: "40px" }}>
-            {/* <TextFieldWrapper> */}
-
-            {/* <TextField
-                sx={{
-                  "& .MuiInputLabel-root": { color: "green" },
-                  borderColor:
-                    "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                  borderRadius: 1,
-                }}
-              /> */}
-            {/* </TextFieldWrapper> */}
+          <Box sx={{ width: "100%", paddingTop: {xs:"16px",md:"40px"} }}>
             <div
               style={{
                 background:
@@ -184,6 +177,7 @@ function DialogTextInput({
                 justifyContent: "center",
                 borderRadius: "24px",
                 // marginTop: "40px",
+                width:'95%'
               }}
             >
               <GradiantTextField
@@ -223,7 +217,7 @@ function DialogTextInput({
             </div>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ padding: "16px 0px" }}>
+        <DialogActions sx={{ padding: {xs:'0px 0px',  md:"16px 0px"} }}>
           <Box sx={{ width: "100%" }}>
             <LoadingButton
               loading={fetching}
@@ -236,6 +230,7 @@ function DialogTextInput({
                 width: "100%",
                 padding: "10px 0px",
                 textTransform: "capitalize",
+                fontSize:{xs:'10px',md:'15px'}
               }}
               onClick={() => verifyCode(email)}
             >

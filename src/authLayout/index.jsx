@@ -12,9 +12,8 @@ function Index({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("access");
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
-    console.log("profileInfo", profileInfo);
     if (profileInfo?.user?.role === "Practitioner") {
-      if (token && profileInfo?.user?.practitionerType ) {
+      if (token && profileInfo?.user?.practitionerType) {
         push("/dashboard/landing");
       } else {
         // setShowSecondForm(true)

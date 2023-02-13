@@ -130,7 +130,6 @@ const SignUp = () => {
         toast.success("Welcome to Consortia! Please verify your email");
         setEmail(email);
         setEmailVerificationOpen(true);
-        console.log(res);
       } catch (error) {
         if (Array.isArray(error?.data?.message)) {
           toast.error(error?.data?.message?.error?.[0]);
@@ -217,9 +216,9 @@ const SignUp = () => {
         setOpen={setEmailVerificationOpen}
         title="Verification Code"
         text="Verification code has been sent to your email"
-        btnText="Submit"
+        btnText="Send Request"
         inputTypeCode
-        placeholder="Enter your verification code"
+        placeholder="Enter Code"
         email={email}
         isPractitioner={isPractitioner}
       />
@@ -280,11 +279,13 @@ const SignUp = () => {
             item
             xs={12}
             md={6}
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: { xs: "start", sm: "center" },
+              justifyContent: { xs: "start", sm: "center" },
+            }}
             rowGap={3}
-            justifyContent="center"
           >
             {/* <ImageLogo
             sx={{ ":hover": { cursor: "pointer" }, padding:{xs:"24px 0px 32px 0px", md: "0px"}}}
@@ -297,7 +298,12 @@ const SignUp = () => {
               alt="Logo"
             />
           </ImageLogo> */}
-            <Typography variant="h3">User Registration</Typography>
+            <Typography
+              variant="h3"
+              sx={{ paddingLeft: { xs: "24px", sm: "0px" } }}
+            >
+              User Registration
+            </Typography>
             <Formik
               initialValues={{
                 isPractitioner: isPractitioner,
@@ -358,7 +364,8 @@ const SignUp = () => {
                       display="flex"
                       flexDirection="column"
                       boxSizing="border-box"
-                      width="80%"
+                      // width="80%"
+                      sx={{ width: { md: "80%", xs: "85%" } }}
                       margin="auto"
                       // paddingX={2}
                       rowGap={3}
