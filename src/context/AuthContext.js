@@ -43,6 +43,7 @@ export const AuthContext = ({ children }) => {
     focused: "",
     formData: null,
   });
+  const [editNftData, setEditNftData] = useState(null);
 
   const handleCreditCardModalClose = () => {
     setIsCreditCardProcessing(false);
@@ -128,6 +129,8 @@ export const AuthContext = ({ children }) => {
         setStripeVerificationCode,
         creditCardData,
         setCreditCardData,
+        editNftData,
+        setEditNftData,
       }}
     >
       {children}

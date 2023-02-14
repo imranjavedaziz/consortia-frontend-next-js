@@ -57,7 +57,10 @@ const MintNFTS = () => {
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
     setSuccessData,
+    setEditNftData,
+    editNftData,
   } = useAuthContext();
+  console.log({ editNftData });
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
@@ -98,19 +101,10 @@ const MintNFTS = () => {
   };
   useEffect(() => {
     getVerifiedCompanies();
-    // return () =>
-    //   setPropertyCategoryOptions(
-    //     { value: true, label: "Yes" },
-    //     { value: false, label: "No" }
-    //   );
     getUserData();
+    return () => setEditNftData(null);
   }, []);
 
-  console.log(
-    "categoryDocument",
-    categoryDocument,
-    categoryDocument.replace("%28|%29", "(|)")
-  );
   const itemsFunction = (setFieldValue, propertyStatus) => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
