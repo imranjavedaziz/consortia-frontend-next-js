@@ -25,6 +25,8 @@ const CustomFileUpload = ({
   uploadingToS3,
   setUploadingToS3,
   maxUploadSizeMB,
+  editFilePayload,
+  property
 }) => {
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
@@ -53,6 +55,9 @@ const CustomFileUpload = ({
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (practitioner && profileInfo?.user?.role === "Practitioner") {
       setFile(profileInfo?.user?.headshot);
+    }
+    if (property && editFilePayload) {
+      setFile(editFilePayload);
     }
     setuserData(profileInfo);
   }, []);
