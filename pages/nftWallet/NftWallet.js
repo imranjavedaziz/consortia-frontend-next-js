@@ -174,7 +174,7 @@ function NftWallet() {
                     : nftData?.length >= 1 &&
                       nftData
                         ?.slice(0, 4)
-                        ?.map(({ title, address, image, id }, i) => (
+                        ?.map(({ title, address, image, id, is_minted }, i) => (
                           <Grid
                             item
                             xl={3}
@@ -190,6 +190,7 @@ function NftWallet() {
                             }}
                           >
                             <NftCard
+                              isPending={!is_minted}
                               title={title}
                               id={id}
                               address={address}

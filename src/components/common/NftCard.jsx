@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 
-const NftCard = ({ title, address, image, id, type }) => {
+const NftCard = ({ title, address, image, id, type, isPending }) => {
   const { push } = useRouter();
   return (
     <Card
@@ -23,9 +23,30 @@ const NftCard = ({ title, address, image, id, type }) => {
         backdropFilter: "blur(10px)",
         padding: 1,
         borderRadius: "15px",
-        marginRight:'10px'
+        marginRight: "10px",
       }}
     >
+      {isPending && (
+        <Box
+          sx={{
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "30px",
+            width: "90px",
+            borderRadius: "4px",
+            zIndex: 5,
+            bottom: 160,
+            left: 15,
+            backgroundColor: "#D9512C",
+          }}
+        >
+          <Typography variant="body2" fontWeight={500}>
+            Pending
+          </Typography>
+        </Box>
+      )}
       <CardMedia
         onClick={() => {
           const token = localStorage.getItem("access");
