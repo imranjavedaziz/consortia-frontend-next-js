@@ -74,6 +74,8 @@ function NftWallet() {
       }
     }
   };
+  // Upload file to AWS s3
+
   const getPractitionerNftData = async () => {
     try {
       setLoading(true);
@@ -215,7 +217,7 @@ function NftWallet() {
                   }}
                 >
                   <Typography variant="h4" fontWeight={600}>
-                    Practitioner NFTs
+                    Practitioner NFT
                   </Typography>
                   {practitionerNftData?.length > 4 && (
                     <Box
