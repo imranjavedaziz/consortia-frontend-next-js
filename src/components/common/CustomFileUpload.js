@@ -57,6 +57,7 @@ const CustomFileUpload = ({
       setFile(profileInfo?.user?.headshot);
     }
     if (property && editFilePayload) {
+      setFileType("application/pdf")
       setFile(editFilePayload);
     }
     setuserData(profileInfo);
@@ -92,6 +93,7 @@ const CustomFileUpload = ({
           ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
           : process.env.NEXT_PUBLIC_BUCKET_NAME,
         Key: Date.now() + e.target.files[0].name.replace(/[^./a-zA-Z0-9]/g, ""),
+        ContentType: e.target.files[0].type,
         Body: e.target.files[0],
       },
       async (err, data) => {

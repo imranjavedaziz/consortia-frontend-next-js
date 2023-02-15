@@ -176,16 +176,6 @@ const PractitionerDetailPage = () => {
         </Box>
         <GradientBorderContainer>
           <NftDetailPageContainer>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography>{nftDetail?.property_nft_status}</Typography>
-              <Typography>{nftDetail?.failed_reason}</Typography>
-            </Box>
             <Grid container>
               <Grid
                 item
@@ -267,7 +257,10 @@ const PractitionerDetailPage = () => {
                           }}
                         >
                           <Image
-                            src={localData?.user?.headshot || "/assets/icons/profileImage.svg"}
+                            src={
+                              localData?.user?.headshot ||
+                              "/assets/icons/profileImage.svg"
+                            }
                             layout="fill"
                             objectFit="cover"
                             // height={isMobile ? 20 : 33}
@@ -283,6 +276,11 @@ const PractitionerDetailPage = () => {
                         </Typography>
                       </Box>
                     </Box>
+                  </Box>
+                  <Box sx={{ padding: "10px 0px" }}>
+                    <Typography variant="body2">
+                      {nftDetail?.failed_reason}
+                    </Typography>
                   </Box>
                   {nftDetail?.is_minted && (
                     <Box
@@ -305,9 +303,17 @@ const PractitionerDetailPage = () => {
                       sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}
                     >
                       <LoadingButton
+                        sx={{
+                          backgroundColor: "secondary.purpleGray",
+                          color: "#fff",
+                          borderRadius: "8px",
+                          padding: "5px 17px",
+                          fontSize: "12px",
+                          textTransform:'capitalize'
+                        }}
                         loading={fetching}
                         // disabled={!nftDetail?.is_minted}
-                        variant="gradient"
+                        // backgroundColor="secondary.purpleGray"
                         size="large"
                         onClick={() => editNftDataHandler()}
                       >

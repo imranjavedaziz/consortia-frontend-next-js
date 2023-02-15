@@ -589,10 +589,8 @@ const MintNFTS = () => {
                                 setUploadingToS3={setUploadingDocument}
                                 s3Url={categoryDocument}
                                 setS3Url={setCategoryDocument}
-                                // editFilePayload={ExtractPrivateFileFromAws(
-                                //   editNftData?.document?.split("/").at(-1)
-                                // )}
-                                // property={true}
+                                editFilePayload={editNftData?.document_preview}
+                                property={true}
                                 borderRadius="24px"
                                 width="100%"
                                 privateBucket={true}
