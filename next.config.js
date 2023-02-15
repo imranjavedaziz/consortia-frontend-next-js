@@ -4,6 +4,9 @@ const nextConfig = {
   devIndicators: {
     buildActivity: false,
   },
+  images: {
+    domains: ["consortiamedia.s3.amazonaws.com"],
+  },
 };
 
 module.exports = nextConfig;

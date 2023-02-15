@@ -114,7 +114,7 @@ const MintNFTS = () => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
         {
-          name: "name",
+          name: "name", 
           label: "Name:",
           sublabel: "Exact Legal name on Government ID:",
           placeholder: "Enter the exact name",

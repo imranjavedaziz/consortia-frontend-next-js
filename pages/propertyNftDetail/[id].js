@@ -7,6 +7,7 @@ import {
   CardMedia,
   Button,
   useMediaQuery,
+  IconButton,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -255,14 +256,25 @@ const PractitionerDetailPage = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Image
-                          height={48}
-                          width={48}
-                          // width="250px"
-                          alt="Minter avtar"
-                          src="/assets/icons/profileImage.svg"
-                          sx={{ borderRadius: "50px" }}
-                        />
+                        <IconButton
+                          // onClick={handleClick}
+                          sx={{
+                            borderRadius: "50%",
+                            border: "2px solid #1D2CDF",
+                            overflow: "hidden",
+                            width: "48px",
+                            height: "48px",
+                          }}
+                        >
+                          <Image
+                            src={localData?.user?.headshot || "/assets/icons/profileImage.svg"}
+                            layout="fill"
+                            objectFit="cover"
+                            // height={isMobile ? 20 : 33}
+                            // width={33}
+                            alt={nftDetail.name}
+                          />
+                        </IconButton>
                         <Typography
                           variant="subtitle1"
                           sx={{ padding: "0px 8px" }}
