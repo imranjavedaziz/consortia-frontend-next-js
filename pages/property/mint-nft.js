@@ -63,7 +63,7 @@ const MintNFTS = () => {
     setEditNftData,
     editNftData,
     liveStripe,
-    stripe
+    stripe,
   } = useAuthContext();
   console.log({ editNftData });
   useTitle("Mint NFTs");
@@ -114,10 +114,11 @@ const MintNFTS = () => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
         {
-          name: "name", 
+          name: "name",
           label: "Name:",
           sublabel: "Exact Legal name on Government ID:",
           placeholder: "Enter the exact name",
+          disabled: userData?.stripe_identity_status,
         },
         {
           name: "property_category",
@@ -186,6 +187,7 @@ const MintNFTS = () => {
           label: "Name:",
           sublabel: "Exact Legal name on Government ID",
           placeholder: "Enter the exact name",
+          disabled: userData?.stripe_identity_status,
         },
         {
           name: "property_category",
@@ -216,8 +218,6 @@ const MintNFTS = () => {
     { value: "settlement", label: "Settlement Statement" },
   ];
   const handleSubmit = async (values, resetForm) => {
-   
-
     if (editNftData) {
       try {
         setisSubmitting(true);
@@ -226,23 +226,23 @@ const MintNFTS = () => {
           {
             name: values.name,
             title: "86CFJCX3+X9",
-          // title: values.apartmentNo
-          //   ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
-          //   : latLngPlusCode.plusCode,
-          ...(values.property_category == true && {
-            companyName: values.entity,
-            company_document: entityDocument,
-          }),
-          ...(typeof values.property_category == "number" && {
-            company_id: values.property_category,
-          }),
-          price: 20,
-          image:housePhoto || editNftData?.image,
-          description: "description",
-          address: values.address.replace(", USA", ""),
-          document: categoryDocument,
-          docCategory: values.category,
-          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+            // title: values.apartmentNo
+            //   ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+            //   : latLngPlusCode.plusCode,
+            ...(values.property_category == true && {
+              companyName: values.entity,
+              company_document: entityDocument,
+            }),
+            ...(typeof values.property_category == "number" && {
+              company_id: values.property_category,
+            }),
+            price: 20,
+            image: housePhoto || editNftData?.image,
+            description: "description",
+            address: values.address.replace(", USA", ""),
+            document: categoryDocument || editNftData?.document,
+            docCategory: values.category,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
           },
           {
             headers: {
@@ -256,16 +256,13 @@ const MintNFTS = () => {
           "true"
             ? liveStripe
             : stripe
-          ).verifyIdentity(
-            res?.data?.data?.client_secret
-          );
+          ).verifyIdentity(res?.data?.data?.client_secret);
           if (error) {
             setOpenVerificationFailure(true);
             console.log("[error]", error);
           } else {
             setOpenVerificationSuccess(true);
           }
-          setIsCreditCardProcessing(false);
           return;
         }
 
@@ -278,7 +275,7 @@ const MintNFTS = () => {
           return toast.error(error?.data?.message);
         } else {
           if (Array.isArray(error?.data?.message)) {
-             return toast.error(error?.data?.message?.error?.[0]);
+            return toast.error(error?.data?.message?.error?.[0]);
           } else {
             if (typeof error?.data?.message === "string") {
               return toast.error(error?.data?.message);
@@ -421,7 +418,9 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
-                  name: editNftData?.name,
+                  name: userData?.stripe_identity_status
+                    ? `${userData?.verified_first_name} ${userData?.verified_last_name}`
+                    : editNftData?.name,
                   property_category: editNftData?.companyName ? true : false,
                   entity: editNftData?.companyName,
                   agent: "",
@@ -479,6 +478,7 @@ const MintNFTS = () => {
                               multiline,
                               maxRows,
                               component,
+                              disabled,
                             },
                             i
                           ) => (
@@ -496,6 +496,7 @@ const MintNFTS = () => {
                                   options={options}
                                   rows={maxRows}
                                   multiline={multiline}
+                                  disabled={disabled}
                                 />
                               )}
                             </Box>
@@ -560,9 +561,7 @@ const MintNFTS = () => {
                             select
                             options={documentOptions}
                           />
-                          {
-                            console.log("test", values, editNftData)
-                          }
+                          {console.log("test", values, editNftData)}
                           {(values?.category?.length > 1 ||
                             editNftData?.docCategory) && (
                             <Box>
