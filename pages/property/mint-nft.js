@@ -257,10 +257,11 @@ const MintNFTS = () => {
           "property_nft/" + `${editNftData.id}`,
           {
             name: values.name,
-            title: "86CFJCX3+X9",
             title:
               editNftData && values.apartmentNo
-                ? `${editNftData.title}@${values.apartmentNo}`
+                ? `${editNftData.title.split("@").at(0)}@${values.apartmentNo}`
+                : editNftData && values.apartmentNo.length == 0
+                ? editNftData.title.split("@").at(0)
                 : editNftData
                 ? editNftData.title
                 : values.apartmentNo
@@ -462,7 +463,9 @@ const MintNFTS = () => {
                   entity: editNftData?.companyName,
                   agent: "",
                   price: editNftData?.price,
-                  apartmentNo: editNftData?.apartmentNo,
+                  apartmentNo: editNftData?.title?.includes("@")
+                    ? editNftData?.title?.split("@").at(-1)
+                    : "",
                   address: editNftData?.address,
                   category: editNftData?.docCategory,
                 }}
@@ -550,11 +553,6 @@ const MintNFTS = () => {
                             <Box>
                               <CustomInputField
                                 name="apartmentNo"
-                                value={
-                                  (editNftData?.title?.includes("@") &&
-                                    editNftData?.title?.split("@").at(-1)) ||
-                                  ""
-                                }
                                 label="Apartment No:"
                                 placeholder="Enter apartment no"
                                 select={false}
