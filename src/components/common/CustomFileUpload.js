@@ -26,8 +26,9 @@ const CustomFileUpload = ({
   setUploadingToS3,
   maxUploadSizeMB,
   editFilePayload,
-  property
+  property,
 }) => {
+  console.log({ editFilePayload });
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
@@ -57,7 +58,8 @@ const CustomFileUpload = ({
       setFile(profileInfo?.user?.headshot);
     }
     if (property && editFilePayload) {
-      setFileType("application/pdf")
+      console.log({ editFilePayload });
+      if (editFilePayload?.includes("pdf")) setFileType("application/pdf");
       setFile(editFilePayload);
     }
     setuserData(profileInfo);

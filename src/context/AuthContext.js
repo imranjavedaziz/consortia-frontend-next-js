@@ -34,6 +34,7 @@ export const AuthContext = ({ children }) => {
   const [stripeVerificationCode, setStripeVerificationCode] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [successData, setSuccessData] = useState("");
+  const [refetchFromLocalStorage, setRefetchFromLocalStorage] = useState(false);
   const [creditCardData, setCreditCardData] = useState({
     number: "",
     name: "",
@@ -131,6 +132,8 @@ export const AuthContext = ({ children }) => {
         setCreditCardData,
         editNftData,
         setEditNftData,
+        refetchFromLocalStorage,
+        setRefetchFromLocalStorage,
       }}
     >
       {children}

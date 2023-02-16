@@ -34,6 +34,13 @@ const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
 }));
 
 export default function Header() {
+  const {
+    setChoosePractitionerOpen,
+    setShowSecondForm,
+    refetchFromLocalStorage,
+    // setOpenVerificationFailure,
+    // setOpenVerificationSuccess,
+  } = useAuthContext();
   const { push } = useRouter();
   const [profileImg, setProfileImg] = React.useState(null);
   React.useEffect(() => {
@@ -42,18 +49,11 @@ export default function Header() {
     if (typeof profile_img == "string" && profile_img?.length > 1) {
       setProfileImg(profile_img);
     }
-  }, []);
+  }, [refetchFromLocalStorage]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
   const isTablet = useMediaQuery("(max-width:1000px)");
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const {
-    setChoosePractitionerOpen,
-    setShowSecondForm,
-    // setOpenVerificationFailure,
-    // setOpenVerificationSuccess,
-  } = useAuthContext();
 
   const open = Boolean(anchorEl);
   const icons = [

@@ -28,6 +28,7 @@ import { publicAxios } from "../../api";
 import toast from "react-hot-toast";
 import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
 import { EDIT_USER_PROFILE } from "../../constants/endpoints";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -60,6 +61,7 @@ function CompletePractitionerProfile({
   height,
   crossButtonEbable,
 }) {
+  const { setRefetchFromLocalStorage } = useAuthContext();
   const [date, setDate] = useState(null);
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
@@ -97,15 +99,26 @@ function CompletePractitionerProfile({
       );
 
       setIsLoading(false);
-      toast.success("Verification code has been sent to your email");
-      setUpdatedUserData({
-        bio,
-        headshot,
-        ...(showLicenseSince && {
-          licenseSince: dayjs(date).unix(),
-        }),
-      });
-      setVerifyCodeOpen(true);
+      debugger;
+      const user = res?.data?.data?.user;
+      toast.success(res?.data?.message);
+      handleClose();
+      const profile_info = JSON.parse(localStorage.getItem("profile_info"));
+      const newProfileData = {
+        ...profile_info,
+        user,
+      };
+      localStorage.setItem("profile_info", JSON.stringify(newProfileData));
+      setRefetchFromLocalStorage((prev) => !prev);
+      // toast.success("Verification code has been sent to your email");
+      // setUpdatedUserData({
+      //   bio,
+      //   headshot,
+      //   ...(showLicenseSince && {
+      //     licenseSince: dayjs(date).unix(),
+      //   }),
+      // });
+      // setVerifyCodeOpen(true);
     } catch (error) {
       setIsLoading(false);
       if (Array.isArray(error?.data?.message)) {
@@ -311,10 +324,11 @@ function CompletePractitionerProfile({
                                 fontSize: "12px",
                                 fontWeight: 400,
                               },
-                              "& input":{
-                              fontSize:'14px',
-                              padding:'10px 0px'
-                            }}}
+                              "& input": {
+                                fontSize: "14px",
+                                padding: "10px 0px",
+                              },
+                            }}
                             onKeyDown={(e) => e.preventDefault()}
                             fullWidth
                             style={{

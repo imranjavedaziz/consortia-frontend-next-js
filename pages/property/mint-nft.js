@@ -221,14 +221,51 @@ const MintNFTS = () => {
     if (editNftData) {
       try {
         setisSubmitting(true);
+        if (editNftData?.property_nft_status == "Pending Payment") {
+          setData({
+            stripe_identity_status: editNftData?.stripe_identity_status,
+            id: editNftData?.id,
+            name: values.name,
+            // title: "86CFJCX3+X9",
+            title: values.apartmentNo
+              ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+              : latLngPlusCode.plusCode,
+            ...(values.property_category == true && {
+              companyName: values.entity,
+              company_document: entityDocument,
+            }),
+            ...(typeof values.property_category == "number" && {
+              company_id: values.property_category,
+            }),
+            price: 20,
+            image: housePhoto,
+            description: "description",
+            address: values.address.replace(", USA", ""),
+            document: categoryDocument,
+            docCategory: values.category,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          });
+          setSuccessData(
+            "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
+          );
+          setisSubmitting(false);
+          setIsCreditCardModalOpen(true);
+          setisSubmitting(false);
+          return;
+        }
         const res = await publicAxios.put(
           "property_nft/" + `${editNftData.id}`,
           {
             name: values.name,
             title: "86CFJCX3+X9",
-            // title: values.apartmentNo
-            //   ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
-            //   : latLngPlusCode.plusCode,
+            title:
+              editNftData && values.apartmentNo
+                ? `${editNftData.title}@${values.apartmentNo}`
+                : editNftData
+                ? editNftData.title
+                : values.apartmentNo
+                ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+                : latLngPlusCode.plusCode,
             ...(values.property_category == true && {
               companyName: values.entity,
               company_document: entityDocument,
@@ -513,6 +550,11 @@ const MintNFTS = () => {
                             <Box>
                               <CustomInputField
                                 name="apartmentNo"
+                                value={
+                                  (editNftData?.title?.includes("@") &&
+                                    editNftData?.title?.split("@").at(-1)) ||
+                                  ""
+                                }
                                 label="Apartment No:"
                                 placeholder="Enter apartment no"
                                 select={false}
