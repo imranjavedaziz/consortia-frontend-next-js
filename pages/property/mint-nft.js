@@ -30,6 +30,7 @@ import {
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
 import { ExtractPrivateFileFromAws } from "../../src/utils/aws/ExtractPrivateFileFromAws";
+
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({

@@ -158,6 +158,18 @@ const PractitionerDetailPage = () => {
     push("/property/mint-nft");
   };
 
+  const donwloadAsPdf = (url) => {
+    fetch(url).then((response) => {
+      response.blob().then((blob) => {
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "Document.pdf";
+        a.click();
+      });
+    });
+  };
+
   return (
     <>
       <DialogForBlockchainData
@@ -309,7 +321,7 @@ const PractitionerDetailPage = () => {
                           borderRadius: "8px",
                           padding: "5px 17px",
                           fontSize: "12px",
-                          textTransform:'capitalize'
+                          textTransform: "capitalize",
                         }}
                         loading={fetching}
                         // disabled={!nftDetail?.is_minted}
@@ -325,7 +337,14 @@ const PractitionerDetailPage = () => {
                 <Box>
                   {!belowSm && (
                     <Box
-                      sx={{ display: "flex", justifyContent: "space-between" }}
+                      onClick={() => donwloadAsPdf(nftDetail?.document_preview)}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        ":hover": {
+                          cursor: "pointer",
+                        },
+                      }}
                     >
                       {/* <Typography variant="h5">Transaction History</Typography> */}
                       <Image
