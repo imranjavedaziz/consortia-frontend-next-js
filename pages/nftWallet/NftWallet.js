@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, Typography, styled, Grid, Skeleton } from "@mui/material";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import NftsLayout from "../../src/nftsLayout";
@@ -107,11 +107,58 @@ function NftWallet() {
   const handleClick = (data) => {
     push(`/nftsList/${data}`);
   };
+  const CopyWalletAddressRef = useRef(null);
+  const CopyWalletAddressHandler = () => {
+    const text = CopyWalletAddressRef.current.innerText;
+    if (text) {
+      toast.success("copied");
+      navigator.clipboard.writeText(text);
+    }
+  };
   return (
     <>
       <Box>
         <Box>
           <Typography variant="h3">My Wallet</Typography>
+        </Box>
+        <Box
+          sx={{
+            paddingTop: "16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(29, 6, 104, 0.5)",
+              borderRadius: "8px",
+              minWidth: "400px",
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight={600}>
+              Wallet Address:
+            </Typography>
+            <Typography variant="subtitle1" ref={CopyWalletAddressRef}>
+              {loading ? (
+                <Skeleton />
+              ) : (
+                profileInfo?.user?.walletId?.replaceAll("-", "")
+              )}
+            </Typography>
+            <Box sx={{ paddingLeft: "10px", cursor: "pointer" }}>
+              <Image
+                src="/assets/icons/copyIcon.svg"
+                height={16}
+                width={16}
+                alt="icon"
+                onClick={CopyWalletAddressHandler}
+              />
+            </Box>
+          </Box>
         </Box>
         <GradientMintPropertyNfts>
           <MintPropertyNfts>
