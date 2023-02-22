@@ -37,7 +37,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
             width: "90px",
             borderRadius: "4px",
             zIndex: 5,
-            bottom: 160,
+            top: 190,
             left: 15,
             backgroundColor: "#D9512C",
           }}
@@ -70,7 +70,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
           >
             {title ?? "US-06041-N"}
           </Typography>
-          <Stack direction="row" gap={0.8} alignItems="center">
+          {/* <Stack direction="row" gap={0.8} alignItems="center">
             <CardMedia
               component="img"
               height={10}
@@ -85,7 +85,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
               alt="Eye Icon"
             />
             <Typography variant="body2"> 0</Typography>
-          </Stack>
+          </Stack> */}
         </Box>
         <Box width="170px">
           <Typography
@@ -98,7 +98,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
           </Typography>
         </Box>
       </CardContent>
-      <CardActions
+      {/* <CardActions
         sx={{
           display: "flex",
           alignItems: "center",
@@ -117,7 +117,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
         >
           Buy
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

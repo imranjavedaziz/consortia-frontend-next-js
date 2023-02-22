@@ -1,4 +1,5 @@
 import property from "../../public/assets/icons/property.svg";
+import nftWallet from "../../public/assets/icons/wallet_light.svg";
 import nft from "../../public/assets/icons/nft.svg";
 import credits from "../../public/assets/icons/credits.svg";
 import mintNFT from "../../public/assets/icons/mintNFT.svg";
@@ -46,6 +47,13 @@ export const practitionarPages = [
       },
       // { id: 3.2, icon: tagNFT,path:"/practitionerNfts/practitioner-child2/", title: "Practitioner 2" },
     ],
+  },
+  {
+    id: 5,
+    title: "NFT Wallet",
+    nested: false,
+    icon: nftWallet,
+    path: "/nftWallet/NftWallet",
   },
   // {
   //   id: 4,
@@ -97,6 +105,13 @@ export const consumerPages = [
       },
       // { id: 2.2, icon: tagNFT,path:"/property/tag-nft/", title: "Tag NFTs" },
     ],
+  },
+  {
+    id: 5,
+    title: "NFT Wallet",
+    nested: false,
+    icon: nftWallet,
+    path: "/nftWallet/NftWallet",
   },
   // {
   //   id: 3,

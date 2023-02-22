@@ -8,6 +8,7 @@ import {
   Button,
   useMediaQuery,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -68,12 +69,15 @@ const PractitionerDetailPage = () => {
   const [fetching, setFetching] = useState(false);
   const [blockchainDataModal, setBlockchainDataModal] = useState(false);
   const [blockchainData, setBlockchainData] = useState();
+  const [isDownloading, setIsDownloading] = useState(false);
   const { setEditNftData } = useAuthContext();
 
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     setLocalData(profileInfo);
     getNftData();
+
+    return () => setIsDownloading(false);
   }, [query?.id]);
 
   const getNftData = async () => {
@@ -158,16 +162,16 @@ const PractitionerDetailPage = () => {
     push("/property/mint-nft");
   };
 
-  const donwloadAsPdf = (url) => {
-    fetch(url).then((response) => {
-      response.blob().then((blob) => {
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "Document.pdf";
-        a.click();
-      });
-    });
+  const donwloadAsPdf = async (signedUrl) => {
+    setIsDownloading(true);
+    const response = await fetch(signedUrl);
+    const blob = await response.blob();
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "Document.pdf";
+    a.click();
+    setIsDownloading(false);
   };
 
   return (
@@ -346,12 +350,16 @@ const PractitionerDetailPage = () => {
                         },
                       }}
                     >
+                      {isDownloading ? (
+                        <CircularProgress />
+                      ) : (
+                        <Image
+                          src="/assets/icons/export.svg"
+                          height={40}
+                          width={40}
+                        />
+                      )}
                       {/* <Typography variant="h5">Transaction History</Typography> */}
-                      <Image
-                        src="/assets/icons/export.svg"
-                        height={40}
-                        width={40}
-                      />
                     </Box>
                   )}
                 </Box>
@@ -369,12 +377,16 @@ const PractitionerDetailPage = () => {
                     <Box
                       sx={{ display: "flex", justifyContent: "space-between" }}
                     >
+                      {isDownloading ? (
+                        <CircularProgress />
+                      ) : (
+                        <Image
+                          src="/assets/icons/export.svg"
+                          height={40}
+                          width={40}
+                        />
+                      )}
                       {/* <Typography variant="h5">Transaction History</Typography> */}
-                      <Image
-                        src="/assets/icons/export.svg"
-                        height={40}
-                        width={40}
-                      />
                     </Box>
                   )}
                 </Box>
