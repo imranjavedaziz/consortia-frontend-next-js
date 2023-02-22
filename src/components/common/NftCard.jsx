@@ -70,7 +70,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
           >
             {title ?? "US-06041-N"}
           </Typography>
-          <Stack direction="row" gap={0.8} alignItems="center">
+          {/* <Stack direction="row" gap={0.8} alignItems="center">
             <CardMedia
               component="img"
               height={10}
@@ -85,7 +85,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
               alt="Eye Icon"
             />
             <Typography variant="body2"> 0</Typography>
-          </Stack>
+          </Stack> */}
         </Box>
         <Box width="170px">
           <Typography
