@@ -32,6 +32,7 @@ function BlockchainInfo() {
                 src="/assets/images/teresaSheila.jpg"
                 height={300}
                 width={550}
+                alt="pic"
               />
             </Box>
           </Grid>
@@ -51,7 +52,7 @@ function BlockchainInfo() {
                 CONSORTIA BLOCKCHAIN COMPLIANCE DESIGNATION (CBCD) Learn
                 everything you need to know about web 3.0, blockchain and real
                 estate. Go at your own pace. Once you earn your designation,
-                you'll know all the laws and sales opportunities in web 3.0
+                you&apos;ll know all the laws and sales opportunities in web 3.0
                 Consortia Blockchain Compliance Certification
               </Typography>
             </Box>
@@ -119,11 +120,11 @@ function BlockchainInfo() {
                 sx={{ textAlign: "center" }}
               >
                 The Property NFT is the digital twin of your past sales in web
-                3.0. It's what connects the agent to capital markets for the
-                benefit of the homeowner. Now, lenders and secondary markets can
-                reference the Consortia Blockchain and YOU the agent as the home
-                hero for the life of the property! Map all of your past sales on
-                the Consortia global digital twin metaverse.
+                3.0. It&apos;s what connects the agent to capital markets for
+                the benefit of the homeowner. Now, lenders and secondary markets
+                can reference the Consortia Blockchain and YOU the agent as the
+                home hero for the life of the property! Map all of your past
+                sales on the Consortia global digital twin metaverse.
               </Typography>
             </Box>
             <Box
@@ -179,9 +180,9 @@ function BlockchainInfo() {
                 fontWeight={400}
                 sx={{ textAlign: "center" }}
               >
-                What's the good of a Property NFT if it can't be tied to
-                client's properties? Your practitioner NFT is what ties you to
-                all your past sales and relationships on the Consortia
+                What&apos;s the good of a Property NFT if it can&apos;t be tied
+                to client&apos;s properties? Your practitioner NFT is what ties
+                you to all your past sales and relationships on the Consortia
                 Blockchain Global Digital Twin blockchain ledger. Practitioner
                 NFTs are available for real estate, title and escrow, and loan
                 professionals.
@@ -239,11 +240,11 @@ function BlockchainInfo() {
             </Box>
             <Box>
               <Typography>
-                Consortia put the world’s largest asset class, American real
-                estate, on blockchain. Consortia filed for the patent regarding
-                all things real estate, blockchain and NFTs in 2018. Consortia's
-                purpose is to satisfy Dodd Frank, fair housing, and housing
-                accessibility.
+                Consortia put the world&apos;s largest asset class, American
+                real estate, on blockchain. Consortia filed for the patent
+                regarding all things real estate, blockchain and NFTs in 2018.
+                Consortia&apos;s purpose is to satisfy Dodd Frank, fair housing,
+                and housing accessibility.
               </Typography>
             </Box>
             <Box
@@ -315,7 +316,7 @@ function BlockchainInfo() {
                     padding: "15px 40px",
                   }}
                 >
-                  LEARN WHAT'S LEGAL
+                  LEARN WHAT&apos;S LEGAL
                 </Button>
               </Link>
             </Box>
@@ -383,10 +384,10 @@ function BlockchainInfo() {
             </Box>
             <Box>
               <Typography>
-                Blockchain. It's the latest buzzword in the tech world, and it's
-                quickly gaining traction in a variety of industries. So what is
-                blockchain, and how could it revolutionize real estate
-                underwriting and capital markets?
+                Blockchain. It&apos;s the latest buzzword in the tech world, and
+                it&apos;s quickly gaining traction in a variety of industries.
+                So what is blockchain, and how could it revolutionize real
+                estate underwriting and capital markets?
               </Typography>
             </Box>
             <Box
@@ -426,7 +427,7 @@ function BlockchainInfo() {
           </Box>
           <Box sx={{ paddingTop: "15px" }}>
             <Typography>
-              Consortia put the world's largest asset class, American
+              Consortia put the world&apos;s largest asset class, American
               residential real estate, on our private, patent pending
               blockchain.
             </Typography>
