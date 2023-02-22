@@ -37,11 +37,11 @@ export default function Index({ children }) {
         </Box>
         <Box
           sx={{
-            paddingX: { xs: "24px",sm:"40px",lg:"120px", },
+            paddingX: { xs: "24px", sm: "40px", lg: "120px" },
             width: "100%",
             background: "rgba(255, 255, 255, 0.1)",
             backdropFilter: "blur(10px)",
-            marginTop: {xs:"33px",sm:"120px"},
+            marginTop: { xs: "33px", sm: "120px" },
           }}
         >
           <Footer />
