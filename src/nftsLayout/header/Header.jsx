@@ -85,11 +85,11 @@ export default function Header() {
       path: "/assets/icons/changePassword.svg",
       rel: "/dashboard/change-password",
     },
-    {
-      name: "NFT Wallet",
-      path: "/assets/icons/wallet.svg",
-      rel: "/nftWallet/NftWallet",
-    },
+    // {
+    //   name: "NFT Wallet",
+    //   path: "/assets/icons/wallet.svg",
+    //   rel: "/nftWallet/NftWallet",
+    // },
     // { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
     // { name: "Verify Identity", path: "/assets/icons/profile.svg" },
     { name: "Logout", path: "/assets/icons/logout.svg" },
