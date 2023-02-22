@@ -25,10 +25,19 @@ const CustomFileUpload = ({
   uploadingToS3,
   setUploadingToS3,
   maxUploadSizeMB,
+  editFilePayload,
+  property,
 }) => {
+  console.log({ editFilePayload });
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
+  const [iframeSize, setIframeSize] = useState(["auto", "100%"]);
+  const [iframeStyle, setIframeStyle] = useState({
+    zIndex: 50,
+    width: "auto",
+    height: "100%",
+  });
   // const [uploadingToS3, setUploadingToS3] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
@@ -53,6 +62,11 @@ const CustomFileUpload = ({
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (practitioner && profileInfo?.user?.role === "Practitioner") {
       setFile(profileInfo?.user?.headshot);
+    }
+    if (property && editFilePayload) {
+      console.log({ editFilePayload });
+      if (editFilePayload?.includes("pdf")) setFileType("application/pdf");
+      setFile(editFilePayload);
     }
     setuserData(profileInfo);
   }, []);
@@ -87,6 +101,7 @@ const CustomFileUpload = ({
           ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
           : process.env.NEXT_PUBLIC_BUCKET_NAME,
         Key: Date.now() + e.target.files[0].name.replace(/[^./a-zA-Z0-9]/g, ""),
+        ContentType: e.target.files[0].type,
         Body: e.target.files[0],
       },
       async (err, data) => {
@@ -170,7 +185,32 @@ const CustomFileUpload = ({
           ) : uploadingToS3 ? (
             <CircularProgress color="primary" />
           ) : fileType == "application/pdf" ? (
-            <iframe src={file} width="auto" height="100%"></iframe>
+            <iframe
+              style={iframeStyle}
+              src={file}
+              // width="auto"
+              // height="500px"
+              onMouseLeave={() =>
+                setIframeStyle({
+                  zIndex: 50,
+                  width: "auto",
+                  height: "100%",
+                  // overflow: "hidden",
+                })
+              }
+              // onMouseLeave={() => setIframeSize(["auto", "100%"])}
+              // onMouseOver={() => setIframeSize(["90vw", "100vh"])}
+              onMouseOver={() =>
+                setIframeStyle((prev) => ({
+                  ...prev,
+                  position: "fixed",
+                  top: "5vh",
+                  left: "5vw",
+                  height: "90vh",
+                  width: "90vw",
+                }))
+              }
+            ></iframe>
           ) : (
             <img src={file} width="auto" height="100%" />
           )}

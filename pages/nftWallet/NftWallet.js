@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, Typography, styled, Grid, Skeleton } from "@mui/material";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import NftsLayout from "../../src/nftsLayout";
@@ -74,6 +74,8 @@ function NftWallet() {
       }
     }
   };
+  // Upload file to AWS s3
+
   const getPractitionerNftData = async () => {
     try {
       setLoading(true);
@@ -105,11 +107,58 @@ function NftWallet() {
   const handleClick = (data) => {
     push(`/nftsList/${data}`);
   };
+  const CopyWalletAddressRef = useRef(null);
+  const CopyWalletAddressHandler = () => {
+    const text = CopyWalletAddressRef.current.innerText;
+    if (text) {
+      toast.success("copied");
+      navigator.clipboard.writeText(text);
+    }
+  };
   return (
     <>
       <Box>
         <Box>
           <Typography variant="h3">My Wallet</Typography>
+        </Box>
+        <Box
+          sx={{
+            paddingTop: "16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(29, 6, 104, 0.5)",
+              borderRadius: "8px",
+              minWidth: "400px",
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight={600}>
+              Wallet Address:
+            </Typography>
+            <Typography variant="subtitle1" ref={CopyWalletAddressRef}>
+              {loading ? (
+                <Skeleton />
+              ) : (
+                profileInfo?.user?.walletId?.replaceAll("-", "")
+              )}
+            </Typography>
+            <Box sx={{ paddingLeft: "10px", cursor: "pointer" }}>
+              <Image
+                src="/assets/icons/copyIcon.svg"
+                height={16}
+                width={16}
+                alt="icon"
+                onClick={CopyWalletAddressHandler}
+              />
+            </Box>
+          </Box>
         </Box>
         <GradientMintPropertyNfts>
           <MintPropertyNfts>
@@ -174,7 +223,7 @@ function NftWallet() {
                     : nftData?.length >= 1 &&
                       nftData
                         ?.slice(0, 4)
-                        ?.map(({ title, address, image, id }, i) => (
+                        ?.map(({ title, address, image, id, is_minted }, i) => (
                           <Grid
                             item
                             xl={3}
@@ -190,6 +239,7 @@ function NftWallet() {
                             }}
                           >
                             <NftCard
+                              isPending={!is_minted}
                               title={title}
                               id={id}
                               address={address}
@@ -214,7 +264,7 @@ function NftWallet() {
                   }}
                 >
                   <Typography variant="h4" fontWeight={600}>
-                    Practitioner NFTs
+                    Practitioner NFT
                   </Typography>
                   {practitionerNftData?.length > 4 && (
                     <Box

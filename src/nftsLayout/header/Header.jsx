@@ -34,18 +34,26 @@ const GradiantTextField = styled(OutlinedInput)(({ theme, Width, Height }) => ({
 }));
 
 export default function Header() {
+  const {
+    setChoosePractitionerOpen,
+    setShowSecondForm,
+    refetchFromLocalStorage,
+    // setOpenVerificationFailure,
+    // setOpenVerificationSuccess,
+  } = useAuthContext();
   const { push } = useRouter();
+  const [profileImg, setProfileImg] = React.useState(null);
+  React.useEffect(() => {
+    const profile_img = JSON.parse(localStorage.getItem("profile_info"))?.user
+      ?.headshot;
+    if (typeof profile_img == "string" && profile_img?.length > 1) {
+      setProfileImg(profile_img);
+    }
+  }, [refetchFromLocalStorage]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
   const isTablet = useMediaQuery("(max-width:1000px)");
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const {
-    setChoosePractitionerOpen,
-    setShowSecondForm,
-    // setOpenVerificationFailure,
-    // setOpenVerificationSuccess,
-  } = useAuthContext();
 
   const open = Boolean(anchorEl);
   const icons = [
@@ -57,6 +65,9 @@ export default function Header() {
     // console.log(event.target.alt)
     if (event.target.alt === "setting") {
       setAnchorEl(event.currentTarget);
+    }
+    if (event.target.alt === "userProfile") {
+      push("/dashboard/edit-profile");
     }
   };
   const handleClose = () => {
@@ -79,7 +90,7 @@ export default function Header() {
       path: "/assets/icons/wallet.svg",
       rel: "/nftWallet/NftWallet",
     },
-    { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
+    // { name: "Night Mode", path: "/assets/icons/nightMode.svg" },
     // { name: "Verify Identity", path: "/assets/icons/profile.svg" },
     { name: "Logout", path: "/assets/icons/logout.svg" },
   ];
@@ -208,19 +219,49 @@ export default function Header() {
             <Box
               sx={{
                 display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+
                 // width:isMobile ? "100%":"auto"
               }}
             >
-              {icons.map((item, i) => (
-                <IconButton key={item.name + i} onClick={handleClick}>
-                  <Image
-                    src={item.path}
-                    height={isMobile ? 20 : 33}
-                    width={33}
-                    alt={item.name}
-                  />
-                </IconButton>
-              ))}
+              {icons.map((item, i) =>
+                item.name == "userProfile" ? (
+                  <IconButton
+                    key={item.name + i}
+                    onClick={handleClick}
+                    sx={{
+                      borderRadius: "50%",
+                      border: "2px solid #1D2CDF",
+                      overflow: "hidden",
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  >
+                    <Image
+                      src={
+                        item.name == "userProfile" && !!profileImg
+                          ? profileImg
+                          : item.path
+                      }
+                      layout="fill"
+                      objectFit="cover"
+                      // height={isMobile ? 20 : 33}
+                      // width={33}
+                      alt={item.name}
+                    />
+                  </IconButton>
+                ) : (
+                  <IconButton key={item.name + i} onClick={handleClick}>
+                    <Image
+                      src={item.path}
+                      height={isMobile ? 20 : 33}
+                      width={33}
+                      alt={item.name}
+                    />
+                  </IconButton>
+                )
+              )}
               {/* <Button color="inherit">Login</Button> */}
             </Box>
           </Toolbar>

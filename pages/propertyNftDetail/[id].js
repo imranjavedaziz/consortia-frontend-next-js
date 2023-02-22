@@ -7,6 +7,7 @@ import {
   CardMedia,
   Button,
   useMediaQuery,
+  IconButton,
 } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -20,6 +21,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
 import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
+import { LoadingButton } from "@mui/lab";
+import { useAuthContext } from "../../src/context/AuthContext";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -62,8 +65,10 @@ const PractitionerDetailPage = () => {
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
-
+  const [fetching, setFetching] = useState(false);
   const [blockchainDataModal, setBlockchainDataModal] = useState(false);
+  const [blockchainData, setBlockchainData] = useState();
+  const { setEditNftData } = useAuthContext();
 
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
@@ -103,6 +108,39 @@ const PractitionerDetailPage = () => {
       }
     }
   };
+
+  const getBlockchainData = async () => {
+    if (query?.id) {
+      try {
+        setFetching(true);
+        const res = await publicAxios.get(
+          PROPERTY_NFT_BLOCKCHAIN_DATA + `?id=${query?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        setFetching(false);
+        setBlockchainData(res?.data?.data);
+        setBlockchainDataModal(true);
+      } catch (error) {
+        setFetching(false);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            if (error?.data?.message) {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
+        }
+      }
+    }
+  };
+
   const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
     {
@@ -115,6 +153,22 @@ const PractitionerDetailPage = () => {
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
+  const editNftDataHandler = () => {
+    setEditNftData(nftDetail);
+    push("/property/mint-nft");
+  };
+
+  const donwloadAsPdf = (url) => {
+    fetch(url).then((response) => {
+      response.blob().then((blob) => {
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "Document.pdf";
+        a.click();
+      });
+    });
+  };
 
   return (
     <>
@@ -122,7 +176,8 @@ const PractitionerDetailPage = () => {
         open={blockchainDataModal}
         setOpen={setBlockchainDataModal}
         title="Blockchain Data"
-        endpoint={PROPERTY_NFT_BLOCKCHAIN_DATA}
+        resData={blockchainData}
+        // endpoint={PROPERTY_NFT_BLOCKCHAIN_DATA}
         // text="Please enter your email address and we will email you a link to reset your password."
         // btnText="Send Request"
         placeholder="Mail@example.com"
@@ -203,14 +258,28 @@ const PractitionerDetailPage = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Image
-                          height={48}
-                          width={48}
-                          // width="250px"
-                          alt="Minter avtar"
-                          src="/assets/icons/profileImage.svg"
-                          sx={{ borderRadius: "50px" }}
-                        />
+                        <IconButton
+                          // onClick={handleClick}
+                          sx={{
+                            borderRadius: "50%",
+                            border: "2px solid #1D2CDF",
+                            overflow: "hidden",
+                            width: "48px",
+                            height: "48px",
+                          }}
+                        >
+                          <Image
+                            src={
+                              localData?.user?.headshot ||
+                              "/assets/icons/profileImage.svg"
+                            }
+                            layout="fill"
+                            objectFit="cover"
+                            // height={isMobile ? 20 : 33}
+                            // width={33}
+                            alt={nftDetail.name}
+                          />
+                        </IconButton>
                         <Typography
                           variant="subtitle1"
                           sx={{ padding: "0px 8px" }}
@@ -220,20 +289,62 @@ const PractitionerDetailPage = () => {
                       </Box>
                     </Box>
                   </Box>
-                  <Box sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}>
-                    <Button
-                      variant="gradient"
-                      size="large"
-                      onClick={() => setBlockchainDataModal(true)}
-                    >
-                      {belowSm ? "Blochchain" : "View Blockchain Data"}
-                    </Button>
+                  <Box sx={{ padding: "10px 0px" }}>
+                    <Typography variant="body2">
+                      {nftDetail?.failed_reason}
+                    </Typography>
                   </Box>
+                  {nftDetail?.is_minted && (
+                    <Box
+                      sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}
+                    >
+                      <LoadingButton
+                        loading={fetching}
+                        disabled={!nftDetail?.is_minted}
+                        variant="gradient"
+                        size="large"
+                        onClick={() => getBlockchainData()}
+                      >
+                        {belowSm ? "Blockchain" : "View Blockchain Data"}
+                      </LoadingButton>
+                    </Box>
+                  )}
+
+                  {!nftDetail?.is_minted && (
+                    <Box
+                      sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}
+                    >
+                      <LoadingButton
+                        sx={{
+                          backgroundColor: "secondary.purpleGray",
+                          color: "#fff",
+                          borderRadius: "8px",
+                          padding: "5px 17px",
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                        }}
+                        loading={fetching}
+                        // disabled={!nftDetail?.is_minted}
+                        // backgroundColor="secondary.purpleGray"
+                        size="large"
+                        onClick={() => editNftDataHandler()}
+                      >
+                        Edit Details
+                      </LoadingButton>
+                    </Box>
+                  )}
                 </Box>
                 <Box>
                   {!belowSm && (
                     <Box
-                      sx={{ display: "flex", justifyContent: "space-between" }}
+                      onClick={() => donwloadAsPdf(nftDetail?.document_preview)}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        ":hover": {
+                          cursor: "pointer",
+                        },
+                      }}
                     >
                       {/* <Typography variant="h5">Transaction History</Typography> */}
                       <Image

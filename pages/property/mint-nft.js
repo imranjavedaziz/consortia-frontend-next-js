@@ -29,6 +29,8 @@ import {
 } from "../../src/constants/endpoints";
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
+import { ExtractPrivateFileFromAws } from "../../src/utils/aws/ExtractPrivateFileFromAws";
+
 // import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
@@ -57,7 +59,14 @@ const MintNFTS = () => {
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
     setSuccessData,
+    setOpenVerificationSuccess,
+    setOpenVerificationFailure,
+    setEditNftData,
+    editNftData,
+    liveStripe,
+    stripe,
   } = useAuthContext();
+  console.log({ editNftData });
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");
@@ -98,19 +107,10 @@ const MintNFTS = () => {
   };
   useEffect(() => {
     getVerifiedCompanies();
-    // return () =>
-    //   setPropertyCategoryOptions(
-    //     { value: true, label: "Yes" },
-    //     { value: false, label: "No" }
-    //   );
     getUserData();
+    return () => setEditNftData(null);
   }, []);
 
-  console.log(
-    "categoryDocument",
-    categoryDocument,
-    categoryDocument.replace("%28|%29", "(|)")
-  );
   const itemsFunction = (setFieldValue, propertyStatus) => {
     if (propertyStatus === true) {
       const propertyNftsForm = [
@@ -119,6 +119,7 @@ const MintNFTS = () => {
           label: "Name:",
           sublabel: "Exact Legal name on Government ID:",
           placeholder: "Enter the exact name",
+          disabled: userData?.stripe_identity_status,
         },
         {
           name: "property_category",
@@ -156,6 +157,10 @@ const MintNFTS = () => {
                 setUploadingToS3={setUploadingEntity}
                 s3Url={entityDocument}
                 setS3Url={setEntityDocument}
+                editFilePayload={ExtractPrivateFileFromAws(
+                  editNftData?.company_document?.split("/").at(-1)
+                )}
+                property={true}
                 borderRadius="24px"
                 width="100%"
                 privateBucket={true}
@@ -167,6 +172,7 @@ const MintNFTS = () => {
           component: (
             <GoogleMapAutoComplete
               name="address"
+              initialValue={editNftData?.address}
               setFieldValue={setFieldValue}
               setLatLngPlusCode={setLatLngPlusCode}
               latLngPlusCode={latLngPlusCode}
@@ -182,6 +188,7 @@ const MintNFTS = () => {
           label: "Name:",
           sublabel: "Exact Legal name on Government ID",
           placeholder: "Enter the exact name",
+          disabled: userData?.stripe_identity_status,
         },
         {
           name: "property_category",
@@ -195,6 +202,7 @@ const MintNFTS = () => {
           component: (
             <GoogleMapAutoComplete
               name="address"
+              initialValue={editNftData?.address}
               setFieldValue={setFieldValue}
               setLatLngPlusCode={setLatLngPlusCode}
               latLngPlusCode={latLngPlusCode}
@@ -211,6 +219,113 @@ const MintNFTS = () => {
     { value: "settlement", label: "Settlement Statement" },
   ];
   const handleSubmit = async (values, resetForm) => {
+    if (editNftData) {
+      try {
+        setisSubmitting(true);
+        if (editNftData?.property_nft_status == "Pending Payment") {
+          setData({
+            stripe_identity_status: editNftData?.stripe_identity_status,
+            id: editNftData?.id,
+            name: values.name,
+            // title: "86CFJCX3+X9",
+            title: values.apartmentNo
+              ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+              : latLngPlusCode.plusCode,
+            ...(values.property_category == true && {
+              companyName: values.entity,
+              company_document: entityDocument,
+            }),
+            ...(typeof values.property_category == "number" && {
+              company_id: values.property_category,
+            }),
+            price: 20,
+            image: housePhoto,
+            description: "description",
+            address: values.address.replace(", USA", ""),
+            document: categoryDocument,
+            docCategory: values.category,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          });
+          setSuccessData(
+            "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
+          );
+          setisSubmitting(false);
+          setIsCreditCardModalOpen(true);
+          setisSubmitting(false);
+          return;
+        }
+        const res = await publicAxios.put(
+          "property_nft/" + `${editNftData.id}`,
+          {
+            name: values.name,
+            title:
+              editNftData && values.apartmentNo
+                ? `${editNftData.title.split("@").at(0)}@${values.apartmentNo}`
+                : editNftData && values.apartmentNo.length == 0
+                ? editNftData.title.split("@").at(0)
+                : editNftData
+                ? editNftData.title
+                : values.apartmentNo
+                ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
+                : latLngPlusCode.plusCode,
+            ...(values.property_category == true && {
+              companyName: values.entity,
+              company_document: entityDocument,
+            }),
+            ...(typeof values.property_category == "number" && {
+              company_id: values.property_category,
+            }),
+            price: 20,
+            image: housePhoto || editNftData?.image,
+            description: "description",
+            address: values.address.replace(", USA", ""),
+            document: categoryDocument || editNftData?.document,
+            docCategory: values.category,
+            agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+
+        if (res?.data?.data?.client_secret) {
+          const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+          "true"
+            ? liveStripe
+            : stripe
+          ).verifyIdentity(res?.data?.data?.client_secret);
+          if (error) {
+            setOpenVerificationFailure(true);
+            console.log("[error]", error);
+          } else {
+            setOpenVerificationSuccess(true);
+          }
+          return;
+        }
+
+        setisSubmitting(false);
+        return setOpenVerificationSuccess(true);
+      } catch (error) {
+        setisSubmitting(false);
+        console.log(error);
+        if (typeof error?.data?.message == "string") {
+          return toast.error(error?.data?.message);
+        } else {
+          if (Array.isArray(error?.data?.message)) {
+            return toast.error(error?.data?.message?.error?.[0]);
+          } else {
+            if (typeof error?.data?.message === "string") {
+              return toast.error(error?.data?.message);
+            } else {
+              return toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
+        }
+      }
+    }
+
     if (housePhoto.length < 1) {
       toast.error("Please upload the photo of house");
       return;
@@ -342,15 +457,20 @@ const MintNFTS = () => {
             <Box>
               <Formik
                 initialValues={{
-                  name: "",
-                  property_category: false,
-                  entity: "",
+                  name: userData?.stripe_identity_status
+                    ? `${userData?.verified_first_name} ${userData?.verified_last_name}`
+                    : editNftData?.name,
+                  property_category: editNftData?.companyName ? true : false,
+                  entity: editNftData?.companyName,
                   agent: "",
-                  price: "",
-                  apartmentNo: "",
-                  address: "",
-                  category: "",
+                  price: editNftData?.price,
+                  apartmentNo: editNftData?.title?.includes("@")
+                    ? editNftData?.title?.split("@").at(-1)
+                    : "",
+                  address: editNftData?.address,
+                  category: editNftData?.docCategory,
                 }}
+                enableReinitialize={true}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                   handleSubmit(values, resetForm);
                 }}
@@ -399,6 +519,7 @@ const MintNFTS = () => {
                               multiline,
                               maxRows,
                               component,
+                              disabled,
                             },
                             i
                           ) => (
@@ -416,6 +537,7 @@ const MintNFTS = () => {
                                   options={options}
                                   rows={maxRows}
                                   multiline={multiline}
+                                  disabled={disabled}
                                 />
                               )}
                             </Box>
@@ -466,6 +588,8 @@ const MintNFTS = () => {
                               uploadingToS3={uploadingHousePhoto}
                               setUploadingToS3={setUploadingHousePhoto}
                               s3Url={housePhoto}
+                              editFilePayload={editNftData?.image}
+                              property={true}
                               setS3Url={setHousePhoto}
                               borderRadius="24px"
                               width="100%"
@@ -473,11 +597,14 @@ const MintNFTS = () => {
                           </Box>
                           <CustomInputField
                             name="category"
+                            // value={editNftData?.docCategory}
                             label="Select Document Categories:"
                             select
                             options={documentOptions}
                           />
-                          {values.category.length > 1 && (
+                          {console.log("test", values, editNftData)}
+                          {(values?.category?.length > 1 ||
+                            editNftData?.docCategory) && (
                             <Box>
                               <InputLabel shrink>
                                 {values.category == "deed"
@@ -502,6 +629,8 @@ const MintNFTS = () => {
                                 setUploadingToS3={setUploadingDocument}
                                 s3Url={categoryDocument}
                                 setS3Url={setCategoryDocument}
+                                editFilePayload={editNftData?.document_preview}
+                                property={true}
                                 borderRadius="24px"
                                 width="100%"
                                 privateBucket={true}
@@ -515,14 +644,15 @@ const MintNFTS = () => {
                               size="large"
                               type="submit"
                               loading={isSubmitting}
-                              disabled={
-                                !(
-                                  housePhoto.length > 1 &&
-                                  categoryDocument.length > 1 &&
-                                  !uploadingDocument &&
-                                  !uploadingHousePhoto
-                                )
-                              }
+                              // disabled={
+                              //   !!editNftData &&
+                              //   !(
+                              //     housePhoto.length > 1 &&
+                              //     categoryDocument.length > 1 &&
+                              //     !uploadingDocument &&
+                              //     !uploadingHousePhoto
+                              //   )
+                              // }
                               sx={{
                                 fontSize: "20px",
                                 fontWeight: 600,

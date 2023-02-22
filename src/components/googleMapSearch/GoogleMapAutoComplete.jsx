@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 var OpenLocationCode = require("open-location-code").OpenLocationCode;
 import Geocode from "react-geocode";
 
+
+
 export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
   // paddingRight: "20px",
   margin: "2px",
@@ -173,6 +175,7 @@ const [reset, setReset] = useState(false)
           onClose={() => {
             setOpen(false);
           }}
+          value={props.initialValue}
           openOnFocus={true}
           name="address"
           onChange={(e, value) => {

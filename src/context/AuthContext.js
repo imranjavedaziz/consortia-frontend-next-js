@@ -34,6 +34,7 @@ export const AuthContext = ({ children }) => {
   const [stripeVerificationCode, setStripeVerificationCode] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [successData, setSuccessData] = useState("");
+  const [refetchFromLocalStorage, setRefetchFromLocalStorage] = useState(false);
   const [creditCardData, setCreditCardData] = useState({
     number: "",
     name: "",
@@ -43,6 +44,7 @@ export const AuthContext = ({ children }) => {
     focused: "",
     formData: null,
   });
+  const [editNftData, setEditNftData] = useState(null);
 
   const handleCreditCardModalClose = () => {
     setIsCreditCardProcessing(false);
@@ -128,6 +130,10 @@ export const AuthContext = ({ children }) => {
         setStripeVerificationCode,
         creditCardData,
         setCreditCardData,
+        editNftData,
+        setEditNftData,
+        refetchFromLocalStorage,
+        setRefetchFromLocalStorage,
       }}
     >
       {children}
