@@ -37,7 +37,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
             width: "90px",
             borderRadius: "4px",
             zIndex: 5,
-            bottom: 160,
+            top: 190,
             left: 15,
             backgroundColor: "#D9512C",
           }}
@@ -98,7 +98,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
           </Typography>
         </Box>
       </CardContent>
-      <CardActions
+      {/* <CardActions
         sx={{
           display: "flex",
           alignItems: "center",
@@ -117,7 +117,7 @@ const NftCard = ({ title, address, image, id, type, isPending }) => {
         >
           Buy
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };
