@@ -14,7 +14,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { Box, height, styled, width } from "@mui/system";
 import Image from "next/image";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { BiotechRounded, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import CustomInputField from "../common/CustomInputField";
@@ -77,7 +77,18 @@ function CompletePractitionerProfile({
     setOpen(false);
   };
 
+  console.log({ date }, !date);
   const completePractitionerDetails = async () => {
+    if (!date) {
+      toast.error("License Since Date is required");
+      return;
+    }
+
+    if (bio.length === 0) {
+      toast.error("Bio is required");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await publicAxios.patch(
