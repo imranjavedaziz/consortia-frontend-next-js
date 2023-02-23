@@ -9,9 +9,8 @@ function BlockchainInfo() {
   useEffect(() => {
     const token = localStorage.getItem("access");
     const userData = JSON.parse(localStorage.getItem("profile_info"));
-    setProfileInfo({ token, userData: userData.user });
+    setProfileInfo({ token, userData: userData?.user });
   }, []);
-  console.log(profileInfo);
   return (
     <>
       <Box
