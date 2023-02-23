@@ -28,7 +28,6 @@ const CustomFileUpload = ({
   editFilePayload,
   property,
 }) => {
-  console.log({ editFilePayload });
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
@@ -64,7 +63,6 @@ const CustomFileUpload = ({
       setFile(profileInfo?.user?.headshot);
     }
     if (property && editFilePayload) {
-      console.log({ editFilePayload });
       if (editFilePayload?.includes("pdf")) setFileType("application/pdf");
       setFile(editFilePayload);
     }

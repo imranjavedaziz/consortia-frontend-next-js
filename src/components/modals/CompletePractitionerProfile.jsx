@@ -77,9 +77,8 @@ function CompletePractitionerProfile({
     setOpen(false);
   };
 
-  console.log({ date }, !date);
   const completePractitionerDetails = async () => {
-    if (!date) {
+    if (!date && showLicenseSince) {
       toast.error("License Since Date is required");
       return;
     }
