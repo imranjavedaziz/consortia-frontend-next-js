@@ -8,6 +8,10 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
+  MenuList,
+  Paper,
   SwipeableDrawer,
   Typography,
   useMediaQuery,
@@ -85,7 +89,7 @@ const Header = () => {
     } else {
       if (token) {
         setIsLoggedIn(true);
-      }else{
+      } else {
         setIsLoggedIn(false);
       }
     }
@@ -99,23 +103,47 @@ const Header = () => {
       path: "/",
     },
     {
-      name: "Community",
-      path: "/community",
+      name: "Training + Community",
+      path: "https://consortia.mn.co/sign_in?from=https%3A%2F%2Fconsortia.mn.co%2F",
+      target: "_blank",
     },
-    {
-      name: "Training",
-      path: "/training",
-    },
-    {
-      name: "About us",
-      path: "/about-us",
-    },
+    // {
+    //   name: "Training",
+    //   path: "/training",
+    // },
+
     {
       name: "Contact us",
-      path: "/contact-us",
+      path: "https://consortia.typeform.com/inquiry",
+      target: "_blank",
     },
   ];
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const moreMenuItems = [
+    {
+      name: "About Certified Asset",
+      path: "/about-certified-asset",
+    },
+    {
+      name: "Order Certified Asset",
+      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+      target: "_blank",
+    },
+    {
+      name: "Work With Consortia",
+      path: "https://consortia.typeform.com/inquiry",
+      target: "_blank",
+    },
+  ];
+  const forHamburgerItems = navigationItems.concat(moreMenuItems);
   const list = (anchor) => (
     <Box
       sx={{
@@ -139,7 +167,7 @@ const Header = () => {
         </ImageLogo>
       </Box>
       <List>
-        {navigationItems.map((text, index) => (
+        {forHamburgerItems.map((text, index) => (
           <StyledListItem
             key={text.name}
             disablePadding
@@ -168,7 +196,7 @@ const Header = () => {
           alignItems={"center"}
           sx={{ padding: "50px 0px 80px 0px" }}
         >
-          <Grid item xs={2}>
+          <Grid item xs={2} sm={1}>
             <ImageLogo>
               <Image
                 src="/assets/images/consortiaLogo.svg"
@@ -178,7 +206,7 @@ const Header = () => {
               />
             </ImageLogo>
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={7} sm={8}>
             <NavigationList
               sx={{
                 display: "flex",
@@ -191,6 +219,7 @@ const Header = () => {
                   <Link
                     key={i}
                     href={item.path}
+                    target={item.target}
                     passHref={true}
                     style={{ textDecoration: "none" }}
                   >
@@ -230,12 +259,21 @@ const Header = () => {
                   </Link>
                 );
               })}
+              <Typography
+                varaint="h6"
+                fontWeight={500}
+                sx={{ opacity: 0.5, cursor: "pointer" }}
+                onClick={handleClick}
+              >
+                More
+              </Typography>
             </NavigationList>
           </Grid>
 
           <Grid
             item
             xs={3}
+            sm={3}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -418,6 +456,34 @@ const Header = () => {
         {list()}
       </SwipeableDrawer>
       {/* <GradientBorderButton btnText='login' /> */}
+
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        {/* <Paper sx={{ width: 320, maxWidth: "100%" }}> */}
+        <MenuList>
+          {moreMenuItems.map((item, i) => (
+            <Link
+              key={i}
+              href={item.path}
+              target={item.target}
+              passHref={true}
+              style={{ textDecoration: "none" }}
+            >
+              <MenuItem>
+                <ListItemText>
+                  <Typography
+                    varaint="h6"
+                    fontWeight={500}
+                    sx={{ opacity: 0.5 }}
+                  >
+                    {item.name}
+                  </Typography>
+                </ListItemText>
+              </MenuItem>
+            </Link>
+          ))}
+        </MenuList>
+        {/* </Paper> */}
+      </Menu>
     </>
   );
 };

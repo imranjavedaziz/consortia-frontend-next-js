@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import PolygonButton from "../src/components/common/PolygonButton";
-import BlockchainInfo from "../src/components/homePageComponents/blockchainInfo/BlockchainInfo";
+import BlockchainInfo from "../src/components/pagesComponent/homePageComponents/blockchainInfo/BlockchainInfo";
 import NftLandingPageSection from "../src/components/NftLandingPageSection";
 import { useTitle } from "../src/utils/Title";
 import styles from "../styles/Home.module.css";
@@ -91,7 +91,10 @@ export default function Home() {
           </Box>
         )}
       </Box>
-      <NftLandingPageSection />
+
+      {/* This component is commented on client behalf */}
+      {/* <NftLandingPageSection /> */}
+      {/* This component is commented on client behalf */}
       <BlockchainInfo />
     </>
   );

@@ -210,11 +210,11 @@ export const darkTheme = createTheme({
       },
     },
     subtitle2: {
-      lineHeight: "17px",
+      lineHeight: "22px",
       color: "#fff",
       [theme.breakpoints.up("lg")]: {
-        fontSize: "14px",
-        fontWeight: 600,
+        fontSize: "16px",
+        fontWeight: 400,
       },
       [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "8px",

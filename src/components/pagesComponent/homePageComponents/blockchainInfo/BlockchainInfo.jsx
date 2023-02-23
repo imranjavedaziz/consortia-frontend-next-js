@@ -9,9 +9,17 @@ function BlockchainInfo() {
   useEffect(() => {
     const token = localStorage.getItem("access");
     const userData = JSON.parse(localStorage.getItem("profile_info"));
-    setProfileInfo({ token, userData: userData.user });
+    setProfileInfo({ token, userData: userData?.user });
   }, []);
   console.log(profileInfo);
+  const sectionStyle = {
+    // minHeight: "100vh",
+    backgroundImage: `url(/assets/images/houseBackground.jpg)`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    height: "250px",
+    backgroundPosition: "center",
+  };
   return (
     <>
       <Box
@@ -84,6 +92,86 @@ function BlockchainInfo() {
           </Grid>
         </Grid>
       </Box>
+      <Box>
+        <Box style={sectionStyle}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography variant="h2">WANT TO SELL FASTER?</Typography>
+            <Link
+              href="https://consortia.typeform.com/to/eu6OzeyT?typeform-source=localhost#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx"
+              target="_blank"
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                  padding: "15px 40px",
+                }}
+              >
+                CERTIFY YOUR ASSET TODAY
+              </Button>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          paddingX: { xs: "24px", sm: "40px", lg: "120px" },
+          paddingY: "50px",
+          width: "100%",
+          background: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          //   marginTop: { xs: "33px", sm: "120px" },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body1">
+            CERTIFY YOUR PROPERTY BEFORE LISTING OR AS SOON AS YOU GO INTO
+            ESCROW
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            color="rgb(145, 145, 145)"
+            sx={{ padding: "20px 0px" }}
+          >
+            GET MORE LISTINGS AND GET BUYERS INTO HOMES FASTER
+          </Typography>
+          <Link
+            href="/about-certified-asset"
+            style={{ textDecoration: "none" }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                background:
+                  "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
+                padding: "15px 40px",
+              }}
+            >
+              LEARN MORE ABOUT CERTIFIED ASSET
+            </Button>
+          </Link>
+        </Box>
+      </Box>
+
       <Box>
         <Box
           sx={{ display: "flex", justifyContent: "center", margin: "50px 0px" }}
