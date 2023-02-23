@@ -149,7 +149,7 @@ const PractitionerDetailPage = () => {
   const rowData = [
     {
       text1: nftDetail.tx_id ? `${nftDetail.tx_id?.slice(0, 12)}...` : "_ _",
-      text2: nftDetail?.is_minted ? "Mint" : "_ _",
+      text2: nftDetail?.is_minted ? "Mint" : "Pending",
       text3: nftDetail?.docCategory,
       text4: nftDetail?.updated_at,
     },
