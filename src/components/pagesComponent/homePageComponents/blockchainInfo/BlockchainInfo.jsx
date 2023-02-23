@@ -11,7 +11,7 @@ function BlockchainInfo() {
     const userData = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo({ token, userData: userData?.user });
   }, []);
-  console.log(profileInfo);
+  // console.log(profileInfo);
   const sectionStyle = {
     // minHeight: "100vh",
     backgroundImage: `url(/assets/images/houseBackground.jpg)`,
