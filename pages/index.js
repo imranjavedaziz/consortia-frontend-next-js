@@ -42,7 +42,7 @@ export default function Home() {
               Consortia is the only NFT and training solution led by an <br />
               SEC registered investment banker, real estate broker and
               <br /> mortgage loan originator. We focus on SEC rules, RESPA,
-              <br /> and Good Funds laws to protect the industry.Consortia is
+              <br /> and Good Funds laws to protect the industry. Consortia is
               <br />
               NOT a crypto. We do NOT sell homes as NFTs.
             </Typography>
