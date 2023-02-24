@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
 import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
+import { LoadingButton } from "@mui/lab";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -64,6 +65,8 @@ const PractitionerDetailPage = () => {
   const [propertyNftsData, setPropertyNftsData] = useState([]);
 
   const [loading, setLoading] = useState([]);
+  const [blockchainData, setBlockchainData] = useState();
+  const [fetching, setFetching] = useState(false);
 
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
@@ -139,7 +142,37 @@ const PractitionerDetailPage = () => {
       }
     }
   };
-
+  const getBlockchainData = async () => {
+    if (query?.id) {
+      try {
+        setFetching(true);
+        const res = await publicAxios.get(
+          PRACTITIONER_NFT_BLOCKCHAIN_DATA + `?id=${query?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        setFetching(false);
+        setBlockchainData(res?.data?.data);
+        setBlockchainDataModal(true);
+      } catch (error) {
+        setFetching(false);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            if (error?.data?.message) {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
+        }
+      }
+    }
+  };
   const CopyPrivateTextRef = useRef(null);
   const CopyPrivateTextHandler = () => {
     const text = CopyPrivateTextRef.current.innerText;
@@ -172,6 +205,7 @@ const PractitionerDetailPage = () => {
       <DialogForBlockchainData
         open={blockchainDataModal}
         setOpen={setBlockchainDataModal}
+        resData={blockchainData}
         title="Blockchain Data"
         endpoint={PRACTITIONER_NFT_BLOCKCHAIN_DATA}
         // text="Please enter your email address and we will email you a link to reset your password."
@@ -204,7 +238,7 @@ const PractitionerDetailPage = () => {
                 }}
               >
                 <Box>
-                  <Box sx={{padding: { xs: "14px 0px 0px 0px", md: "0px" },}}>
+                  <Box sx={{ padding: { xs: "14px 0px 0px 0px", md: "0px" } }}>
                     {/* <Image src={nftDetail?.image} height={149} width={149} alt='image' /> */}
                     {loading ? (
                       <Skeleton
@@ -295,26 +329,31 @@ const PractitionerDetailPage = () => {
                   <Box
                     sx={{
                       maxWidth: "220px",
-                      padding:"14px 0px 0px 0px",
+                      padding: "14px 0px 0px 0px",
                     }}
                   >
-                    <Button
+                    <LoadingButton
+                      loading={fetching}
                       variant="gradient"
                       size="large"
-                      onClick={() => setBlockchainDataModal(true)}
+                      onClick={() => getBlockchainData()}
                     >
                       View Blockchain Data
-                    </Button>
+                    </LoadingButton>
                   </Box>
                 </Box>
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={12} sx={{ padding: {xs:'16px 0px',md:"40px 0px"} }}>
+              <Grid
+                item
+                xs={12}
+                sx={{ padding: { xs: "16px 0px", md: "40px 0px" } }}
+              >
                 <Box>
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
-                <Box sx={{ paddingTop: {xs:'16px',md:"40px"} }}>
+                <Box sx={{ paddingTop: { xs: "16px", md: "40px" } }}>
                   <TransactiionHistoryTable
                     tableHeader={headerData}
                     tableRowData={rowData}
