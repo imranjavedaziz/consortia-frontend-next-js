@@ -32,7 +32,7 @@ function DialogForBlockchainData({
   text,
   title,
   endpoint,
-  resData,
+  // resData,
   input,
   btnText,
   placeholder,
@@ -44,48 +44,49 @@ function DialogForBlockchainData({
     setOpen(false);
     // setEmail("");
   };
-  // const [resData, setResData] = useState({});
+  const [resData, setResData] = useState({});
   const [fetching, setFetching] = useState(false);
   const [otpModalOpen, setOtpModalOpen] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
   const { push, query } = useRouter();
 
-  // useEffect(() => {
-  //   resetPassword();
-  // }, [query?.id]);
+  useEffect(() => {
+    getBlockchainData();
+  }, [query?.id]);
 
-  // const resetPassword = async (values) => {
-  //   // if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-  //   if (query?.id) {
-  //     try {
-  //       setFetching(true);
-  //       const res = await publicAxios.get(endpoint + `?id=${query?.id}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("access")}`,
-  //         },
-  //       });
-  //       setFetching(false);
-  //       setResData(res?.data?.data);
-  //       //   toast.success(res?.data?.message);
-  //       //   setOtpModalOpen(true);
-  //       // handleClose();
-  //     } catch (error) {
-  //       setFetching(false);
-  //       if (Array.isArray(error?.data?.message)) {
-  //         toast.error(error?.data?.message?.error?.[0]);
-  //       } else {
-  //         if (typeof error?.data?.message === "string") {
-  //           toast.error(error?.data?.message);
-  //         } else {
-  //           if (error?.data?.message) {
-  //             toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // };
+  const getBlockchainData = async (values) => {
+    // if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+    if (query?.id) {
+      try {
+        setFetching(true);
+        const res = await publicAxios.get(endpoint + `?id=${query?.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        });
+        console.log("res.data.data", res.data.data);
+        setFetching(false);
+        setResData(res?.data?.data);
+        //   toast.success(res?.data?.message);
+        //   setOtpModalOpen(true);
+        // handleClose();
+      } catch (error) {
+        setFetching(false);
+        if (Array.isArray(error?.data?.message)) {
+          toast.error(error?.data?.message?.error?.[0]);
+        } else {
+          if (typeof error?.data?.message === "string") {
+            toast.error(error?.data?.message);
+          } else {
+            if (error?.data?.message) {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
+          }
+        }
+      }
+    }
+  };
   const blockchainData = {
     owner: resData?.owner,
     tokenId: resData?.tokenId,

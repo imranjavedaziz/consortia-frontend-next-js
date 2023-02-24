@@ -65,10 +65,10 @@ function Landing() {
       <Box>
         <CardMedia
           component="iframe"
-          src="https://www.youtube.com/embed/A16G29d0dQ0"
+          src="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
           controls
           title="title"
-          image="https://www.youtube.com/embed/A16G29d0dQ0"
+          image="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
           autoPlay
           allow="autoPlay"
           sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}

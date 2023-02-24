@@ -35,7 +35,7 @@ export const practitionarPages = [
   },
   {
     id: 3,
-    title: "Practitioner NFTs",
+    title: "Practitioner NFT",
     nested: true,
     icon: nft,
     children: [
