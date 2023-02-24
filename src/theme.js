@@ -96,7 +96,7 @@ export const darkTheme = createTheme({
         fontSize: "48px",
         fontWeight: 600,
       },
-      [theme.breakpoints.between("sm", "lg")]: {
+      [theme.breakpoints.between("sm", "xl")]: {
         fontSize: "24px",
         fontWeight: 600,
         lineHeight: "160%",
@@ -164,6 +164,9 @@ export const darkTheme = createTheme({
       },
       [theme.breakpoints.between("sm", "lg")]: {
         fontSize: "12px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "10px",
       },
     },
 

@@ -21,11 +21,15 @@ function FloorPlan() {
             justifyContent: "center",
           }}
         >
-          <Image
+          <img
             src="/assets/images/floorPlan.jpg"
             alt="pic"
-            width={1232}
-            height={616}
+            style={{
+              maxWidth: "1232px",
+              maxHeight: "616px",
+              height: "80%",
+              width: "80%",
+            }}
           />
         </Box>
         <Box sx={{ padding: "30px 0px" }}>
@@ -35,7 +39,7 @@ function FloorPlan() {
         </Box>
         <Grid container>
           <Grid item xs={2.5}></Grid>
-          <Grid item xs={7}>
+          <Grid item xs={12} md={7}>
             <Typography variant="body1" sx={{ padding: "20px 0px" }}>
               STEP 2: HOW DO I PRICE THE LISTING PERFECTLY? (Pre-appraisal
               package)

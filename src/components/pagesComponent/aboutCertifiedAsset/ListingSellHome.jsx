@@ -49,15 +49,29 @@ function ListingSellHome() {
           </Typography>
         </Box>
         <Grid container>
-          <Grid item xs={4}>
-            <Image
+          <Grid
+            item
+            lg={5}
+            md={6}
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img
               src="/assets/images/sellHome.jpg"
               alt="home"
-              height={191}
-              width={379}
+              style={{
+                maxWidth: "379px",
+                maxHeight: "191px",
+                height: "80%",
+                width: "80%",
+              }}
             />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item lg={7} md={6} xs={12}>
             {staticData.map((item, i) => (
               <Box key={i}>
                 <Box pb="10px" pt="10px">

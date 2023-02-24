@@ -6,12 +6,8 @@ import { Box } from "@mui/system";
 import Link from "next/link";
 
 function Footer() {
-  const betweenSmAndLg = useMediaQuery((theme) =>
-    theme.breakpoints.between("sm", "lg")
-  );
-  const belowSm = useMediaQuery((theme) =>
-    theme.breakpoints.between("xs", "lg")
-  );
+  const upSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  const belowSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const socilaIcons = [
     {
@@ -51,16 +47,24 @@ function Footer() {
         sx={{
           padding: { xs: "24px 0px 12px 0px", sm: "40px 0px 20px 0px" },
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: { xs: "space-between", md: "space-between" },
+          // flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "space-between" },
+          }}
+        >
           <Image
-            src="/assets/images/colorConsortiaLogo.svg"
+            src="/assets/images/consortiaLogo.svg"
             alt="Logo"
-            height={betweenSmAndLg ? 22 : belowSm ? 20 : 34}
-            width={betweenSmAndLg ? 126 : belowSm ? 114 : 208}
+            height={upSm ? 74 : belowSm ? 20 : 34}
+            width={upSm ? 126 : belowSm ? 114 : 208}
           />
+
           {/* <Box
             sx={{
               paddingTop: { xs: "12px", sm: "20px" },
@@ -91,8 +95,8 @@ function Footer() {
                 >
                   <Image
                     src={item?.icon}
-                    height={betweenSmAndLg ? 24 : belowSm ? 20 : 36}
-                    width={betweenSmAndLg ? 24 : belowSm ? 20 : 36}
+                    height={upSm ? 24 : belowSm ? 20 : 36}
+                    width={upSm ? 24 : belowSm ? 20 : 36}
                     alt="SocialIcons"
                   />
                 </Box>
@@ -163,16 +167,30 @@ function Footer() {
         )} */}
 
         {true && (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: { xs: "column", sm: "row" },
+            }}
+          >
             {footerContent.map((item, i) => {
               return (
                 <Link
                   href={item.path}
                   target={item.target}
-                  style={{ textDecoration: "none" }}
+                  style={{
+                    textDecoration: "none",
+                  }}
                   key={i}
                 >
-                  <Box key={item.name + i} sx={{ paddingRight: "12px" }}>
+                  <Box
+                    key={item.name + i}
+                    sx={{
+                      paddingRight: "12px",
+                      paddingTop: { xs: "15px", sm: "0px" },
+                    }}
+                  >
                     <Typography variant="subtitle2">{item.name}</Typography>
                   </Box>
                 </Link>

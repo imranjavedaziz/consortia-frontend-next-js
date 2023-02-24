@@ -3,6 +3,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import ConsortiaWhitePapers from "./ConsortiaWhitePapers";
 
 function BlockchainInfo() {
   const [profileInfo, setProfileInfo] = useState({});
@@ -11,14 +12,17 @@ function BlockchainInfo() {
     const userData = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo({ token, userData: userData?.user });
   }, []);
-  console.log(profileInfo);
   const sectionStyle = {
     // minHeight: "100vh",
     backgroundImage: `url(/assets/images/houseBackground.jpg)`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    height: "250px",
+    minHeight: "250px",
     backgroundPosition: "center",
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    alignItems: "center",
   };
   return (
     <>
@@ -29,22 +33,41 @@ function BlockchainInfo() {
           width: "100%",
           background: "rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
-          marginTop: { xs: "33px", sm: "120px" },
+          marginTop: { xs: "33px", sm: "0px", lg: "100px" },
         }}
       >
-        <Box></Box>
         <Grid container>
-          <Grid item xs={6}>
-            <Box>
-              <Image
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: { xs: "flex", md: "unset" },
+                justifyContent: { xs: "center", md: "start" },
+              }}
+            >
+              <img
                 src="/assets/images/teresaSheila.jpg"
-                height={300}
-                width={550}
                 alt="pic"
+                style={{
+                  maxWidth: "550px",
+                  maxHeight: "300px",
+                  height: "100%",
+                  width: "100%",
+                }}
               />
             </Box>
           </Grid>
-          <Grid item xs={6}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              paddingTop: {
+                xs: "20px",
+                md: "0px",
+              },
+              paddingLeft: { xs: "0px", md: "30px", xl: "0px" },
+            }}
+          >
             <Box>
               <Typography variant="body2" sx={{ color: "rgb(169, 169, 169)" }}>
                 Because keeping you out of an orange jumpsuit is important
@@ -98,6 +121,7 @@ function BlockchainInfo() {
             sx={{
               display: "flex",
               justifyContent: "center",
+              flexWrap: "wrap",
               alignItems: "center",
               height: "100%",
             }}
@@ -182,7 +206,8 @@ function BlockchainInfo() {
           <Grid item xs={1.5}></Grid>
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -243,7 +268,8 @@ function BlockchainInfo() {
           <Grid item xs={1}></Grid>
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -252,11 +278,13 @@ function BlockchainInfo() {
             }}
           >
             <Box>
-              <Image
+              <img
                 src="/assets/images/practitioner.jpg"
-                height={300}
-                width={300}
-                style={{ borderRadius: "300px" }}
+                style={{
+                  borderRadius: "300px",
+                  maxHeight: "300px",
+                  maxWidth: "300px",
+                }}
               />
             </Box>
             <Box sx={{ padding: "10px 0px" }}>
@@ -300,216 +328,13 @@ function BlockchainInfo() {
         </Grid>
       </Box>
 
-      <Box
-        sx={{
-          paddingX: { xs: "24px", sm: "40px", lg: "120px" },
-          paddingY: "30px",
-          width: "100%",
-          background: "rgba(255, 255, 255, 0.1)",
-          backdropFilter: "blur(10px)",
-          marginTop: { xs: "33px", sm: "120px" },
-        }}
-      >
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Typography variant="h2">CONSORTIA WHITEPAPERS</Typography>
-        </Box>
-        <Grid container>
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body1" color="#fff">
-                THE CONSORTIA VISION
-              </Typography>
-            </Box>
-            <Box>
-              <Typography>
-                Consortia put the world&apos;s largest asset class, American
-                real estate, on blockchain. Consortia filed for the patent
-                regarding all things real estate, blockchain and NFTs in 2018.
-                Consortia&apos;s purpose is to satisfy Dodd Frank, fair housing,
-                and housing accessibility.
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                padding: "30px 0px 10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Link
-                href="https://docsend.com/view/je7nsx4eyunmyenb"
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    padding: "15px 40px",
-                  }}
-                >
-                  READ THE WHITEPAPER
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body1" color="#fff">
-                REAL ESTATE, NFTS & THE LAW
-              </Typography>
-            </Box>
-            <Box>
-              <Typography>
-                New digital real estate ownership stuctures are being invented
-                every day. What are they and what is legal? This article
-                explains the regulatory considerations you need to know to stay
-                on the right side of transfer laws, good funds laws, the SEC and
-                RESPA.
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                padding: "30px 0px 10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Link
-                href="https://docsend.com/view/mbsghvgbshaiidv7"
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    padding: "15px 40px",
-                  }}
-                >
-                  LEARN WHAT&apos;S LEGAL
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-        <Grid container>
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body1" color="#fff">
-                RE DAO
-              </Typography>
-            </Box>
-            <Box>
-              <Typography>
-                Real estate brokerages, title insurance, escrow settlement
-                providers, warranty companies, capital markets lenders, and
-                underwriting companies are invited to join the Consortia DAO and
-                the future of real estate web 3.0.
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                padding: "30px 0px 10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Link
-                href="https://docsend.com/view/4t7iij3zf89dh3sr"
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    padding: "15px 40px",
-                  }}
-                >
-                  JOIN THE RE DAO
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="body1" color="#fff">
-                CONSORTIA FOR CAPITAL MARKETS
-              </Typography>
-            </Box>
-            <Box>
-              <Typography>
-                Blockchain. It&apos;s the latest buzzword in the tech world, and
-                it&apos;s quickly gaining traction in a variety of industries.
-                So what is blockchain, and how could it revolutionize real
-                estate underwriting and capital markets?
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                padding: "30px 0px 10px 0px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Link
-                href="https://docsend.com/view/y3pigaa28xzym36w"
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    background:
-                      "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
-                    padding: "15px 40px",
-                  }}
-                >
-                  CAPITAL MARKETS
-                </Button>
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+      {/* Consortia Whitepapers component */}
+      <ConsortiaWhitePapers />
+      {/* Consortia Whitepapers component */}
 
       <Grid container sx={{ padding: "40px 0px 0px 0px" }}>
         <Grid item xs={3}></Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography variant="h2">FOR THE LOVE OF THE INDUSTRY</Typography>
           </Box>

@@ -137,11 +137,6 @@ const Header = () => {
       path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
       target: "_blank",
     },
-    {
-      name: "Work With Consortia",
-      path: "https://consortia.typeform.com/inquiry",
-      target: "_blank",
-    },
   ];
   const forHamburgerItems = navigationItems.concat(moreMenuItems);
   const list = (anchor) => (

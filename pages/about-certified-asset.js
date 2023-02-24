@@ -31,11 +31,15 @@ function AboutCertifiedAsset() {
             justifyContent: "center",
           }}
         >
-          <Image
+          <img
             src="/assets/images/sellHomeInfoForm.jpg"
             alt="pic"
-            width={1223}
-            height={616}
+            style={{
+              maxWidth: "1223px",
+              maxHeight: "616px",
+              height: "80%",
+              width: "80%",
+            }}
           />
         </Box>
         <Box
@@ -49,7 +53,7 @@ function AboutCertifiedAsset() {
         </Box>
         <Grid container>
           <Grid item xs={2.7}></Grid>
-          <Grid item xs={7}>
+          <Grid item xs={12} md={7}>
             <Box
               sx={{
                 // display: "flex",

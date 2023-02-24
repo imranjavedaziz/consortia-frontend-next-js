@@ -48,7 +48,8 @@ export default function Home() {
             </Typography>
             <PolygonButton />
           </Box>
-          <Box
+          {/* This section is commented on behalf of client */}
+          {/* <Box
             sx={{
               display: "flex",
               justifyContent: { sm: "start", xs: "center" },
@@ -72,7 +73,8 @@ export default function Home() {
                 Consumer
               </Typography>
             </Box>
-          </Box>
+          </Box> */}
+          {/* This section is commented on behalf of client */}
         </Box>
         {!belowSm && (
           <Box>
