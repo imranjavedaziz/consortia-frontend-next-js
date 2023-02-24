@@ -9,10 +9,23 @@ import {
   Typography,
   TableRow,
 } from "@mui/material";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+dayjs.extend(localizedFormat);
 
-export default function TransactiionHistoryTable({tableHeader,tableRowData=[]}) {
-  const headerData = ["Token ID", "Action","From",  "To","Timestamp", "Document Type"];
-  
+export default function TransactiionHistoryTable({
+  tableHeader,
+  tableRowData = [],
+}) {
+  const headerData = [
+    "Token ID",
+    "Action",
+    "From",
+    "To",
+    "Timestamp",
+    "Document Type",
+  ];
+
   return (
     <Paper
       sx={{ width: "100%", overflow: "hidden", background: "transparent" }}
@@ -32,6 +45,7 @@ export default function TransactiionHistoryTable({tableHeader,tableRowData=[]}) 
               ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {tableRowData?.map((row, i) => {
               return (
@@ -53,29 +67,37 @@ export default function TransactiionHistoryTable({tableHeader,tableRowData=[]}) 
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {row.text4}
+                      {row.text5 ? row.text4 : dayjs(row.text4).format("LLLL")}
                     </Typography>
                   </TableCell>
-                  {row.text5 && <TableCell>
-                    <Typography variant="body2" color="secondary.gray">
-                      {row.text5}
-                    </Typography>
-                  </TableCell>}
-                  {row.text6 && <TableCell>
-                    <Typography variant="body2" color="secondary.gray">
-                      {row.text6}
-                    </Typography>
-                  </TableCell>}
-                 {row.text7 &&  <TableCell>
-                    <Typography variant="body2" color="secondary.gray">
-                      {row.text7}
-                    </Typography>
-                  </TableCell>}
-                 {row.text8 &&   <TableCell>
-                    <Typography variant="body2" color="secondary.gray">
-                      {row.text8}
-                    </Typography>
-                  </TableCell>}
+                  {row.text5 && (
+                    <TableCell>
+                      <Typography variant="body2" color="secondary.gray">
+                        {dayjs(row.text5).format("LLLL")}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {row.text6 && (
+                    <TableCell>
+                      <Typography variant="body2" color="secondary.gray">
+                        {row.text6}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {row.text7 && (
+                    <TableCell>
+                      <Typography variant="body2" color="secondary.gray">
+                        {row.text7}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {row.text8 && (
+                    <TableCell>
+                      <Typography variant="body2" color="secondary.gray">
+                        {row.text8}
+                      </Typography>
+                    </TableCell>
+                  )}
                 </TableRow>
               );
             })}
