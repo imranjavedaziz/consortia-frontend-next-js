@@ -67,13 +67,13 @@ export default function TransactiionHistoryTable({
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="secondary.gray">
-                      {dayjs(row.text4).format("LLLL")}
+                      {row.text5 ? row.text4 : dayjs(row.text4).format("LLLL")}
                     </Typography>
                   </TableCell>
                   {row.text5 && (
                     <TableCell>
                       <Typography variant="body2" color="secondary.gray">
-                        {row.text5}
+                        {dayjs(row.text5).format("LLLL")}
                       </Typography>
                     </TableCell>
                   )}
