@@ -56,7 +56,7 @@ const CustomFileUpload = ({
       : ["jpg", "png"].some((char) => fileName?.endsWith(char));
   // 1MB = 1048576 Bytes
   const isValidFileSize = (fileSize) =>
-    fileSize < (maxUploadSizeMB ? maxUploadSizeMB * 1048576 : 1048576);
+    fileSize < (maxUploadSizeMB ? maxUploadSizeMB * 1048576 : 1048576 * 5);
   useEffect(() => {
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
     if (practitioner && profileInfo?.user?.role === "Practitioner") {
@@ -86,7 +86,7 @@ const CustomFileUpload = ({
               maxUploadSizeMB ? maxUploadSizeMB : 1
             } MB`
           )
-        : toast.error("Image size should be less than 1MB");
+        : toast.error("Image size should be less than 5MB");
       return;
     }
 
