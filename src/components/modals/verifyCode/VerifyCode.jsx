@@ -13,8 +13,7 @@ import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import { VERIFY_OTP_PASSWORD,RESEND_OTP } from "../../../constants/endpoints";
-
+import { VERIFY_OTP_PASSWORD, RESEND_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -45,6 +44,7 @@ function VerifyCodeModal({
   oldPassword,
   newPassword,
   resetForm,
+  dumpUser,
 }) {
   const handleClose = () => {
     resetForm();
@@ -67,9 +67,9 @@ function VerifyCodeModal({
         VERIFY_OTP_PASSWORD,
         {
           // oldPassword,
-          password:newPassword,
+          password: newPassword,
           otp: code,
-          otp_type:'Email'
+          otp_type: "Email",
         },
         {
           headers: {
@@ -79,6 +79,12 @@ function VerifyCodeModal({
       );
       setFetching(false);
       toast.success(res?.data?.message);
+      if (dumpUser) {
+        setOpen(false);
+        localStorage.removeItem("access");
+        localStorage.removeItem("profile_info");
+        push("/");
+      }
       handleClose();
     } catch (error) {
       setFetching(false);
@@ -100,14 +106,13 @@ function VerifyCodeModal({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
-    
   };
   return (
     <>

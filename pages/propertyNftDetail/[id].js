@@ -92,7 +92,6 @@ const PractitionerDetailPage = () => {
             },
           }
         );
-        // console.log('res', res)
         setNftDetail(res?.data?.data);
 
         // console.log("res", res?.data?.nfts);
@@ -144,12 +143,16 @@ const PractitionerDetailPage = () => {
       }
     }
   };
-
+  console.log("nftDetail", nftDetail);
   const headerData = ["Token ID", "Action", "Document Type", "Timestamp"];
   const rowData = [
     {
       text1: nftDetail.tx_id ? `${nftDetail.tx_id?.slice(0, 12)}...` : "_ _",
-      text2: nftDetail?.is_minted ? "Mint" : "Pending",
+      text2: nftDetail?.nft_gifted_user
+        ? "Gifted"
+        : nftDetail?.is_minted
+        ? "Mint"
+        : "Pending",
       text3: nftDetail?.docCategory,
       text4: nftDetail?.updated_at,
     },

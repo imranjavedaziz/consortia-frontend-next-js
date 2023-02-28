@@ -17,6 +17,8 @@ import CompletePractitionerProfile from "../components/modals/CompletePractition
 import axios from "axios";
 import { publicAxios } from "../api";
 import VerificationModal from "../components/modals/verificationModal/VerificationModal";
+import DialogResetPassword from "../components/modals/resetPassword/DialogResetPassword";
+import ChangePasswordDumpUsers from "../components/modals/changePasswordDumpUsers/ChangePasswordDumpUsers";
 
 function NftsLayout({ children }) {
   useTitle("Dashboard");
@@ -40,6 +42,7 @@ function NftsLayout({ children }) {
     liveStripe,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
+  const [dumpUserOpen, setDumpUserOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -81,13 +84,17 @@ function NftsLayout({ children }) {
     //     .catch((err) => console.log(err));
     //   return;
     // }
-
-    if (
-      !!profile_info &&
-      profile_info?.user?.role == "Practitioner" &&
-      !profile_info?.user?.bio
-    ) {
-      setCompleteProfileOpen(true);
+    //
+    if (profile_info?.user?.reset_password) {
+      setDumpUserOpen(true);
+    } else {
+      if (
+        !!profile_info &&
+        profile_info?.user?.role == "Practitioner" &&
+        !profile_info?.user?.bio
+      ) {
+        setCompleteProfileOpen(true);
+      }
     }
 
     if (stripeVerificationCode.length > 1) {
@@ -147,6 +154,15 @@ function NftsLayout({ children }) {
             : "Thank you for your order. Your property nft will be minted as soon as the verification process is complete, for your security the identification process may take up to three days"
         }
       />
+      <ChangePasswordDumpUsers
+        open={dumpUserOpen}
+        setOpen={setDumpUserOpen}
+        // title="Reset Password"
+        // text="Please enter your email address and phone number and we will send you otp to reset your password."
+        // btnText="Send Request"
+        // placeholder="Mail@example.com"
+        // removeCorssForDumpUser={true}
+      />
       <CompletePractitionerProfile
         open={completeProfileOpen}
         setOpen={setCompleteProfileOpen}
@@ -155,6 +171,7 @@ function NftsLayout({ children }) {
         btnText1="consumer"
         btnText2="practitioner"
       />
+
       <Dialog
         open={isStripeModalOpen}
         // TransitionComponent={Transition}

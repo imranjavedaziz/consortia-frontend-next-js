@@ -28,15 +28,19 @@ const CustomFileUpload = ({
   editFilePayload,
   property,
 }) => {
+  const belowSm = useMediaQuery((theme) =>
+    theme.breakpoints.between("xs", "sm")
+  );
   const [file, setFile] = useState("");
   const [userData, setuserData] = useState({});
   const [fileType, setFileType] = useState("");
   const [iframeSize, setIframeSize] = useState(["auto", "100%"]);
   const [iframeStyle, setIframeStyle] = useState({
     zIndex: 50,
-    width: "auto",
+    width: belowSm ? "50%" : "auto",
     height: "100%",
   });
+
   // const [uploadingToS3, setUploadingToS3] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
   const ref = useRef();
@@ -191,7 +195,7 @@ const CustomFileUpload = ({
               onMouseLeave={() =>
                 setIframeStyle({
                   zIndex: 50,
-                  width: "auto",
+                  width: belowSm ? "50%" : "auto",
                   height: "100%",
                   // overflow: "hidden",
                 })
