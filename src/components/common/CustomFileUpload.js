@@ -74,7 +74,6 @@ const CustomFileUpload = ({
   }, []);
 
   const handleChange = (e) => {
-    console.log("e.target.files[0]?.type", e.target.files[0]?.type);
     if (!isValidFileType(e.target.files[0]?.type)) {
       e.target.value = null;
       allowPdf
