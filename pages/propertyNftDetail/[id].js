@@ -161,8 +161,10 @@ const PractitionerDetailPage = () => {
     theme.breakpoints.between("xs", "sm")
   );
   const editNftDataHandler = () => {
-    setEditNftData(nftDetail);
-    push("/property/mint-nft");
+    if (nftDetail?.id) {
+      setEditNftData(nftDetail);
+      push("/property/mint-nft");
+    }
   };
 
   const donwloadAsPdf = async (signedUrl) => {

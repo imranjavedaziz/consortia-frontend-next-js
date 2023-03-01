@@ -117,8 +117,10 @@ const PractitionerDetailPage = () => {
     }
   };
   const editPracNftDataHandler = () => {
-    setEditPractitionerNftData(nftDetail);
-    push("/practitionerNfts/mint-nft");
+    if (nftDetail?.id) {
+      setEditPractitionerNftData(nftDetail);
+      push("/practitionerNfts/mint-nft");
+    }
   };
   const getPropertyNftData = async () => {
     if (query?.id) {
