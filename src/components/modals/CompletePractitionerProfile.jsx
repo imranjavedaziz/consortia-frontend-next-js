@@ -291,7 +291,7 @@ function CompletePractitionerProfile({
                   variant="subtitle1"
                   sx={{ color: "#FAFBFC", opacity: 0.5, marginBottom: 1 }}
                 >
-                  Files types supported: JPG, PNG, GIF, SVG, Max Size: 1MB
+                  Files types supported: JPG, PNG, GIF, SVG, Max Size: 5MB
                 </Typography>
                 <CustomFileUpload
                   uploadingToS3={uploadingHeadshot}

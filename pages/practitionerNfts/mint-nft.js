@@ -69,6 +69,12 @@ const MintNFTS = () => {
     setIsCreditCardModalOpen,
     handleCreditCardModalClose,
     setSuccessData,
+    setEditPractitionerNftData,
+    editPractitionerNftData,
+    setOpenVerificationSuccess,
+    setOpenVerificationFailure,
+    liveStripe,
+    stripe,
   } = useAuthContext();
 
   useTitle("Mint NFTs");
@@ -89,11 +95,12 @@ const MintNFTS = () => {
       setLicenseTypeValue(localData?.user?.practitionerType);
     }
     getUserData();
+    return () => setEditPractitionerNftData(null);
   }, []);
   const handleChange = (event) => {
     setLicenseTypeValue(event.target.value);
   };
-
+  console.log({ editPractitionerNftData });
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -115,9 +122,11 @@ const MintNFTS = () => {
         component: (
           <GoogleMapAutoComplete
             name="address"
+            initialValue={editPractitionerNftData?.address}
             setFieldValue={setFieldValue}
             setLatLngPlusCode={setLatLngPlusCode}
             latLngPlusCode={latLngPlusCode}
+            disabled={editPractitionerNftData?.is_minted == false}
           />
         ),
       },
@@ -142,54 +151,112 @@ const MintNFTS = () => {
     state,
     licenseNumber,
   }) => {
-    try {
-      if (false) {
-        toast.error("Please upload profile");
-      } else {
-        if (userData?.stripe_user_block) {
-          toast.error("User has been blocked");
-        } else {
-          const res = await publicAxios.post(
-            "create_practitioner_nft",
-            {
-              name,
-              email,
-              address,
-              image: headShot,
-              bio,
-              agentId: JSON.parse(localStorage.getItem("profile_info"))?.user
-                ?.id,
-              licenseType: licenseTypeValue,
-              licenseNumber,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
-            }
-          );
+    if (userData?.stripe_user_block) {
+      return toast.error("User has been blocked");
+    }
+    if (editPractitionerNftData) {
+      try {
+        if (
+          editPractitionerNftData?.practitioner_nft_status == "Pending Payment"
+        ) {
           setData({
             name,
             email,
             address,
             image: headShot,
             bio,
-            id: res?.data?.data?.id,
+            id: editPractitionerNftData?.id,
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
             licenseType: licenseTypeValue,
             licenseNumber,
           });
-          // toast.success(res?.data?.message);
-
           setSuccessData(
             "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
           );
-
           setIsCreditCardModalOpen(true);
+          return;
         }
-
-        // setVerifyModalOpen(false);
+        const res = await publicAxios.put(
+          `practitioner_nft/${editPractitionerNftData?.id}`,
+          { name },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+          }
+        );
+        console.log({ res });
+        if (res?.data?.data?.client_secret) {
+          const { error } = await (process.env.NEXT_PUBLIC_IS_LIVE_STRIPE ==
+          "true"
+            ? liveStripe
+            : stripe
+          ).verifyIdentity(res?.data?.data?.client_secret);
+          if (error) {
+            setOpenVerificationFailure(true);
+            console.log("[error]", error);
+          } else {
+            setOpenVerificationSuccess(true);
+          }
+          return;
+        }
+        return setOpenVerificationSuccess(true);
+      } catch (error) {
+        console.log("error", error);
+        if (typeof error?.data?.message == "string") {
+          if (error?.data?.message.includes(":")) {
+            return toast.error(error?.data?.message?.split(":")[1]);
+          } else {
+            return toast.error(error?.data?.message);
+          }
+        } else {
+          if (Array.isArray(error?.data?.message)) {
+            return toast.error(error?.data?.message?.error?.[0]);
+          } else {
+            return toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          }
+        }
       }
+    }
+    try {
+      const res = await publicAxios.post(
+        "create_practitioner_nft",
+        {
+          name,
+          email,
+          address,
+          image: headShot,
+          bio,
+          agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+          licenseType: licenseTypeValue,
+          licenseNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      setData({
+        name,
+        email,
+        address,
+        image: headShot,
+        bio,
+        id: res?.data?.data?.id,
+        agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
+        licenseType: licenseTypeValue,
+        licenseNumber,
+      });
+      // toast.success(res?.data?.message);
+
+      setSuccessData(
+        "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
+      );
+
+      setIsCreditCardModalOpen(true);
+
+      // setVerifyModalOpen(false);
     } catch (error) {
       console.log("error", error);
       if (typeof error?.data?.message == "string") {
@@ -257,11 +324,11 @@ const MintNFTS = () => {
                     profileInfo?.user?.firstName +
                       ` ${profileInfo?.user?.lastName}`,
                   email: profileInfo && profileInfo?.user?.email,
-                  address: "",
+                  address: editPractitionerNftData?.address,
                   // image: "",
                   bio: profileInfo?.user?.bio,
 
-                  licenseNumber: "",
+                  licenseNumber: editPractitionerNftData?.licenseNumber || "",
                 }}
                 enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -338,7 +405,7 @@ const MintNFTS = () => {
                                 opacity: 0.5,
                               }}
                             >
-                              File types supported: JPG, PNG, Max size: 1 MB
+                              File types supported: JPG, PNG, Max size: 5MB
                             </Typography>
                           </Box>
                           <CustomFileUpload
@@ -431,6 +498,7 @@ const MintNFTS = () => {
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
+                            disabled={editPractitionerNftData?.licenseNumber}
                           />
                         </Box>
 

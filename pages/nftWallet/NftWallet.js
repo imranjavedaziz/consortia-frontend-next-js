@@ -320,31 +320,34 @@ function NftWallet() {
                         : practitionerNftData.length >= 1 &&
                           practitionerNftData
                             ?.slice(0, 4)
-                            ?.map(({ name, address, image, id }, i) => (
-                              <Grid
-                                item
-                                xl={3}
-                                key={i}
-                                lg={4}
-                                md={6}
-                                sm={6}
-                                xs={12}
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  paddingTop: "30px",
-                                }}
-                              >
-                                <NftCard
+                            ?.map(
+                              ({ name, address, image, id, is_minted }, i) => (
+                                <Grid
+                                  item
+                                  xl={3}
                                   key={i}
-                                  id={id}
-                                  title={name}
-                                  address={address}
-                                  image={image}
-                                  type="practitionerNftDetail"
-                                />
-                              </Grid>
-                            ))}
+                                  lg={4}
+                                  md={6}
+                                  sm={6}
+                                  xs={12}
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    paddingTop: "30px",
+                                  }}
+                                >
+                                  <NftCard
+                                    key={i}
+                                    id={id}
+                                    title={name}
+                                    address={address}
+                                    image={image}
+                                    type="practitionerNftDetail"
+                                    isPending={!is_minted}
+                                  />
+                                </Grid>
+                              )
+                            )}
                     </Grid>
                   </Box>
                 </NftsCards>

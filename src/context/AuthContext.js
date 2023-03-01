@@ -45,6 +45,7 @@ export const AuthContext = ({ children }) => {
     formData: null,
   });
   const [editNftData, setEditNftData] = useState(null);
+  const [editPractitionerNftData, setEditPractitionerNftData] = useState(null);
 
   const handleCreditCardModalClose = () => {
     setIsCreditCardProcessing(false);
@@ -134,6 +135,8 @@ export const AuthContext = ({ children }) => {
         setEditNftData,
         refetchFromLocalStorage,
         setRefetchFromLocalStorage,
+        editPractitionerNftData,
+        setEditPractitionerNftData,
       }}
     >
       {children}

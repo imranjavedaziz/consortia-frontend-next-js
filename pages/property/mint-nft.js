@@ -581,7 +581,7 @@ const MintNFTS = () => {
                                 marginBottom: 1,
                               }}
                             >
-                              Files types supported: JPG, PNG Max Size: 1MB
+                              Files types supported: JPG, PNG Max Size: 5MB
                             </Typography>
                             <CustomFileUpload
                               // isUploading = {}

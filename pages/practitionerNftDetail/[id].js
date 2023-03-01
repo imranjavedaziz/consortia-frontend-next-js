@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import { publicAxios } from "../../src/api";
 import DialogForBlockchainData from "../../src/components/modals/dialogForBlockchainData/DialogForBlockchainData";
 import { LoadingButton } from "@mui/lab";
+import { useAuthContext } from "../../src/context/AuthContext";
 
 const GradientBorderContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -61,6 +62,7 @@ const NftsCards = styled(Box)(({ theme }) => ({
 
 const PractitionerDetailPage = () => {
   const { push, query } = useRouter();
+  const { setEditPractitionerNftData } = useAuthContext();
 
   const [propertyNftsData, setPropertyNftsData] = useState([]);
 
@@ -114,7 +116,10 @@ const PractitionerDetailPage = () => {
       }
     }
   };
-
+  const editPracNftDataHandler = () => {
+    setEditPractitionerNftData(nftDetail);
+    push("/practitionerNfts/mint-nft");
+  };
   const getPropertyNftData = async () => {
     if (query?.id) {
       try {
@@ -325,22 +330,51 @@ const PractitionerDetailPage = () => {
                       </Box>
                     </Box>
                   </Box>
-
-                  <Box
-                    sx={{
-                      maxWidth: "220px",
-                      padding: "14px 0px 0px 0px",
-                    }}
-                  >
-                    <LoadingButton
-                      loading={fetching}
-                      variant="gradient"
-                      size="large"
-                      onClick={() => getBlockchainData()}
-                    >
-                      View Blockchain Data
-                    </LoadingButton>
+                  <Box sx={{ padding: "10px 0px" }}>
+                    <Typography variant="body2">
+                      {nftDetail?.failed_reason}
+                    </Typography>
                   </Box>
+                  {nftDetail?.is_minted && (
+                    <Box
+                      sx={{
+                        maxWidth: "220px",
+                        padding: "14px 0px 0px 0px",
+                      }}
+                    >
+                      <LoadingButton
+                        loading={fetching}
+                        variant="gradient"
+                        size="large"
+                        onClick={() => getBlockchainData()}
+                      >
+                        View Blockchain Data
+                      </LoadingButton>
+                    </Box>
+                  )}
+                  {!nftDetail?.is_minted && (
+                    <Box
+                      sx={{ maxWidth: "220px", padding: "10px 0px 0px 0px" }}
+                    >
+                      <LoadingButton
+                        sx={{
+                          backgroundColor: "secondary.purpleGray",
+                          color: "#fff",
+                          borderRadius: "8px",
+                          padding: "5px 17px",
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                        }}
+                        loading={fetching}
+                        // disabled={!nftDetail?.is_minted}
+                        // backgroundColor="secondary.purpleGray"
+                        size="large"
+                        onClick={() => editPracNftDataHandler()}
+                      >
+                        View Details
+                      </LoadingButton>
+                    </Box>
+                  )}
                 </Box>
               </Grid>
             </Grid>
