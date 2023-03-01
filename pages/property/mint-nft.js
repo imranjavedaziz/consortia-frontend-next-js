@@ -149,10 +149,11 @@ const MintNFTS = () => {
                   marginBottom: 1,
                 }}
               >
-                Files types supported: JPG, PNG, PDF, Max Size: 1MB
+                Files types supported: JPG, PNG, PDF, Max Size: 100MB
               </Typography>
               <CustomFileUpload
                 allowPdf={true}
+                maxUploadSizeMB={100}
                 uploadingToS3={uploadingEntity}
                 setUploadingToS3={setUploadingEntity}
                 s3Url={entityDocument}
