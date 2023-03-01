@@ -54,10 +54,10 @@ const CustomFileUpload = ({
     region: process.env.REGION,
   });
 
-  const isValidFileType = (fileName) =>
+  const isValidFileType = (fileType) =>
     allowPdf
-      ? ["jpg", "png", "pdf"].some((char) => fileName?.endsWith(char))
-      : ["jpg", "png"].some((char) => fileName?.endsWith(char));
+      ? ["image/jpeg", "image/png", "application/pdf"].includes(fileType)
+      : ["image/jpeg", "image/png"].includes(fileType);
   // 1MB = 1048576 Bytes
   const isValidFileSize = (fileSize) =>
     fileSize < (maxUploadSizeMB ? maxUploadSizeMB * 1048576 : 1048576 * 5);
@@ -74,7 +74,8 @@ const CustomFileUpload = ({
   }, []);
 
   const handleChange = (e) => {
-    if (!isValidFileType(e.target.files[0]?.name)) {
+    console.log("e.target.files[0]?.type", e.target.files[0]?.type);
+    if (!isValidFileType(e.target.files[0]?.type)) {
       e.target.value = null;
       allowPdf
         ? toast.error("Only pdf,jpg and png files are allowed")
