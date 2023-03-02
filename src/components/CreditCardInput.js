@@ -226,18 +226,25 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
           console.log(error);
           setIsCreditCardProcessing(false);
           if (typeof error?.data?.message == "string") {
+            // Stripe errors coming from the backend have format error:desc -> picking desc here
             if (error?.data?.message.includes(":")) {
               toast.error(error?.data?.message?.split(":")[1]);
-            } else {
-              toast.error(error?.data?.message);
+              return;
             }
-          } else {
-            if (Array.isArray(error?.data?.message)) {
-              toast.error(error?.data?.message?.error?.[0]);
-            } else {
-              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-            }
+            // else {
+            //   toast.error(error?.data?.message);
+            // }
           }
+          setOpenVerificationSuccess(true);
+          handleCreditCardModalClose();
+
+          //  else {
+          //   if (Array.isArray(error?.data?.message)) {
+          //     toast.error(error?.data?.message?.error?.[0]);
+          //   } else {
+          //     toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+          //   }
+          // }
         }
       })
       .catch((error) => console.log(error));
