@@ -147,7 +147,7 @@ const Header = () => {
       target: "_blank",
     },
   ];
-  const forHamburgerItems = navigationItems.concat(moreMenuItems);
+  const forHamburgerItems = betweenSmXlMenuItems.concat(moreMenuItems);
   const list = (anchor) => (
     <Box
       sx={{
