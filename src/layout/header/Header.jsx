@@ -64,6 +64,9 @@ const Header = () => {
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
+  const betweenSmAndXl = useMediaQuery((theme) =>
+    theme.breakpoints.between("sm", "xl")
+  );
   useEffect(() => {
     if (!belowSm) setDrawer(false);
   }, [belowSm]);
@@ -107,11 +110,15 @@ const Header = () => {
       path: "https://consortia.mn.co/sign_in?from=https%3A%2F%2Fconsortia.mn.co%2F",
       target: "_blank",
     },
-    // {
-    //   name: "Training",
-    //   path: "/training",
-    // },
-
+    {
+      name: "About Certified Asset",
+      path: "/about-certified-asset",
+    },
+    {
+      name: "Order Certified Asset",
+      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+      target: "_blank",
+    },
     {
       name: "Contact us",
       path: "https://consortia.typeform.com/inquiry",
@@ -127,14 +134,16 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const betweenSmXlMenuItems = navigationItems.slice(0, 3);
   const moreMenuItems = [
-    {
-      name: "About Certified Asset",
-      path: "/about-certified-asset",
-    },
     {
       name: "Order Certified Asset",
       path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+      target: "_blank",
+    },
+    {
+      name: "Contact us",
+      path: "https://consortia.typeform.com/inquiry",
       target: "_blank",
     },
   ];
@@ -201,79 +210,83 @@ const Header = () => {
               />
             </ImageLogo>
           </Grid>
-          <Grid item xs={7} sm={8}>
+          <Grid item xs={7} sm={isLoggedIn ? 10 : 8}>
             <NavigationList
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                gap: { xs: 1, md: 2, lg: 4 },
+                gap: { xs: 1, md: 2, lg: 3 },
               }}
             >
-              {navigationItems.map((item, i) => {
-                return (
-                  <Link
-                    key={i}
-                    href={item.path}
-                    target={item.target}
-                    passHref={true}
-                    style={{ textDecoration: "none" }}
-                  >
-                    {isActive(item.path) ? (
-                      <Typography
-                        varaint="h6"
-                        fontWeight={500}
-                        sx={{
-                          // textDecoration: "underline",
+              {(betweenSmAndXl ? betweenSmXlMenuItems : navigationItems).map(
+                (item, i) => {
+                  return (
+                    <Link
+                      key={i}
+                      href={item.path}
+                      target={item.target}
+                      passHref={true}
+                      style={{ textDecoration: "none" }}
+                    >
+                      {isActive(item.path) ? (
+                        <Typography
+                          varaint="h6"
+                          fontWeight={500}
+                          sx={{
+                            // textDecoration: "underline",
 
-                          position: "relative",
-                          "::after": {
-                            content: "''",
-                            width: "100%",
-                            position: "absolute",
-                            left: "0",
-                            bottom: "-1px",
-                            height: "3px",
-                            background:
+                            position: "relative",
+                            "::after": {
+                              content: "''",
+                              width: "100%",
+                              position: "absolute",
+                              left: "0",
+                              bottom: "-1px",
+                              height: "3px",
+                              background:
+                                "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
+                            },
+                            textDecorationColor:
                               "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                          },
-                          textDecorationColor:
-                            "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                        }}
-                      >
-                        {item.name}
-                      </Typography>
-                    ) : (
-                      <Typography
-                        varaint="h6"
-                        fontWeight={500}
-                        sx={{ opacity: 0.5 }}
-                      >
-                        {item.name}
-                      </Typography>
-                    )}
-                  </Link>
-                );
-              })}
-              <Typography
-                varaint="h6"
-                fontWeight={500}
-                sx={{ opacity: 0.5, cursor: "pointer" }}
-                onClick={handleClick}
-              >
-                More
-              </Typography>
+                          }}
+                        >
+                          {item.name}
+                        </Typography>
+                      ) : (
+                        <Typography
+                          varaint="h6"
+                          fontWeight={500}
+                          sx={{ opacity: 0.5 }}
+                        >
+                          {item.name}
+                        </Typography>
+                      )}
+                    </Link>
+                  );
+                }
+              )}
+              {betweenSmAndXl && (
+                <Typography
+                  varaint="h6"
+                  fontWeight={500}
+                  sx={{ opacity: 0.5, cursor: "pointer" }}
+                  onClick={handleClick}
+                >
+                  More
+                </Typography>
+              )}
             </NavigationList>
           </Grid>
 
           <Grid
             item
             xs={3}
-            sm={3}
+            sm={isLoggedIn ? 1 : 3}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "end",
-              gap: { xs: 1, lg: 3, xl: 4 },
+              gap: { xs: 1, lg: 3, xl: 3 },
             }}
           >
             {isLoggedIn ? (
