@@ -139,7 +139,7 @@ function NftWallet() {
               minWidth: "430px",
             }}
           >
-            <Typography variant="subtitle1" fontWeight={600}>
+            <Typography variant="subtitle1" fontSize="14px" fontWeight={600}>
               Wallet Address:
             </Typography>
             <Typography
