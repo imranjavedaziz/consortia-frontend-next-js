@@ -254,9 +254,10 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
     <>
       <Dialog
         open={isCreditCardModalOpen}
+        // onBackdropClick="false"
         //   TransitionComponent={Transition}
         keepMounted
-        onClose={handleCreditCardModalClose}
+        // onClose={handleCreditCardModalClose}
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",

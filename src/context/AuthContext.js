@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useRouter } from "next/router";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -18,6 +19,7 @@ const stripeLivePromise = loadStripe(
 const Context = createContext();
 
 export const AuthContext = ({ children }) => {
+  const { route } = useRouter();
   const [stripe, setStripe] = useState({});
   const [liveStripe, setLiveStripe] = useState({});
 
@@ -46,6 +48,10 @@ export const AuthContext = ({ children }) => {
   });
   const [editNftData, setEditNftData] = useState(null);
   const [editPractitionerNftData, setEditPractitionerNftData] = useState(null);
+
+  useEffect(() => {
+    handleCreditCardModalClose();
+  }, [route]);
 
   const handleCreditCardModalClose = () => {
     setIsCreditCardProcessing(false);
