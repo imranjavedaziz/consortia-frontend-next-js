@@ -25,6 +25,10 @@ export default function MyApp(props) {
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta
+          name="description"
+          content="Consortia is the only NFT and training solution led by an SEC registered investment banker, real estate broker and mortgage loan originator."
+        ></meta>
         <link rel="shortcut icon" href="/consortiaFavicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

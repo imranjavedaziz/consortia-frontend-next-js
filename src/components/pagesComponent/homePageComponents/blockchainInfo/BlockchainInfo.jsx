@@ -222,6 +222,7 @@ function BlockchainInfo() {
                 height={300}
                 width={300}
                 style={{ borderRadius: "300px" }}
+                alt=""
               />
             </Box>
             <Box sx={{ padding: "10px 0px" }}>
@@ -280,6 +281,7 @@ function BlockchainInfo() {
           >
             <Box>
               <img
+                alt=""
                 src="/assets/images/practitioner.jpg"
                 style={{
                   borderRadius: "300px",
