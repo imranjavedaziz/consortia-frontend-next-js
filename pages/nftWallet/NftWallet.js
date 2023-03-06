@@ -136,15 +136,20 @@ function NftWallet() {
               justifyContent: "center",
               backgroundColor: "rgba(29, 6, 104, 0.5)",
               borderRadius: "8px",
-              minWidth: "430px",
+              minWidth: { xs: "375px", md: "430px" },
             }}
           >
-            <Typography variant="subtitle1" fontSize="14px" fontWeight={600}>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontSize: { md: "17px" } }}
+              fontWeight={600}
+              marginRight={1}
+            >
               Wallet Address:
             </Typography>
             <Typography
               variant="subtitle1"
-              fontSize="14px"
+              sx={{ fontSize: { md: "17px" } }}
               ref={CopyWalletAddressRef}
             >
               {loading ? (
