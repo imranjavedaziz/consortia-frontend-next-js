@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import { Button, IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Box, styled, width } from "@mui/system";
+import { Box } from "@mui/system";
 import Image from "next/image";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { publicAxios } from "../../../api";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
-import { useRouter } from "next/router";
 import { FORGET_PASSWORD } from "../../../constants/endpoints";
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -33,18 +30,7 @@ const inputFields = [
   },
 ];
 
-function DialogResetPassword({
-  open,
-  setOpen,
-  text,
-  title,
-  input,
-  btnText,
-  placeholder,
-  inputTypeCode,
-  isPractitioner,
-  setShowSecondForm,
-}) {
+function DialogResetPassword({ open, setOpen, text, title, btnText }) {
   const handleClose = () => {
     setOpen(false);
     setEmail("");
@@ -52,14 +38,12 @@ function DialogResetPassword({
   const [email, setEmail] = useState("");
   const [fetching, setFetching] = useState(false);
   const [otpModalOpen, setOtpModalOpen] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(true);
 
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
 
   const resetPassword = async (values) => {
-    // if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
     try {
       setFetching(true);
       const res = await publicAxios.post(FORGET_PASSWORD, {
@@ -76,17 +60,13 @@ function DialogResetPassword({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
-    // }else{
-    // setIsValidEmail(false)
-    // toast.error('Please enter a valid email!')
-    // }
   };
 
   return (
@@ -100,14 +80,16 @@ function DialogResetPassword({
           sx: {
             backgroundColor: "secondary.purpleGray",
             // height: "397px",
-            borderRadius: {xs:'12px',md:"24px"},
-            width: {xs:"272px",md:"571px"},
-            padding: {xs:"16px",md:"40px"},
-            margin:{xs:'16px', md:'32px'}
+            borderRadius: { xs: "12px", md: "24px" },
+            width: { xs: "272px", md: "571px" },
+            padding: { xs: "16px", md: "40px" },
+            margin: { xs: "16px", md: "32px" },
           },
         }}
       >
-        <DialogTitle sx={{ padding: {xs:"0px 0px 12px 0px",md:"0px 0px 16px 0px"} }}>
+        <DialogTitle
+          sx={{ padding: { xs: "0px 0px 12px 0px", md: "0px 0px 16px 0px" } }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -128,8 +110,8 @@ function DialogResetPassword({
             >
               <Image
                 src="/assets/icons/cross.svg"
-                height={belowSm ? 12:22}
-                width={belowSm ? 12:22}
+                height={belowSm ? 12 : 22}
+                width={belowSm ? 12 : 22}
                 alt=""
               />
             </Box>
@@ -162,10 +144,10 @@ function DialogResetPassword({
                 autoComplete="off"
                 style={{ width: { md: "100%", xs: "100%" } }}
               >
-                <DialogContent
-                sx={{ padding:{ xs:"0px 0px",md:'none'} }}
-                >
-                  <Typography variant="body1" sx={{paddingBottom:'10px'}}>{text}</Typography>
+                <DialogContent sx={{ padding: { xs: "0px 0px", md: "none" } }}>
+                  <Typography variant="body1" sx={{ paddingBottom: "10px" }}>
+                    {text}
+                  </Typography>
                   <Box>
                     <Box
                       display="flex"
@@ -174,7 +156,7 @@ function DialogResetPassword({
                       width="100%"
                       margin="auto"
                       // paddingX={2}
-                      rowGap={{xs:2,md:3}}
+                      rowGap={{ xs: 2, md: 3 }}
                     >
                       {inputFields.map(
                         ({
@@ -202,7 +184,9 @@ function DialogResetPassword({
                     </Box>
                   </Box>
                 </DialogContent>
-                <DialogActions sx={{ padding: {xs:'16px 0px 0px 0px',  md:"16px 0px"} }}>
+                <DialogActions
+                  sx={{ padding: { xs: "16px 0px 0px 0px", md: "16px 0px" } }}
+                >
                   <Box sx={{ width: "100%" }}>
                     <LoadingButton
                       loading={fetching}
@@ -215,11 +199,10 @@ function DialogResetPassword({
                         width: "100%",
                         padding: "10px 0px",
                         textTransform: "capitalize",
-                        fontSize:{xs:'10px',md:'15px'}
+                        fontSize: { xs: "10px", md: "15px" },
                       }}
                       type="submit"
                       disabled={isSubmitting}
-                      
 
                       // onClick={() => resetPassword(email)}
                     >

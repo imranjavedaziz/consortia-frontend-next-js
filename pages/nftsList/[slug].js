@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
+import { Box, Typography, styled, Grid } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
-import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
-import TransactiionHistoryTable from "../../src/components/transactiionHistoryTable/TransactiionHistoryTable";
 import {
   GET_PRACTITIONER_NFTS,
   GET_PROPERTY_NFTS,
@@ -28,21 +26,14 @@ const NftDetailPageContainer = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "33px 40px 40px 40px",
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
-}));
+
 const NftsCards = styled(Box)(({ theme }) => ({
   marginTop: "32px",
   marginBottom: "120px",
 }));
 
 const NftsList = () => {
-  const { push, query } = useRouter();
+  const { query } = useRouter();
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -54,7 +45,7 @@ const NftsList = () => {
     //    setLocalData(profileInfo)
     query.slug === "practitioner-nfts" && getPractitionerNftData();
     query.slug === "property-nfts" && getNftData();
-  }, [page,query.slug]);
+  }, [page, query.slug]);
 
   const getNftData = async () => {
     try {
@@ -79,11 +70,11 @@ const NftsList = () => {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -109,15 +100,15 @@ const NftsList = () => {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
+        if (typeof error?.data?.message === "string") {
           toast.error(error?.data?.message);
-        }else{
+        } else {
           toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
     }
   };
-  const paginationHandler = (event, value) => {
+  const paginationHandler = (value) => {
     setPage(value);
   };
 
@@ -178,7 +169,7 @@ const NftsList = () => {
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
-                                paddingTop:'30px'
+                                paddingTop: "30px",
                               }}
                             >
                               <NftCard
@@ -215,7 +206,7 @@ const NftsList = () => {
                         })
                       : nftsList?.results?.length >= 1 &&
                         nftsList?.results?.map(
-                          ({ name, address, image, id,title }, i) => (
+                          ({ name, address, image, id, title }, i) => (
                             <Grid
                               item
                               key={i}
@@ -227,7 +218,7 @@ const NftsList = () => {
                               sx={{
                                 display: "flex",
                                 justifyContent: "center",
-                                paddingTop:'30px'
+                                paddingTop: "30px",
                               }}
                             >
                               <NftCard

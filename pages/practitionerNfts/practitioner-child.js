@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
-
-
-
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -22,14 +15,6 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
   background: theme.palette.background.default,
   borderRadius: "24px",
   padding: "40px 281px",
-}));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
 }));
 
 const Practitioner = () => {
@@ -46,18 +31,15 @@ const Practitioner = () => {
                 Detail page
               </Typography>
             </Box>
-            <Box>
-              gsggsg
-            </Box>
+            <Box>gsggsg</Box>
           </MintPropertyNfts>
         </GradientMintPropertyNfts>
       </Box>
     </>
   );
-}
+};
 
 export default Practitioner;
 Practitioner.getLayout = function (page) {
-    return <NftsLayout>{page}</NftsLayout>;
-  };
-  
+  return <NftsLayout>{page}</NftsLayout>;
+};

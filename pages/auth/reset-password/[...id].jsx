@@ -1,27 +1,10 @@
 import Image from "next/image";
-import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../../src/authLayout/index";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { useRouter } from "next/router";
 import CustomInputField from "../../../src/components/common/CustomInputField";

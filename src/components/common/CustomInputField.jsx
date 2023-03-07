@@ -50,11 +50,6 @@ export const GradiantTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const Placeholder = ({ children }) => {
-  // const classes = usePlaceholderStyles();
-  return <div>{children}</div>;
-};
-
 const CustomInputField = ({
   label,
   sublabel,

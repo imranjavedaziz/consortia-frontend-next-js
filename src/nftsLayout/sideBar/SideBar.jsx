@@ -1,10 +1,5 @@
-import { useEffect } from "react";
-// @mui
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box } from "@mui/material";
 import SidebarList from "./SidebarList";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useAuthContext } from "../../context/AuthContext";
 import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------
@@ -18,9 +13,6 @@ const SideBarParent = styled(Box)(({ theme }) => ({
   borderRight: `0.5px solid ${theme.palette.secondary.darkGray}`,
 }));
 const Sidebar = ({ setopenForMobile }) => {
-  const { push } = useRouter();
-  const { setChoosePractitionerOpen, setShowSecondForm } = useAuthContext();
-
   return (
     <Box
       component="nav"

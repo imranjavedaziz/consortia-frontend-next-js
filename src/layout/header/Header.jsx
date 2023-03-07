@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Divider,
   Grid,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   MenuList,
-  Paper,
   SwipeableDrawer,
   Typography,
   useMediaQuery,
@@ -20,7 +17,6 @@ import { Box, styled } from "@mui/system";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import GradientBorderButton from "../../components/common/gradientBorderButton/GradientBorderButton";
 import { useAuthContext } from "../../context/AuthContext";
 
 export const ImageLogo = styled("div")({
@@ -97,8 +93,6 @@ const Header = () => {
       }
     }
   }, []);
-
-  const goToSignup = () => {};
 
   const navigationItems = [
     {

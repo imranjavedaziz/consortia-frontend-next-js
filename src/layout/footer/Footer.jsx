@@ -1,7 +1,7 @@
 import React from "react";
 
 import Image from "next/image";
-import { Divider, Grid, Typography, useMediaQuery } from "@mui/material";
+import { Divider, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
 

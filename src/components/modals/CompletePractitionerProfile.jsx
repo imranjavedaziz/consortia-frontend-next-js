@@ -1,43 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  IconButton,
-  InputLabel,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { InputLabel, TextField, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Box, height, styled, width } from "@mui/system";
-import Image from "next/image";
-import { BiotechRounded, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import CustomInputField from "../common/CustomInputField";
+import { Box, styled } from "@mui/system";
 import CustomFileUpload from "../common/CustomFileUpload";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import dayjs from "dayjs";
-import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../api";
 import toast from "react-hot-toast";
 import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeForProfileUpdate";
 import { EDIT_USER_PROFILE } from "../../constants/endpoints";
 import { useAuthContext } from "../../context/AuthContext";
+import { LoadingButton } from "@mui/lab";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-//   export const TextFieldWrapper = styled(TextField)`
-//   fieldset {
-//     border-radius: 50px;
-//   }
-// `;
+
 const GradiantTextField = styled(TextField)(({}) => ({
   "& .MuiInput-root": {
     padding: "0 20px",
@@ -48,19 +28,7 @@ const GradiantTextField = styled(TextField)(({}) => ({
   },
 }));
 
-const inputFields = [
-  { name: "bio", label: "Bio", placeholder: "Enter your bio" },
-];
-const TextFieldWrapper = styled(TextField)(() => ({}));
-function CompletePractitionerProfile({
-  open,
-  setIsPractitioner,
-  setOpen,
-  text,
-  title,
-  height,
-  crossButtonEbable,
-}) {
+function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
   const { setRefetchFromLocalStorage } = useAuthContext();
   const [date, setDate] = useState(null);
   const [bio, setBio] = useState("");

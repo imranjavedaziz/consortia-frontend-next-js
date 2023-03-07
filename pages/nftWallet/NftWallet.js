@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, styled, Grid, Skeleton } from "@mui/material";
 import Image from "next/image";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import NftsLayout from "../../src/nftsLayout";
 import NftCard from "../../src/components/common/NftCard";
 import { publicAxios } from "../../src/api";

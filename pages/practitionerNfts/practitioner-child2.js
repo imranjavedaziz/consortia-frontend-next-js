@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Typography, styled, Grid, CardMedia } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
@@ -19,14 +19,7 @@ const NftDetailPageContainer = styled(Box)(({ theme }) => ({
   borderRadius: "24px",
   padding: "33px 40px 40px 40px",
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
-}));
+
 const NftsCards = styled(Box)(({ theme }) => ({
   marginTop: "32px",
   marginBottom: "120px",
@@ -133,7 +126,7 @@ const Practitioner2 = () => {
                 <Box>
                   <Typography variant="h5">Transaction History</Typography>
                 </Box>
-                <Box sx={{paddingTop:'40px'}}>
+                <Box sx={{ paddingTop: "40px" }}>
                   <TransactiionHistoryTable />
                 </Box>
               </Grid>

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import {IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
+import {
+  IconButton,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -17,27 +22,21 @@ import { RESEND_OTP, VERIFY_OTP } from "../../../constants/endpoints";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-//   export const TextFieldWrapper = styled(TextField)`
-//   fieldset {
-//     border-radius: 50px;
-//   }
-// `;
+
 const GradiantTextField = styled(TextField)(({}) => ({
   "& .MuiInput-root": {
     paddingLeft: "15px",
   },
   "& input::placeholder": {
-    fontSize: {xs:'8px',md:"16px"},
+    fontSize: { xs: "8px", md: "16px" },
     fontWeight: 400,
   },
 }));
-const TextFieldWrapper = styled(TextField)(() => ({}));
 function DialogTextInput({
   open,
   setOpen,
   text,
   title,
-  input,
   btnText,
   placeholder,
   inputTypeCode,
@@ -51,7 +50,7 @@ function DialogTextInput({
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
-  const { showSecondForm, setShowSecondForm } = useAuthContext();
+  const { setShowSecondForm } = useAuthContext();
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
@@ -69,21 +68,23 @@ function DialogTextInput({
         localStorage.setItem("access", res?.data?.access);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
         toast.success(res?.data?.message);
-        if(res?.data?.data?.user?.role === "Practitioner" && !res.data?.data?.user?.practitionerType){
+        if (
+          res?.data?.data?.user?.role === "Practitioner" &&
+          !res.data?.data?.user?.practitionerType
+        ) {
           setShowSecondForm(true);
-          push('/auth/signup')
-        }else{
+          push("/auth/signup");
+        } else {
           if (!isPractitioner) {
             return setTimeout(() => {
               // window.open(res?.data?.data?.accountLink?.url);
-              push('/dashboard/landing')
+              push("/dashboard/landing");
             }, 2500);
           }
         }
         setShowSecondForm(true);
-        push('/auth/signup')
-       
-        
+        push("/auth/signup");
+
         handleClose();
       } else {
         toast.error("Please enter OTP");
@@ -94,11 +95,11 @@ function DialogTextInput({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -112,11 +113,11 @@ function DialogTextInput({
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
-            toast.error(error?.data?.message);
-          }else{
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
-          }
+        if (typeof error?.data?.message === "string") {
+          toast.error(error?.data?.message);
+        } else {
+          toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+        }
       }
     }
   };
@@ -132,17 +133,17 @@ function DialogTextInput({
         PaperProps={{
           sx: {
             backgroundColor: "secondary.purpleGray",
-            borderRadius: {xs:'12px',md:"24px"},
-            width: {xs:"272px",md:"571px"},
+            borderRadius: { xs: "12px", md: "24px" },
+            width: { xs: "272px", md: "571px" },
             // height: "397px",
-            padding: {xs:"16px",md:"40px 38px"},
-            margin:{xs:'16px', md:'32px'}
-
-
+            padding: { xs: "16px", md: "40px 38px" },
+            margin: { xs: "16px", md: "32px" },
           },
         }}
       >
-        <DialogTitle sx={{ padding: {xs:"0px 0px 12px 0px",md:"0px 0px 16px 0px"} }}>
+        <DialogTitle
+          sx={{ padding: { xs: "0px 0px 12px 0px", md: "0px 0px 16px 0px" } }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -159,16 +160,18 @@ function DialogTextInput({
             >
               <Image
                 src="/assets/icons/cross.svg"
-                height={belowSm ? 12:22}
-                width={belowSm ? 12:22}
+                height={belowSm ? 12 : 22}
+                width={belowSm ? 12 : 22}
                 alt=""
               />
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent sx={{padding: {xs:"0px 0px 20px 0px",md:"0px 10px 20px 10px"} }}>
+        <DialogContent
+          sx={{ padding: { xs: "0px 0px 20px 0px", md: "0px 10px 20px 10px" } }}
+        >
           <Typography variant="body1">{text}</Typography>
-          <Box sx={{ width: "100%", paddingTop: {xs:"16px",md:"40px"} }}>
+          <Box sx={{ width: "100%", paddingTop: { xs: "16px", md: "40px" } }}>
             <div
               style={{
                 background:
@@ -177,7 +180,7 @@ function DialogTextInput({
                 justifyContent: "center",
                 borderRadius: "24px",
                 // marginTop: "40px",
-                width:'95%'
+                width: "95%",
               }}
             >
               <GradiantTextField
@@ -217,7 +220,7 @@ function DialogTextInput({
             </div>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ padding: {xs:'0px 0px',  md:"16px 0px"} }}>
+        <DialogActions sx={{ padding: { xs: "0px 0px", md: "16px 0px" } }}>
           <Box sx={{ width: "100%" }}>
             <LoadingButton
               loading={fetching}
@@ -230,7 +233,7 @@ function DialogTextInput({
                 width: "100%",
                 padding: "10px 0px",
                 textTransform: "capitalize",
-                fontSize:{xs:'10px',md:'15px'}
+                fontSize: { xs: "10px", md: "15px" },
               }}
               onClick={() => verifyCode(email)}
             >

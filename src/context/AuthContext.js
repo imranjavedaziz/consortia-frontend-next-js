@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useLayoutEffect,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
 
@@ -22,7 +16,6 @@ export const AuthContext = ({ children }) => {
   const { route } = useRouter();
   const [stripe, setStripe] = useState({});
   const [liveStripe, setLiveStripe] = useState({});
-
   const [showSecondForm, setShowSecondForm] = useState(false);
   const [choosePractitionerOpen, setChoosePractitionerOpen] = useState(true);
   const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);

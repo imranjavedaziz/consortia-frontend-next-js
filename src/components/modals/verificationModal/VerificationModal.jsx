@@ -1,35 +1,17 @@
-import React, { useState } from "react";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import React from "react";
+import { Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { Box, styled, width } from "@mui/system";
+import { Box } from "@mui/system";
 import Image from "next/image";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { publicAxios } from "../../../api";
-import toast from "react-hot-toast";
-import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
-import { useAuthContext } from "../../../context/AuthContext";
-import { RESEND_OTP, VERIFY_OTP } from "../../../constants/endpoints";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const GradiantTextField = styled(TextField)(({}) => ({
-  "& .MuiInput-root": {
-    paddingLeft: "15px",
-  },
-  "& input::placeholder": {
-    fontSize: "16px",
-    fontWeight: 400,
-  },
-}));
-const TextFieldWrapper = styled(TextField)(() => ({}));
 function VerificationModal({ open, setOpen, text, title, imageSrc }) {
   const { push } = useRouter();
 

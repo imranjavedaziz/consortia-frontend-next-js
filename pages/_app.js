@@ -4,10 +4,9 @@ import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
-import { darkTheme, lightTheme } from "../src/theme";
+import { darkTheme } from "../src/theme";
 import createEmotionCache from "../src/createEmotionCache";
 import Layout from "../src/layout/Index";
-import NftsLayout from "../src/nftsLayout";
 import { AuthContext } from "../src/context/AuthContext";
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -28,6 +27,7 @@ export default function MyApp(props) {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
+        <title>Consortia</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <meta
           name="description"

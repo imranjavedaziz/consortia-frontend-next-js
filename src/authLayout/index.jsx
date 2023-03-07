@@ -7,8 +7,6 @@ import { useAuthContext } from "../context/AuthContext";
 
 function Index({ children }) {
   const { push } = useRouter();
-  const { setShowSecondForm } = useAuthContext();
-
   useEffect(() => {
     const token = localStorage.getItem("access");
     const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
@@ -16,7 +14,6 @@ function Index({ children }) {
       if (token && profileInfo?.user?.practitionerType) {
         push("/dashboard/landing");
       } else {
-        // setShowSecondForm(true)
         push("/auth/login");
       }
     } else {
