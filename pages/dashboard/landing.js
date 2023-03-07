@@ -1,50 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, CardMedia, Typography } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
-import GradientButton from "../../src/components/common/GradientButton";
 import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
-// import AWS from "aws-sdk";
-{
-  /* 
-AWS.config.update({
-  accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
-  secretAccessKey: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
-});
 
-const myBucket = new AWS.S3({
-  params: {
-    Bucket: true
-      ? process.env.NEXT_PUBLIC_UNLOCKABLE_BUCKET_NAME
-      : process.env.NEXT_PUBLIC_BUCKET_NAME,
-  },
-  region: process.env.REGION,
-});
-
-const handleDownload = () => {
-  myBucket.getObject(
-    {
-      Bucket: "consortialockablecontent",
-      Key: "1674563359663Warranty_Deed.pdf",
-    },
-    async (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        const file = data.Body;
-        console.log({ data });
-        const blob = new Blob([arr], { type: "application/pdf" });
-        const url = URL.createObjectURL(file);
-        console.log({ url });
-      }
-    }
-  );
-};
-*/
-}
 function Landing() {
   useTitle("Dasboard");
-
   const { push } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
   useEffect(() => {

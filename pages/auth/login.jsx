@@ -2,27 +2,17 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
-  CardContent,
   CardMedia,
   Checkbox,
   FormControlLabel,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 import { ImageLogo } from "../../src/layout/header/Header";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import AuthLayout from "../../src/authLayout/index";
 import CustomInputField from "../../src/components/common/CustomInputField";

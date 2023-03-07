@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import { useField } from "formik";
-import toast from "react-hot-toast";
 var OpenLocationCode = require("open-location-code").OpenLocationCode;
 import Geocode from "react-geocode";
 
@@ -62,29 +61,21 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
 }));
 
 export default function GoogleMapAutoComplete(props) {
-  const ref = useRef(null);
   const [selectedValue, setSelectedValue] = useState("");
   const [open, setOpen] = React.useState(true);
   const [adrString, setAdrString] = useState("");
   const [reset, setReset] = useState(false);
   const [field, meta] = useField(props);
-  const [htmlText, setHtmlText] = useState({});
   var openLocationCode = new OpenLocationCode();
   Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
   // var options = {
   //   types: ['(cities)'],
   //   componentRestrictions: {country: "us"}
   //  };
-  const {
-    placesService,
-    placesAutocompleteService,
-    placePredictions,
-    getPlacePredictions,
-    isPlacePredictionsLoading,
-    autocompleteRef,
-  } = usePlacesService({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  });
+  const { placesService, placePredictions, getPlacePredictions } =
+    usePlacesService({
+      apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    });
 
   // console.log('penLocationCode?.encode'
   //               // placeDetails?.geometry?.location?.lat(),

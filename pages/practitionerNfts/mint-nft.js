@@ -6,7 +6,6 @@ import {
   FormControl,
   RadioGroup,
   FormControlLabel,
-  InputLabel,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -17,21 +16,14 @@ import { Formik } from "formik";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import { publicAxios } from "../../src/api";
 import toast from "react-hot-toast";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import {
-  GET_PROFILE_BY_USERID,
-  MINT_PRACTITIONER_NFT,
-} from "../../src/constants/endpoints";
+import { GET_PROFILE_BY_USERID } from "../../src/constants/endpoints";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete.jsx";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../src/context/AuthContext";
 import CreditCardInput from "../../src/components/CreditCardInput";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import dayjs from "dayjs";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -52,22 +44,10 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
     padding: "40px 12%",
   },
 }));
-const GradiantTextField = styled(TextField)(({}) => ({
-  "& .MuiInput-root": {
-    padding: "0 20px",
-  },
-  "& input::placeholder": {
-    fontSize: "16px",
-    fontWeight: 400,
-  },
-}));
 
 const MintNFTS = () => {
-  const { push } = useRouter();
   const {
-    isCreditCardModalOpen,
     setIsCreditCardModalOpen,
-    handleCreditCardModalClose,
     setSuccessData,
     setEditPractitionerNftData,
     editPractitionerNftData,
@@ -85,7 +65,6 @@ const MintNFTS = () => {
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
   const [userData, setUserData] = useState({});
-  const [date, setDate] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -100,7 +79,6 @@ const MintNFTS = () => {
   const handleChange = (event) => {
     setLicenseTypeValue(event.target.value);
   };
-  console.log({ editPractitionerNftData });
   const itemsFunction = (setFieldValue) => {
     const propertyNftsForm = [
       {
@@ -116,9 +94,6 @@ const MintNFTS = () => {
         disabled: true,
       },
       {
-        // name: "address",
-        // label: "Address:",
-        // placeholder: "Enter Your Address",
         component: (
           <GoogleMapAutoComplete
             name="address"
@@ -146,9 +121,6 @@ const MintNFTS = () => {
     email,
     address,
     bio,
-    // image,
-    // licenseType,
-    state,
     licenseNumber,
   }) => {
     if (userData?.stripe_user_block) {
@@ -248,15 +220,11 @@ const MintNFTS = () => {
         licenseType: licenseTypeValue,
         licenseNumber,
       });
-      // toast.success(res?.data?.message);
-
       setSuccessData(
         "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
       );
 
       setIsCreditCardModalOpen(true);
-
-      // setVerifyModalOpen(false);
     } catch (error) {
       console.log("error", error);
       if (typeof error?.data?.message == "string") {

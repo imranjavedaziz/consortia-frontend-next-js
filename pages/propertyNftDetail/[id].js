@@ -5,7 +5,6 @@ import {
   styled,
   Grid,
   CardMedia,
-  Button,
   useMediaQuery,
   IconButton,
   CircularProgress,
@@ -47,23 +46,9 @@ const NftDetailPageContainer = styled(Box)(({ theme }) => ({
     padding: "16px 13px 40px 13px",
   },
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
-}));
-const NftsCards = styled(Box)(({ theme }) => ({
-  marginTop: "32px",
-  marginBottom: "120px",
-}));
 
 const PractitionerDetailPage = () => {
   const { push, query } = useRouter();
-  // console.log("query", query);
-
   const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
   const [fetching, setFetching] = useState(false);

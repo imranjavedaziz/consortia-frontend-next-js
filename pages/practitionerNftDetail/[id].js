@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Typography,
-  styled,
-  Grid,
-  CardMedia,
-  Skeleton,
-  Avatar,
-  Button,
-} from "@mui/material";
+import { Box, Typography, styled, Grid, Skeleton, Avatar } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import Image from "next/image";
 import NftCard from "../../src/components/common/NftCard";
@@ -47,18 +38,6 @@ const NftDetailPageContainer = styled(Box)(({ theme }) => ({
     padding: "16px 13px 40px 13px",
   },
 }));
-const CheckboxStyled = styled(Box)(({ theme }) => ({
-  // '& .MuiCheckbox-root':{
-  // color:'red'
-  // },
-  // '& .Mui-checked':{
-  // color:"red"
-  // }
-}));
-const NftsCards = styled(Box)(({ theme }) => ({
-  marginTop: "32px",
-  marginBottom: "120px",
-}));
 
 const PractitionerDetailPage = () => {
   const { push, query } = useRouter();
@@ -69,15 +48,10 @@ const PractitionerDetailPage = () => {
   const [loading, setLoading] = useState([]);
   const [blockchainData, setBlockchainData] = useState();
   const [fetching, setFetching] = useState(false);
-
-  const [localData, setLocalData] = useState({});
   const [nftDetail, setNftDetail] = useState({});
   const [blockchainDataModal, setBlockchainDataModal] = useState(false);
 
   useEffect(() => {
-    // debugger
-    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
-    // setLocalData(profileInfo);
     getNftData();
     getPropertyNftData();
   }, [query?.id]);
@@ -131,10 +105,6 @@ const PractitionerDetailPage = () => {
           },
         });
         setPropertyNftsData(res?.data?.results);
-
-        // console.log("res", res?.data?.nfts);
-
-        // setUserData(res?.data?.data?.user);
       } catch (error) {
         console.log(error);
         if (Array.isArray(error?.data?.message)) {
@@ -197,7 +167,6 @@ const PractitionerDetailPage = () => {
     "Timestamp",
   ];
   const rowData = propertyNftsData?.map((item, i) => {
-    // console.log('item?.tx',item, item?.tx)
     return {
       text1: item.tx_id ? `${item.tx_id?.slice(0, 12)}...` : "_ _",
       text2: item.address,
@@ -206,7 +175,6 @@ const PractitionerDetailPage = () => {
       text5: item.updated_at,
     };
   });
-  // console.log("rowData", rowData);
   return (
     <>
       <DialogForBlockchainData

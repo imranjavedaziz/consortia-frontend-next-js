@@ -4,21 +4,11 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import {
-  Collapse,
-  IconButton,
-  ListItem,
-  SvgIcon,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Collapse, ListItem, Typography, useMediaQuery } from "@mui/material";
 import styled from "@emotion/styled";
-import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import sidebarLogo from "../../../public/assets/images/consortiaLogo.svg";
-import CloseIcon from "@mui/icons-material/Close";
 import { practitionarPages, consumerPages } from "../../utils/dashboardPages";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -67,7 +57,6 @@ const StyledListItem = styled(ListItem)({
 export default function SidebarList({ setopenForMobile }) {
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const isLaptop = useMediaQuery("(min-width:1000px)");
-  const isXs = useMediaQuery("(max-width:450px)");
   const profile_info = JSON.parse(localStorage.getItem("profile_info"));
 
   const { route, push } = useRouter();

@@ -1,55 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Image from "next/image";
-import toast from "react-hot-toast";
-import { PROPERTY_NFT_BLOCKCHAIN_DATA } from "../../../constants/endpoints";
-import * as Yup from "yup";
-import { Formik } from "formik";
-import CustomInputField from "../../common/CustomInputField";
-import { publicAxios } from "../../../api";
 import { useRouter } from "next/router";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const inputFields = [
-  { name: "email", label: "Email Address", placeholder: "mail@example.com" },
-  //   {
-  //     name: "phoneNumber",
-  //     label: "Phone Number",
-  //     placeholder: "+12345678900",
-  //     inputType: "phone",
-  //   },
-];
-
-function DialogForBlockchainData({
-  open,
-  setOpen,
-  text,
-  title,
-  endpoint,
-  resData,
-  input,
-  btnText,
-  placeholder,
-  inputTypeCode,
-  isPractitioner,
-  setShowSecondForm,
-}) {
+function DialogForBlockchainData({ open, setOpen, title, resData }) {
   const handleClose = () => {
     setOpen(false);
     // setEmail("");
   };
   // const [resData, setResData] = useState({});
-  const [fetching, setFetching] = useState(false);
-  const [otpModalOpen, setOtpModalOpen] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(true);
-
-  const { push, query } = useRouter();
 
   // useEffect(() => {
   //   resetPassword();

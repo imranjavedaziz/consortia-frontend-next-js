@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Header from "./header/Header";
 import SideBar from "./sideBar/SideBar";
 import { useTheme } from "@emotion/react";
@@ -14,10 +13,8 @@ import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
 import toast, { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
-import axios from "axios";
 import { publicAxios } from "../api";
 import VerificationModal from "../components/modals/verificationModal/VerificationModal";
-import DialogResetPassword from "../components/modals/resetPassword/DialogResetPassword";
 import ChangePasswordDumpUsers from "../components/modals/changePasswordDumpUsers/ChangePasswordDumpUsers";
 
 function NftsLayout({ children }) {
@@ -25,12 +22,7 @@ function NftsLayout({ children }) {
 
   const { push } = useRouter();
   const {
-    isLoggedIn,
-    setIsLoggedIn,
     isStripeModalOpen,
-    setIsStripeModalOpen,
-    setOpenVerficationModal,
-    openVerficationModal,
     openVerificationSuccess,
     setOpenVerificationSuccess,
     openVerificationFailure,
@@ -45,7 +37,6 @@ function NftsLayout({ children }) {
   const [dumpUserOpen, setDumpUserOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
-  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [openForMobile, setopenForMobile] = useState(false);
   const openSidebar = () => {

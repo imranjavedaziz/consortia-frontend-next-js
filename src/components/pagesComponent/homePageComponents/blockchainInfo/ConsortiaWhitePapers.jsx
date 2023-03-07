@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 
 function ConsortiaWhitePapers() {

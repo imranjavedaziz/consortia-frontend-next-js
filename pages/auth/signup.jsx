@@ -96,15 +96,10 @@ const SignUp = () => {
   );
 
   useTitle("Signup");
-  const {
-    showSecondForm,
-    setShowSecondForm,
-    choosePractitionerOpen,
-    setChoosePractitionerOpen,
-  } = useAuthContext();
+  const { showSecondForm, choosePractitionerOpen, setChoosePractitionerOpen } =
+    useAuthContext();
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
-  const [phoneNo, setPhoneNo] = useState("");
   const [email, setEmail] = useState("");
   const { push } = useRouter();
 

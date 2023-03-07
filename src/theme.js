@@ -38,15 +38,15 @@ export const darkTheme = createTheme({
         },
       ],
     },
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundImage: `url(/assets/images/mainBackgound.svg)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        },
-      },
-    },
+    // MuiCssBaseline: {
+    //   styleOverrides: {
+    //     body: {
+    //       backgroundImage: `url(/assets/images/mainBackgound.svg)`,
+    //       backgroundRepeat: "no-repeat",
+    //       backgroundSize: "cover",
+    //     },
+    //   },
+    // },
     MuiInputLabel: {
       styleOverrides: {
         root: {

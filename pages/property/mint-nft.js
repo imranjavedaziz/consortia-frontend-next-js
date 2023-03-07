@@ -2,9 +2,6 @@ import {
   Box,
   Typography,
   styled,
-  Button,
-  Checkbox,
-  Grid,
   InputLabel,
   Dialog,
   CircularProgress,
@@ -14,24 +11,15 @@ import CustomInputField from "../../src/components/common/CustomInputField";
 import NftsLayout from "../../src/nftsLayout";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { useTitle } from "../../src/utils/Title";
 import GoogleMapAutoComplete from "../../src/components/googleMapSearch/GoogleMapAutoComplete";
 import CustomFileUpload from "../../src/components/common/CustomFileUpload";
 import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { publicAxios } from "../../src/api";
-import { useRouter } from "next/router";
-import axios from "axios";
-import {
-  GET_PROFILE_BY_USERID,
-  MINT_PROPERTY_NFT,
-} from "../../src/constants/endpoints";
+import { GET_PROFILE_BY_USERID } from "../../src/constants/endpoints";
 import CreditCardInput from "../../src/components/CreditCardInput";
 import { useAuthContext } from "../../src/context/AuthContext";
-import { ExtractPrivateFileFromAws } from "../../src/utils/aws/ExtractPrivateFileFromAws";
-
-// import { getSubLocationsFromLocation } from "../../src/utils/getSubLocationsFromLocation";
 
 const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -53,11 +41,8 @@ const MintPropertyNfts = styled(Box)(({ theme }) => ({
 }));
 
 const MintNFTS = () => {
-  const { push } = useRouter();
   const {
-    isCreditCardModalOpen,
     setIsCreditCardModalOpen,
-    handleCreditCardModalClose,
     setSuccessData,
     setOpenVerificationSuccess,
     setOpenVerificationFailure,
@@ -66,7 +51,6 @@ const MintNFTS = () => {
     liveStripe,
     stripe,
   } = useAuthContext();
-  console.log({ editNftData });
   useTitle("Mint NFTs");
   const [housePhoto, setHousePhoto] = useState("");
   const [categoryDocument, setCategoryDocument] = useState("");

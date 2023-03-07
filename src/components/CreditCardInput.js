@@ -1,8 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Card from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
@@ -12,19 +10,16 @@ import {
   formatCreditCardNumber,
   formatCVC,
   formatExpirationDate,
-  formatFormData,
 } from "./utils";
 import { publicAxios } from "../api";
-import { Button, CircularProgress, TextField, Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { GradiantTextField } from "./common/CustomInputField";
 import { useAuthContext } from "../context/AuthContext";
-import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
 import {
   MINT_PRACTITIONER_NFT,
   MINT_PROPERTY_NFT,
-  STRIPE_VERIFY_IDENTITY,
 } from "../constants/endpoints";
 
 const inputFields = [
@@ -54,24 +49,18 @@ const inputFields = [
 ];
 
 const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
-  const { push } = useRouter();
   const {
     isCreditCardModalOpen,
-    setIsCreditCardModalOpen,
     handleCreditCardModalClose,
-    setIsVerifyIdentityModalOpen,
     setOpenVerificationSuccess,
     setOpenVerificationFailure,
     stripe,
     isCreditCardProcessing,
     setIsCreditCardProcessing,
-    setSuccessData,
     creditCardData,
     setCreditCardData,
     liveStripe,
   } = useAuthContext();
-  const [open, setOpen] = useState(true);
-
   const ref = useRef(null);
   const [verifyModalOpen, setVerifyModalOpen] = useState(false);
   const handleCallback = ({ issuer }, isValid) => {
