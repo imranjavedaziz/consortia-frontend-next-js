@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import { graphik, poppins } from "./utils/fontFamilies/fontFamilies";
 
 const theme = createTheme();
 export const lightTheme = createTheme({
@@ -81,7 +82,7 @@ export const darkTheme = createTheme({
   },
 
   typography: {
-    fontFamily: "Poppins, sans-serif",
+    fontFamily: poppins.style.fontFamily,
     fontWeightLight: 400,
     fontWeightRegular: 500,
     fontWeightMedium: 600,
@@ -109,7 +110,7 @@ export const darkTheme = createTheme({
     },
 
     h3: {
-      fontFamily: "Graphik, sans-serif",
+      fontFamily: graphik.style.fontFamily,
       lineHeight: "44px",
       letterSpacing: "0.04em",
       [theme.breakpoints.up("lg")]: {

@@ -16,6 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.113",
     "@mui/material": "^5.11.0",
     "@mui/x-date-pickers": "^5.0.12",
+    "@next/font": "^13.2.3",
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",
     "aws-sdk": "^2.1286.0",

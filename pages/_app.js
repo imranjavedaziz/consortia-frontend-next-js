@@ -12,6 +12,10 @@ import { AuthContext } from "../src/context/AuthContext";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
+// const roboto = Poppins({
+//   subsets: ["latin"],
+//   weight: ["400", "700"],
+// });
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
@@ -30,17 +34,17 @@ export default function MyApp(props) {
           content="Consortia is the only NFT and training solution led by an SEC registered investment banker, real estate broker and mortgage loan originator."
         ></meta>
         <link rel="shortcut icon" href="/consortiaFavicon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="true"
-        />
-        <link
+        /> */}
+        {/* <link
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap"
           rel="stylesheet"
-        />
-        <link href="https://fonts.cdnfonts.com/css/graphik" rel="stylesheet" />
+        /> */}
+        {/* <link href="https://fonts.cdnfonts.com/css/graphik" rel="stylesheet" /> */}
       </Head>
       <ThemeProvider theme={darkTheme}>
         <AuthContext>

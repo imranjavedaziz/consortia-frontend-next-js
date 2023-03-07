@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 var OpenLocationCode = require("open-location-code").OpenLocationCode;
 import Geocode from "react-geocode";
 
-export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
+export const GradiantAutocomplete = styled(Autocomplete)(({ theme }) => ({
   // paddingRight: "20px",
   margin: "2px",
   backgroundColor: "rgba(29, 6, 104, 0.7)",
@@ -52,12 +52,12 @@ export const GradiantAutocomplete = styled(Autocomplete)(({}) => ({
   "& input::placeholder": {
     fontSize: "12px",
     fontWeight: 400,
-    fontFamily: "Poppins, sans-serif",
+    fontFamily: theme.typography.fontFamily,
   },
   "& textarea::placeholder": {
     fontSize: "12px",
     fontWeight: 400,
-    fontFamily: "Poppins, sans-serif",
+    fontFamily: theme.typography.fontFamily,
   },
 }));
 

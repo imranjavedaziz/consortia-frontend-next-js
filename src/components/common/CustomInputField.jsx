@@ -16,7 +16,7 @@ import { RESEND_OTP } from "../../constants/endpoints";
 import toast from "react-hot-toast";
 import { publicAxios } from "../../api";
 
-export const GradiantTextField = styled(TextField)(({}) => ({
+export const GradiantTextField = styled(TextField)(({ theme }) => ({
   paddingRight: "20px",
 
   "& .MuiInput-root": {
@@ -35,12 +35,12 @@ export const GradiantTextField = styled(TextField)(({}) => ({
   "& input::placeholder": {
     fontSize: "12px",
     fontWeight: 400,
-    fontFamily: "Poppins, sans-serif",
+    fontFamily: theme.typography.fontFamily,
   },
   "& textarea::placeholder": {
     fontSize: "12px",
     fontWeight: 400,
-    fontFamily: "Poppins, sans-serif",
+    fontFamily: theme.typography.fontFamily,
   },
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
     display: "none",
