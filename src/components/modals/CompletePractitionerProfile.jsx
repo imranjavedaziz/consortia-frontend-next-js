@@ -13,6 +13,7 @@ import VerifyCodeForProfileUpdate from "./verifyCodeForProfileUpdate/VerifyCodeF
 import { EDIT_USER_PROFILE } from "../../constants/endpoints";
 import { useAuthContext } from "../../context/AuthContext";
 import { LoadingButton } from "@mui/lab";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
