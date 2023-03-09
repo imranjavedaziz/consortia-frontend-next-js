@@ -8,6 +8,7 @@ import { useState } from "react";
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
+// import Cross from "../../../public/assets/icons/cross.svg";
 
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
@@ -74,6 +75,7 @@ const CustomFileUpload = ({
   }, []);
 
   const handleChange = (e) => {
+    // console.log("ddddddd", e.currentTarget.value);
     if (!isValidFileType(e.target.files[0]?.type)) {
       e.target.value = null;
       allowPdf
@@ -116,6 +118,7 @@ const CustomFileUpload = ({
         }
       }
     );
+    e.target.value = null;
   };
 
   const handleClick = (e) => {
@@ -187,32 +190,64 @@ const CustomFileUpload = ({
           ) : uploadingToS3 ? (
             <CircularProgress color="primary" />
           ) : fileType == "application/pdf" ? (
-            <iframe
-              style={iframeStyle}
-              src={file}
-              // width="auto"
-              // height="500px"
-              onMouseLeave={() =>
-                setIframeStyle({
-                  zIndex: 50,
-                  width: belowSm ? "50%" : "auto",
-                  height: "100%",
-                  // overflow: "hidden",
-                })
-              }
-              // onMouseLeave={() => setIframeSize(["auto", "100%"])}
-              // onMouseOver={() => setIframeSize(["90vw", "100vh"])}
-              onMouseOver={() =>
-                setIframeStyle((prev) => ({
-                  ...prev,
-                  position: "fixed",
-                  top: "5vh",
-                  left: "5vw",
-                  height: "90vh",
-                  width: "90vw",
-                }))
-              }
-            ></iframe>
+            <div
+              style={{
+                position: "relative",
+                height: "inherit",
+              }}
+            >
+              <img
+                src="/assets/icons/colorCross.svg"
+                width="20px"
+                height="20px"
+                style={{
+                  position: "absolute",
+                  right: "23px",
+                  top: "14px",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => {
+                  if (e && e.stopPropagation) e.stopPropagation();
+                  setFile("");
+                  setS3Url("");
+                  setFileType("");
+                  e.target.value = null;
+                }}
+              />
+              <img
+                src="/assets/icons/colorEye.svg"
+                width="30px"
+                height="30px"
+                style={{
+                  position: "absolute",
+                  right: "140px",
+                  top: "65px",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => {
+                  if (e && e.stopPropagation) e.stopPropagation();
+                  setIframeStyle((prev) => ({
+                    ...prev,
+                    position: "fixed",
+                    top: "5vh",
+                    left: "5vw",
+                    height: "90vh",
+                    width: "90vw",
+                  }));
+                }}
+              />
+              <iframe
+                style={iframeStyle}
+                src={file}
+                onMouseLeave={() =>
+                  setIframeStyle({
+                    zIndex: 50,
+                    width: belowSm ? "50%" : "auto",
+                    height: "100%",
+                  })
+                }
+              ></iframe>
+            </div>
           ) : (
             <img src={file} width="auto" height="100%" />
           )}
