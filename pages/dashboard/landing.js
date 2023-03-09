@@ -3,6 +3,8 @@ import { Box, Button, CardMedia, Typography } from "@mui/material";
 import NftsLayout from "../../src/nftsLayout";
 import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
+import { publicAxios } from "../../src/api";
+import { VIDEO_WATCHED } from "../../src/constants/endpoints";
 
 function Landing() {
   useTitle("Dasboard");
@@ -11,7 +13,22 @@ function Landing() {
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo(profile_info);
+    if (profile_info?.user?.isConfirmed) {
+      updateVideoStatus();
+    }
   }, []);
+
+  const updateVideoStatus = async () => {
+    try {
+      const res = await publicAxios.get(VIDEO_WATCHED, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>

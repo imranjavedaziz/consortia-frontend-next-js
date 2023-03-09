@@ -81,7 +81,6 @@ function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
       );
 
       setIsLoading(false);
-      debugger;
       const user = res?.data?.data?.user;
       toast.success(res?.data?.message);
       handleClose();
@@ -155,15 +154,7 @@ function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
             "&::-webkit-scrollbar": {
               width: "6px",
             },
-            // "&::-webkit-scrollbar-track": {
-            //   background: "#f1f1f1",
-            // },
-            // "&::-webkit-scrollbar-thumb": {
-            //   background: "#9f9dc9",
-            // },
             "& textarea::-webkit-scrollbar": {
-              // display: "none",
-              // overflow: "hidden",
               display: "none",
             },
           }}
@@ -189,17 +180,6 @@ function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
               <Box>
                 <InputLabel shrink>Bio</InputLabel>
                 <Box
-                  sx={{
-                    "&::-webkit-scrollbar": {
-                      width: "6px",
-                    },
-                    "&::-webkit-scrollbar-track": {
-                      background: "#f1f1f1",
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                      background: "#9f9dc9",
-                    },
-                  }}
                   style={{
                     background:
                       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
@@ -211,40 +191,11 @@ function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
                 >
                   <GradiantTextField
                     value={bio}
-                    sx={{
-                      // overflow: "hidden",
-                      "&::-webkit-scrollbar ": {},
-                    }}
                     onChange={(e) => setBio(e.target.value)}
                     fullWidth
                     variant="standard"
-                    inputProps={{
-                      overflow: "hidden",
-                      "&::-webkit-scrollbar": {
-                        width: "6px",
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        background: "#f1f1f1",
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        background: "#9f9dc9",
-                      },
-                    }}
                     InputProps={{
                       disableUnderline: true,
-                      style: {
-                        overflow: "hidden",
-
-                        "&::-webkit-scrollbar": {
-                          width: "6px",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                          background: "#f1f1f1",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                          background: "#9f9dc9",
-                        },
-                      },
                     }}
                     style={{
                       background: "rgba(29, 6, 104, 1)",

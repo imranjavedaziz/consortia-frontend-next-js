@@ -58,6 +58,11 @@ const inputFields = [
     placeholder: "License Number",
   },
   {
+    name: "bio",
+    label: "Bio",
+    placeholder: "Enter your Bio",
+  },
+  {
     name: "companyName",
     label: "Business Name",
     placeholder: "Enter your Business Name",
@@ -216,6 +221,7 @@ const EditProfile = () => {
                     email: userData.email,
                     phoneNumber: userData.phoneNumber,
                     practitionerType: userData.practitionerType,
+                    bio: userData.bio,
                     companyName: userData.companyName,
                     country: userData.country,
                     state: userData.state,
@@ -255,6 +261,7 @@ const EditProfile = () => {
                     companyName: Yup.string().required(
                       "Business Name is required"
                     ),
+                    bio: Yup.string().required("Bio is required"),
                     country: Yup.string().required("Country is required"),
                     state: Yup.string().required(
                       "Province / State is required"
@@ -296,6 +303,11 @@ const EditProfile = () => {
                           margin="auto"
                           // paddingX={2}
                           rowGap={3}
+                          sx={{
+                            "& textarea::-webkit-scrollbar": {
+                              display: "none",
+                            },
+                          }}
                         >
                           <Box>
                             <InputLabel shrink htmlFor="firstName">
@@ -336,6 +348,11 @@ const EditProfile = () => {
                                 label={label}
                                 placeholder={placeholder}
                                 sensitive={sensitive}
+                                {...(name == "bio" && {
+                                  rows: 3,
+                                  maxRows: 10,
+                                  multiline: true,
+                                })}
                               />
                             )
                           )}

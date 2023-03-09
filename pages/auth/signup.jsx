@@ -147,7 +147,6 @@ const SignUp = () => {
     state,
     companyName,
   }) => {
-    debugger;
     try {
       const res = await publicAxios.patch(
         `${EDIT_USER_PROFILE}/${

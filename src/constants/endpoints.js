@@ -25,8 +25,9 @@ export const PRACTITIONER_NFT_DETAIL = "practitioner_nft";
 
 export const STRIPE_VERIFY_IDENTITY = "stripe_progress_status";
 
-export const PRACTITIONER_NFT_BLOCKCHAIN_DATA = "practitioner_nft_blockchain_data";
+export const PRACTITIONER_NFT_BLOCKCHAIN_DATA =
+  "practitioner_nft_blockchain_data";
 
 export const PROPERTY_NFT_BLOCKCHAIN_DATA = "property_nft_blockchain_data";
 
-
+export const VIDEO_WATCHED = "video_watch";

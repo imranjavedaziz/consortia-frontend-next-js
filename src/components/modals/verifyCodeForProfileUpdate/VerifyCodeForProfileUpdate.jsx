@@ -120,7 +120,6 @@ function VerifyCodeForProfileUpdate({
           }
         );
         setFetching(false);
-        debugger;
         const user = res?.data?.data?.user;
         toast.success(res?.data?.message);
         const profile_info = JSON.parse(localStorage.getItem("profile_info"));
