@@ -261,7 +261,9 @@ const EditProfile = () => {
                     companyName: Yup.string().required(
                       "Business Name is required"
                     ),
-                    bio: Yup.string().required("Bio is required"),
+                    bio: Yup.string()
+                      .max(1000, "Bio should be less than 1000 characters")
+                      .required("Bio is required"),
                     country: Yup.string().required("Country is required"),
                     state: Yup.string().required(
                       "Province / State is required"

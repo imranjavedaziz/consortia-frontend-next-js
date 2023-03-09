@@ -42,6 +42,11 @@ export const GradiantTextField = styled(TextField)(({ theme }) => ({
     fontWeight: 400,
     fontFamily: theme.typography.fontFamily,
   },
+  "& textarea": {
+    fontSize: "13px",
+    fontWeight: 500,
+    fontFamily: theme.typography.fontFamily,
+  },
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
     display: "none",
   },

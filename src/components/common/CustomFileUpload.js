@@ -9,6 +9,7 @@ import AWS from "aws-sdk";
 import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import CancelIcon from "@mui/icons-material/Cancel";
 // import Cross from "../../../public/assets/icons/cross.svg";
 
 AWS.config.update({
@@ -200,10 +201,12 @@ const CustomFileUpload = ({
               }}
             >
               <img
+                title="Delete"
                 src="/assets/icons/colorCross.svg"
                 width="20px"
                 height="20px"
                 style={{
+                  color: "#12134D",
                   position: "absolute",
                   right: "23px",
                   top: "14px",
@@ -218,6 +221,7 @@ const CustomFileUpload = ({
                 }}
               />
               <img
+                title="Toggle Big Screen"
                 src="/assets/icons/colorEye.svg"
                 width="30px"
                 height="30px"
@@ -226,6 +230,7 @@ const CustomFileUpload = ({
                   right: belowSm ? "100px" : "140px",
                   top: belowSm ? "25px" : "65px",
                   cursor: "pointer",
+                  // color: "#000",
                   // zIndex: 900000,
                 }}
                 onClick={(e) => {
@@ -242,13 +247,15 @@ const CustomFileUpload = ({
                 }}
               />
               {showExitLargeScreenIcon && (
-                <FullscreenExitIcon
-                  color="primary"
+                <img
+                  title="Toggle Small View"
+                  // color="primary"
                   fontSize="large"
-                  // src="/assets/icons/colorEye.svg"
+                  src="/assets/icons/colorCross.svg"
                   width="30px"
                   height="30px"
                   style={{
+                    color: "#12134D",
                     position: "fixed",
                     right: "10vh",
                     top: "7vh",
