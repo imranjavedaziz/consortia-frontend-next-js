@@ -8,6 +8,7 @@ import { useState } from "react";
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 // import Cross from "../../../public/assets/icons/cross.svg";
 
 AWS.config.update({
@@ -38,9 +39,11 @@ const CustomFileUpload = ({
   const [iframeSize, setIframeSize] = useState(["auto", "100%"]);
   const [iframeStyle, setIframeStyle] = useState({
     zIndex: 50,
-    width: belowSm ? "50%" : "auto",
+    width: belowSm ? "100%" : "auto",
     height: "100%",
   });
+  const [showExitLargeScreenIcon, setShowExitLargeScreenIcon] = useState(false);
+  const [showEyeIcon, setShowEyeIcon] = useState(false);
 
   // const [uploadingToS3, setUploadingToS3] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -220,9 +223,10 @@ const CustomFileUpload = ({
                 height="30px"
                 style={{
                   position: "absolute",
-                  right: "140px",
-                  top: "65px",
+                  right: belowSm ? "100px" : "140px",
+                  top: belowSm ? "25px" : "65px",
                   cursor: "pointer",
+                  // zIndex: 900000,
                 }}
                 onClick={(e) => {
                   if (e && e.stopPropagation) e.stopPropagation();
@@ -234,18 +238,45 @@ const CustomFileUpload = ({
                     height: "90vh",
                     width: "90vw",
                   }));
+                  setShowExitLargeScreenIcon(true);
                 }}
               />
+              {showExitLargeScreenIcon && (
+                <FullscreenExitIcon
+                  color="primary"
+                  fontSize="large"
+                  // src="/assets/icons/colorEye.svg"
+                  width="30px"
+                  height="30px"
+                  style={{
+                    position: "fixed",
+                    right: "10vh",
+                    top: "7vh",
+                    cursor: "pointer",
+                    zIndex: 900000,
+                  }}
+                  onClick={(e) => {
+                    if (e && e.stopPropagation) e.stopPropagation();
+                    setShowExitLargeScreenIcon(false);
+                    setIframeStyle({
+                      zIndex: 50,
+                      width: belowSm ? "100%" : "auto",
+                      height: "100%",
+                    });
+                  }}
+                />
+              )}
+
               <iframe
                 style={iframeStyle}
-                src={file}
-                onMouseLeave={() =>
-                  setIframeStyle({
-                    zIndex: 50,
-                    width: belowSm ? "50%" : "auto",
-                    height: "100%",
-                  })
-                }
+                src={file + "#toolbar=0"}
+                // onMouseLeave={() =>
+                //   setIframeStyle({
+                //     zIndex: 50,
+                //     width: belowSm ? "50%" : "auto",
+                //     height: "100%",
+                //   })
+                // }
               ></iframe>
             </div>
           ) : (
