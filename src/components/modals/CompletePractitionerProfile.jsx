@@ -60,6 +60,11 @@ function CompletePractitionerProfile({ open, setOpen, text, title, height }) {
       return;
     }
 
+    if (bio.length > 1000) {
+      toast.error("Bio should be less than 1000 characters");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await publicAxios.patch(
