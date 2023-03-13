@@ -28,7 +28,7 @@ export default function Index({ children }) {
       <Box style={sectionStyle}>
         <Box
           sx={{
-            paddingX: { xs: "20px", md: "30", lg: "80px", xl: "120" },
+            paddingX: { xs: "20px", md: "30", lg: "72px", xl: "120" },
             width: "100%",
           }}
         >
