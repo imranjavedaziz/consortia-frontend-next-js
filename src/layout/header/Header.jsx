@@ -304,7 +304,7 @@ const Header = () => {
                       "linear-gradient(90deg, #1D2CDF 2.38%, #B731FF 100%)",
                     borderRadius: "24px",
                     width: { xs: "70px", md: "140px" },
-                    padding: { xs: "0px", md: "10px 10px" },
+                    padding: { xs: " 0px 50px", md: "10px 10px" },
                     height: { xs: "25px", md: "33px", xl: "37px" },
                     fontSize: { xs: "13px", xl: "17px" },
                     textTransform: "capitalize",
