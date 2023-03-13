@@ -13,10 +13,17 @@ export default function Home() {
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
+  const showImageOnSide = useMediaQuery("(min-width:450px)");
+  console.log({ belowSm }, { showImageOnSide });
   return (
     <>
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
+        sx={{
+          display: "flex",
+          justifyContent: showImageOnSide ? "space-between" : "center",
+          width: "100%",
+          alignItems: "center",
+        }}
       >
         <Box>
           <Box>
@@ -43,7 +50,40 @@ export default function Home() {
               <br />
               NOT a crypto. We do NOT sell homes as NFTs.
             </Typography>
-            <PolygonButton />
+            {!showImageOnSide && (
+              <Box>
+                <Box
+                  sx={{
+                    display: {
+                      // xs: "none",
+                      sm: "block",
+                    },
+                  }}
+                >
+                  <Image
+                    src="/assets/images/landingPageBuilding.svg"
+                    alt="Logo"
+                    height={211}
+                    width={224}
+                    style={{ width: "100%" }}
+                    // sizes="(max-width: 600px) 349px,
+                    // (max-width: 1200px) 50vw,
+                    // 33vw"
+                  />
+                </Box>
+              </Box>
+            )}
+            <Box
+              {...(!showImageOnSide && {
+                sx: {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                },
+              })}
+            >
+              <PolygonButton />
+            </Box>
           </Box>
           {/* This section is commented on behalf of client */}
           {/* <Box
@@ -73,20 +113,24 @@ export default function Home() {
           </Box> */}
           {/* This section is commented on behalf of client */}
         </Box>
-        {!belowSm && (
-          <Box>
-            <Box sx={{ display: { xs: "none", md: "block" } }}>
-              <Image
-                src="/assets/images/landingPageBuilding.svg"
-                alt="Logo"
-                height={betweenSmAndLg ? 330 : 564}
-                width={betweenSmAndLg ? 349 : 597}
-                style={{ width: "100%" }}
-                // sizes="(max-width: 600px) 349px,
-                // (max-width: 1200px) 50vw,
-                // 33vw"
-              />
-            </Box>
+        {showImageOnSide && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              src="/assets/images/landingPageBuilding.svg"
+              alt="Logo"
+              height={betweenSmAndLg ? 330 : belowSm ? 350 : 564}
+              width={betweenSmAndLg ? 349 : belowSm ? 350 : 597}
+              style={{ width: "100%" }}
+              // sizes="(max-width: 600px) 349px,
+              // (max-width: 1200px) 50vw,
+              // 33vw"
+            />
           </Box>
         )}
       </Box>
