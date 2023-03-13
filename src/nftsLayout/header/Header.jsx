@@ -165,7 +165,7 @@ export default function Header() {
     <>
       <Box
         sx={{
-          margin: !isTablet ? "37px 0px 56px 0px" : "10px 0px",
+          margin: !isTablet ? "37px 0px 56px 0px" : "10px 10px",
           flexGrow: 1,
           display: "flex",
           alignItems: "center",

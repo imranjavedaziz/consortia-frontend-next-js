@@ -234,7 +234,7 @@ function NftsLayout({ children }) {
               height: "100%",
               background: theme.palette.background.default,
               position: "absolute",
-              zIndex: 1,
+              zIndex: 4,
             }}
           >
             <SideBar setopenForMobile={setopenForMobile} />

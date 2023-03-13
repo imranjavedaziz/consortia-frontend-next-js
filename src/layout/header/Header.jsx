@@ -142,6 +142,11 @@ const Header = () => {
     },
   ];
   const forHamburgerItems = betweenSmXlMenuItems.concat(moreMenuItems);
+  forHamburgerItems.push({
+    name: "Signup",
+    path: "/auth/signup",
+    target: "",
+  });
   const list = (anchor) => (
     <Box
       sx={{
