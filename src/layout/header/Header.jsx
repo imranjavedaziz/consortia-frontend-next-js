@@ -219,7 +219,7 @@ const Header = () => {
               />
             </ImageLogo>
           </Grid>
-          <Grid item xs={7} sm={isLoggedIn ? 10 : 8}>
+          <Grid item xs={7.5} sm={isLoggedIn ? 10 : 8}>
             <NavigationList
               sx={{
                 display: "flex",
@@ -292,7 +292,7 @@ const Header = () => {
 
           <Grid
             item
-            xs={3}
+            xs={2.5}
             sm={isLoggedIn ? 1 : 3}
             sx={{
               display: "flex",
