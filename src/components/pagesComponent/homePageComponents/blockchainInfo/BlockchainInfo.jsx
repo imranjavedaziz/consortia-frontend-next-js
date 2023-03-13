@@ -203,7 +203,7 @@ function BlockchainInfo() {
         >
           <Typography variant="h2">WANT TO MINT YOUR NFTS?</Typography>
         </Box>
-        <Grid container>
+        <Grid container alignItems="start">
           <Grid item xs={1.5}></Grid>
           <Grid
             item
@@ -276,7 +276,8 @@ function BlockchainInfo() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              alignSelf: "stretch",
             }}
           >
             <Box>
