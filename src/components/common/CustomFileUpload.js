@@ -257,7 +257,7 @@ const CustomFileUpload = ({
                   style={{
                     color: "#12134D",
                     position: "fixed",
-                    right: "10vh",
+                    right: "7vw",
                     top: "7vh",
                     cursor: "pointer",
                     zIndex: 900000,
