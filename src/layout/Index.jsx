@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
-import { Grid, Paper } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -25,7 +25,7 @@ export default function Index({ children }) {
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Paper style={sectionStyle}>
+      <Box style={sectionStyle}>
         <Box
           sx={{
             paddingX: { xs: "20px", md: "30", lg: "120px" },
@@ -46,7 +46,7 @@ export default function Index({ children }) {
         >
           <Footer />
         </Box>
-      </Paper>
+      </Box>
     </>
   );
 }
