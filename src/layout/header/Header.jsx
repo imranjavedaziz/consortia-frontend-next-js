@@ -60,8 +60,11 @@ const Header = () => {
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
-  const betweenSmAndXl = useMediaQuery((theme) =>
-    theme.breakpoints.between("sm", "xl")
+  const betweenMdAndXl = useMediaQuery((theme) =>
+    theme.breakpoints.between("md", "xl")
+  );
+  const betweenSmMd = useMediaQuery((theme) =>
+    theme.breakpoints.between("sm", "md")
   );
   useEffect(() => {
     if (!belowSm) setDrawer(false);
@@ -128,7 +131,7 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const betweenSmXlMenuItems = navigationItems.slice(0, 3);
+  const betweenMdXlMenuItems = navigationItems.slice(0, 3);
   const moreMenuItems = [
     {
       name: "Order Certified Asset",
@@ -141,12 +144,19 @@ const Header = () => {
       target: "_blank",
     },
   ];
-  const forHamburgerItems = betweenSmXlMenuItems.concat(moreMenuItems);
+  const forHamburgerItems = betweenMdXlMenuItems.concat(moreMenuItems);
   forHamburgerItems.push({
     name: "Signup",
     path: "/auth/signup",
     target: "",
   });
+  let betweenSmMdItems = navigationItems.slice(0, 2);
+  if (betweenSmMd) {
+    moreMenuItems.unshift({
+      name: "About Certified Asset",
+      path: "/about-certified-asset",
+    });
+  }
   const list = (anchor) => (
     <Box
       sx={{
@@ -217,54 +227,57 @@ const Header = () => {
                 gap: { xs: 1, md: 2, lg: 3 },
               }}
             >
-              {(betweenSmAndXl ? betweenSmXlMenuItems : navigationItems).map(
-                (item, i) => {
-                  return (
-                    <Link
-                      key={i}
-                      href={item.path}
-                      target={item.target}
-                      passHref={true}
-                      style={{ textDecoration: "none" }}
-                    >
-                      {isActive(item.path) ? (
-                        <Typography
-                          varaint="h6"
-                          fontWeight={500}
-                          sx={{
-                            // textDecoration: "underline",
+              {(betweenMdAndXl
+                ? betweenMdXlMenuItems
+                : betweenSmMd
+                ? betweenSmMdItems
+                : navigationItems
+              ).map((item, i) => {
+                return (
+                  <Link
+                    key={i}
+                    href={item.path}
+                    target={item.target}
+                    passHref={true}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {isActive(item.path) ? (
+                      <Typography
+                        varaint="h6"
+                        fontWeight={500}
+                        sx={{
+                          // textDecoration: "underline",
 
-                            position: "relative",
-                            "::after": {
-                              content: "''",
-                              width: "100%",
-                              position: "absolute",
-                              left: "0",
-                              bottom: "-1px",
-                              height: "3px",
-                              background:
-                                "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                            },
-                            textDecorationColor:
+                          position: "relative",
+                          "::after": {
+                            content: "''",
+                            width: "100%",
+                            position: "absolute",
+                            left: "0",
+                            bottom: "-1px",
+                            height: "3px",
+                            background:
                               "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
-                          }}
-                        >
-                          {item.name}
-                        </Typography>
-                      ) : (
-                        <Typography
-                          varaint="h6"
-                          fontWeight={500}
-                          sx={{ opacity: 0.5 }}
-                        >
-                          {item.name}
-                        </Typography>
-                      )}
-                    </Link>
-                  );
-                }
-              )}
-              {betweenSmAndXl && (
+                          },
+                          textDecorationColor:
+                            "linear-gradient(253.4deg, #B731FF 16.47%, #1D2CDF 95.2%)",
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                    ) : (
+                      <Typography
+                        varaint="h6"
+                        fontWeight={500}
+                        sx={{ opacity: 0.5 }}
+                      >
+                        {item.name}
+                      </Typography>
+                    )}
+                  </Link>
+                );
+              })}
+              {(betweenMdAndXl || betweenSmMd) && (
                 <Typography
                   varaint="h6"
                   fontWeight={500}
