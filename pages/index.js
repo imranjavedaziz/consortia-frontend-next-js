@@ -142,3 +142,14 @@ export default function Home() {
     </>
   );
 }
+export async function getServerSideProps(context) {
+  const { access, signup_info = null } = context.req.cookies;
+  let signupData = JSON.parse(signup_info);
+  if (!access) {
+    return { props: { access: null } };
+  }
+  if (signup_info) {
+    return { props: { access, signupData } };
+  }
+  return { props: { access } };
+}

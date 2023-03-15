@@ -7,19 +7,19 @@ import { useAuthContext } from "../context/AuthContext";
 
 function Index({ children }) {
   const { push } = useRouter();
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
-    if (profileInfo?.user?.role === "Practitioner") {
-      if (token && profileInfo?.user?.practitionerType) {
-        push("/dashboard/landing");
-      } else {
-        push("/auth/login");
-      }
-    } else {
-      if (token) push("/dashboard/landing");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("access");
+  //   const profileInfo = JSON.parse(localStorage.getItem("profile_info"));
+  //   if (profileInfo?.user?.role === "Practitioner") {
+  //     if (token && profileInfo?.user?.practitionerType) {
+  //       push("/dashboard/landing");
+  //     } else {
+  //       push("/auth/login");
+  //     }
+  //   } else {
+  //     if (token) push("/dashboard/landing");
+  //   }
+  // }, []);
   const sectionStyle = {
     minHeight: "100vh",
     height: "100%",

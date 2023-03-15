@@ -43,10 +43,10 @@ function NftsLayout({ children }) {
     setopenForMobile(true);
   };
   const theme = useTheme();
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    if (!token) push("/auth/login");
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("access");
+  //   if (!token) push("/auth/login");
+  // }, []);
   const sectionStyle = {
     minHeight: "100vh",
     height: "100%",

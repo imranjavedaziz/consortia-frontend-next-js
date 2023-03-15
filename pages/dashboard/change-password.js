@@ -39,14 +39,18 @@ const ChangePassword = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
-  const changePassword = async ({ current_password, password,confirm_password }) => {
+  const changePassword = async ({
+    current_password,
+    password,
+    confirm_password,
+  }) => {
     try {
       const res = await publicAxios.post(
         CHANGE_PASSWORD,
         {
           current_password: current_password,
           password: password,
-          confirm_password:confirm_password
+          confirm_password: confirm_password,
         },
         {
           headers: {
@@ -60,9 +64,9 @@ const ChangePassword = () => {
       if (Array.isArray(error?.data?.message)) {
         toast.error(error?.data?.message?.error?.[0]);
       } else {
-        if(typeof(error?.data?.message) === 'string'){
+        if (typeof error?.data?.message === "string") {
           toast.error(error?.data?.message);
-        }else{
+        } else {
           toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
         }
       }
@@ -212,3 +216,23 @@ export default ChangePassword;
 ChangePassword.getLayout = function (page) {
   return <NftsLayout>{page}</NftsLayout>;
 };
+
+export async function getServerSideProps(context) {
+  const { access, profile_info = JSON.stringify({}) } = context.req.cookies;
+  let profileInfoData = JSON.parse(profile_info);
+  if (
+    (profileInfoData?.user?.role == "Practitioner" &&
+      profileInfoData?.user?.practitionerType &&
+      access) ||
+    (profileInfoData?.user?.role == "Consumer" && access)
+  ) {
+    return { props: { access } };
+  } else {
+    return { redirect: { destination: "/auth/login", permanent: false } };
+  }
+  // if (!access) {
+  //   return { redirect: { destination: "/auth/login", permanent: false } };
+  // }
+
+  // return { props: { access } };
+}

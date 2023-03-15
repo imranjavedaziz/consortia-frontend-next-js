@@ -21,7 +21,11 @@ export default function MyApp(props) {
   const renderWithLayout =
     Component.getLayout ||
     function (page) {
-      return <Layout>{page}</Layout>;
+      return (
+        <Layout token={pageProps?.access} signupData={pageProps?.signupData}>
+          {page}
+        </Layout>
+      );
     };
 
   return (

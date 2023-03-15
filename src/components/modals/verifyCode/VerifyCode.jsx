@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { VERIFY_OTP_PASSWORD, RESEND_OTP } from "../../../constants/endpoints";
+import { removeCookies } from "../../../utils/cookies/Cookie";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -83,6 +84,7 @@ function VerifyCodeModal({
         setOpen(false);
         localStorage.removeItem("access");
         localStorage.removeItem("profile_info");
+        removeCookies("access");
         push("/");
       }
       handleClose();

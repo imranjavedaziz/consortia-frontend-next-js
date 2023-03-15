@@ -6,7 +6,7 @@ import { Box } from "@mui/system";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-export default function Index({ children }) {
+export default function Index({ children, token, signupData }) {
   const router = useRouter();
   const sectionStyle = {
     minHeight: "100vh",
@@ -32,7 +32,7 @@ export default function Index({ children }) {
             width: "100%",
           }}
         >
-          <Header />
+          <Header token={token} signupData={signupData} />
           {children}
         </Box>
         <Box
