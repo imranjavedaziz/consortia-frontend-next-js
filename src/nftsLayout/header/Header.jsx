@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../context/AuthContext";
+import { removeCookies } from "../../utils/cookies/Cookie";
 // import { publicAxios } from "../../api";
 // import { STRIPE_VERIFY_IDENTITY } from "../../constants/endpoints";
 // import toast from "react-hot-toast";
@@ -291,6 +292,9 @@ export default function Header() {
                     setChoosePractitionerOpen(true);
                     localStorage.removeItem("access");
                     localStorage.removeItem("profile_info");
+                    removeCookies("access");
+                    removeCookies("signup_info");
+                    removeCookies("profile_info");
                     push("/");
                   }
 

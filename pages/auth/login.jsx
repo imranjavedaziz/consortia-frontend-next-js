@@ -24,6 +24,7 @@ import DialogTextInput from "../../src/components/modals/dialogTextInput/DialogT
 import DialogResetPassword from "../../src/components/modals/resetPassword/DialogResetPassword";
 import { useTitle } from "../../src/utils/Title";
 import { useAuthContext } from "../../src/context/AuthContext";
+import { setCookies } from "../../src/utils/cookies/Cookie";
 import { AUTH_LOGIN } from "../../src/constants/endpoints";
 
 function Login() {
@@ -48,6 +49,8 @@ function Login() {
       });
       localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
       localStorage.setItem("access", res?.data?.data?.access);
+      setCookies({ access: res?.data?.data?.access });
+      setCookies({ profile_info: res?.data?.data });
       toast.success("Welcome Back!");
       if (
         res?.data?.data?.user?.practitionerType ||
@@ -285,3 +288,48 @@ export default Login;
 Login.getLayout = function (page) {
   return <AuthLayout>{page}</AuthLayout>;
 };
+export async function getServerSideProps(context) {
+  const {
+    access,
+    profile_info = JSON.stringify({}),
+    // signup_info = JSON.stringify({}),
+  } = context.req.cookies;
+  let profileInfoData = JSON.parse(profile_info);
+  // let profileInfoData = JSON.parse(profile_info);
+  // let signupInfoData = JSON.parse(signup_info);
+  // if (signupInfoData && signupInfoData?.user?.role == "Practitioner") {
+  //   return {
+  //     redirect: { destination: "/auth/signup", permanent: false },
+  //   };
+  // }
+  if (
+    (profileInfoData?.user?.role == "Practitioner" &&
+      profileInfoData?.user?.practitionerType &&
+      access) ||
+    (profileInfoData?.user?.role == "Consumer" && access)
+  ) {
+    return {
+      redirect: { destination: "/dashboard/landing", permanent: false },
+    };
+  } else {
+    return { props: { access: null } };
+  }
+  // if (access) {
+  //   return {
+  //     redirect: { destination: "/dashboard/landing", permanent: false },
+  //   };
+  // }
+  // if (profileInfoData?.user?.role == "Practitioner") {
+  //   if (profileInfoData?.user?.practitionerType && access) {
+  //     return {
+  //       redirect: { destination: "/dashboard/landing", permanent: false },
+  //     };
+  //   } else {
+  //     return {
+  //       redirect: { destination: "/auth/signup", permanent: false },
+  //     };
+  //   }
+  // }
+
+  // return { props: { access: null } };
+}

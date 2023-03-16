@@ -50,10 +50,9 @@ const StyledListItem = styled(ListItem)({
   },
 });
 
-const Header = () => {
+const Header = ({ token, signupData }) => {
   const { route, push } = useRouter();
   const { isLoggedIn, setIsLoggedIn } = useAuthContext();
-
   const [drawer, setDrawer] = useState(false);
 
   const isNotLap = useMediaQuery("(max-width:900px)");
@@ -301,7 +300,7 @@ const Header = () => {
               gap: { xs: 1, lg: 3, xl: 3 },
             }}
           >
-            {isLoggedIn ? (
+            {token && !Boolean(signupData) ? (
               <Link
                 href="/dashboard/landing"
                 style={{ textDecoration: "none" }}
@@ -398,7 +397,7 @@ const Header = () => {
                 />
               </ImageLogo>
             </Box>
-            {isLoggedIn ? (
+            {token && !Boolean(signupData) ? (
               <Link
                 href="/dashboard/landing"
                 style={{ textDecoration: "none" }}

@@ -18,6 +18,7 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../../context/AuthContext";
 import { RESEND_OTP, VERIFY_OTP } from "../../../constants/endpoints";
+import { setCookies } from "../../../utils/cookies/Cookie";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -50,7 +51,7 @@ function DialogTextInput({
   const [code, setCode] = useState("");
   const [fetching, setFetching] = useState(false);
   const { push } = useRouter();
-  const { setShowSecondForm } = useAuthContext();
+  const { setShowSecondForm, setChoosePractitionerOpen } = useAuthContext();
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
   );
@@ -67,12 +68,16 @@ function DialogTextInput({
         setFetching(false);
         localStorage.setItem("access", res?.data?.access);
         localStorage.setItem("profile_info", JSON.stringify(res?.data?.data));
+        setCookies({ profile_info: res?.data?.data });
+        setCookies({ access: res?.data?.access });
+
         toast.success(res?.data?.message);
         if (
           res?.data?.data?.user?.role === "Practitioner" &&
           !res.data?.data?.user?.practitionerType
         ) {
           setShowSecondForm(true);
+          setChoosePractitionerOpen(false);
           push("/auth/signup");
         } else {
           if (!isPractitioner) {
@@ -184,6 +189,7 @@ function DialogTextInput({
               }}
             >
               <GradiantTextField
+                autoFocus
                 variant="standard"
                 placeholder={placeholder}
                 value={code}

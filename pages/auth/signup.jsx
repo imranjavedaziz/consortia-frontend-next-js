@@ -29,6 +29,7 @@ import {
   getCountriesList,
   getStateAgainstCountry,
 } from "../../src/utils/countriesAndStatesApi/getCountryAndStateList";
+import { setCookies, removeCookies } from "../../src/utils/cookies/Cookie";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -73,15 +74,36 @@ const SignUp = () => {
   );
 
   useTitle("Signup");
-  const { showSecondForm, choosePractitionerOpen, setChoosePractitionerOpen } =
-    useAuthContext();
+  const {
+    showSecondForm,
+    setShowSecondForm,
+    choosePractitionerOpen,
+    setChoosePractitionerOpen,
+  } = useAuthContext();
   const [isPractitioner, setIsPractitioner] = useState(false);
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const { push } = useRouter();
   const [countriesList, setCountries] = useState([]);
   const [statesAgainstCountry, setStatesAgainstCountry] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const { push, asPath } = useRouter();
+  // useEffect(() => {
+  //   const signupData = JSON.parse(localStorage.getItem("signup_info"));
+  //   if (
+  //     signupData?.user?.role == "Practitioner" &&
+  //     signupData?.user?.practitionerType == ""
+  //   ) {
+  //     setChoosePractitionerOpen(false);
+  //     setShowSecondForm(true);
+  //   } else {
+  //     setChoosePractitionerOpen(true);
+  //   }
+  // }, []);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("signup_info"));
+    if (userData?.user?.role && showSecondForm) return;
+    setChoosePractitionerOpen(true);
+  }, [asPath]);
 
   useEffect(() => {
     const getData = async () => {
@@ -152,7 +174,13 @@ const SignUp = () => {
           confirm_password,
           role: isPractitioner ? "Practitioner" : "Consumer",
         });
+        console.log("res 1st", res);
         toast.success("Welcome to Consortia! Please verify your email");
+        // Commenting to allow user to go back to login
+        if (isPractitioner) {
+          setCookies({ signup_info: res?.data?.data });
+          localStorage.setItem("signup_info", JSON.stringify(res?.data?.data));
+        }
         setEmail(email);
         setEmailVerificationOpen(true);
       } catch (error) {
@@ -198,6 +226,8 @@ const SignUp = () => {
           },
         }
       );
+      removeCookies("signup_info");
+      localStorage.removeItem("signup_info");
       const old_profile_info = JSON.parse(localStorage.getItem("profile_info"));
       const new_profile_info = {
         ...old_profile_info,
@@ -211,6 +241,7 @@ const SignUp = () => {
         },
       };
       localStorage.setItem("profile_info", JSON.stringify(new_profile_info));
+      setCookies({ profile_info: new_profile_info });
       toast.success("Details Added Successfully");
       setTimeout(() => push("/dashboard/landing"), 2500);
     } catch (error) {
@@ -627,3 +658,24 @@ export default SignUp;
 SignUp.getLayout = function (page) {
   return <AuthLayout>{page}</AuthLayout>;
 };
+export async function getServerSideProps(context) {
+  const { access, signup_info = JSON.stringify({}) } = context.req.cookies;
+  let userData = JSON.parse(signup_info);
+  console.log("userData", userData);
+
+  if (
+    userData?.user?.role == "Practitioner" &&
+    userData?.user?.country == null
+  ) {
+    console.log("no redirect");
+    return { props: { access: null } };
+  } else if (access) {
+    console.log("redirect");
+
+    return {
+      redirect: { destination: "/dashboard/landing", permanent: false },
+    };
+  }
+
+  return { props: { access: null } };
+}
