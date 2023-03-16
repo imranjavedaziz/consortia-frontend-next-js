@@ -31,3 +31,6 @@ export const PRACTITIONER_NFT_BLOCKCHAIN_DATA =
 export const PROPERTY_NFT_BLOCKCHAIN_DATA = "property_nft_blockchain_data";
 
 export const VIDEO_WATCHED = "video_watch";
+
+export const GET_ALL_COUNTRIES = "country_list";
+export const GET_STATE_AGAINST_COUNTRY = "country_states";

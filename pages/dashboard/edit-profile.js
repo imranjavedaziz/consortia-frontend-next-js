@@ -36,13 +36,13 @@ const inputFields = [
     name: "email",
     label: "Email Address",
     placeholder: "mail@example.com",
-    disabled: true,
+    // disabled: true,
   },
   {
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "Enter your phone number",
-    disabled: true,
+    // disabled: true,
   },
   {
     name: "practitionerType",
@@ -50,7 +50,7 @@ const inputFields = [
     placeholder: "Select Category",
     options: practitionerOptions,
     select: true,
-    disabled: true,
+    // disabled: true,
   },
   {
     name: "licenseNumber",
@@ -72,13 +72,13 @@ const inputFields = [
     label: "Country",
     placeholder: "Select Country",
     select: true,
-    disabled: true,
+    // disabled: true,
     options: listOfCountries,
   },
   {
     name: "state",
     label: "State / Province",
-    disabled: true,
+    // disabled: true,
     placeholder: "Select State",
   },
 ];

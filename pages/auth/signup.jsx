@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -25,6 +25,10 @@ import {
   AUTH_REGISTER,
   EDIT_USER_PROFILE,
 } from "../../src/constants/endpoints";
+import {
+  getCountriesList,
+  getStateAgainstCountry,
+} from "../../src/utils/countriesAndStatesApi/getCountryAndStateList";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -63,33 +67,6 @@ const inputFields = [
   },
 ];
 
-const secondFormInputFields = [
-  {
-    name: "practitioner",
-    label: "Practitioner",
-    placeholder: "Select Category",
-    options: practitionerOptions,
-    select: true,
-  },
-  {
-    name: "companyName",
-    label: "Business Name",
-    placeholder: "Enter your Business Name",
-  },
-  {
-    name: "country",
-    label: "Country",
-    placeholder: "Select Country",
-    select: true,
-    options: listOfCountries,
-  },
-  {
-    name: "state",
-    label: "State / Province",
-    placeholder: "Select State",
-  },
-];
-
 const SignUp = () => {
   const belowSm = useMediaQuery((theme) =>
     theme.breakpoints.between("xs", "sm")
@@ -102,7 +79,60 @@ const SignUp = () => {
   const [emailVerificationOpen, setEmailVerificationOpen] = useState(false);
   const [email, setEmail] = useState("");
   const { push } = useRouter();
+  const [countriesList, setCountries] = useState([]);
+  const [statesAgainstCountry, setStatesAgainstCountry] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
 
+  useEffect(() => {
+    const getData = async () => {
+      const getCountryList = await getCountriesList();
+      setCountries(getCountryList);
+    };
+    getData();
+  }, []);
+  useEffect(() => {
+    getStates();
+  }, [selectedCountry]);
+
+  const getStates = async () => {
+    const resStates = await getStateAgainstCountry(selectedCountry);
+    setStatesAgainstCountry(resStates);
+  };
+  const secondFormInputFields = [
+    {
+      name: "practitioner",
+      label: "Practitioner",
+      placeholder: "Select Category",
+      options: practitionerOptions,
+      select: true,
+    },
+    {
+      name: "companyName",
+      label: "Business Name",
+      placeholder: "Enter your Business Name",
+    },
+    {
+      name: "country",
+      label: "Country",
+      placeholder: "Select Country",
+      select: true,
+      options: countriesList,
+    },
+    {
+      name: "state",
+      label: "State / Province",
+      placeholder: "Select State",
+      options: statesAgainstCountry,
+      select: true,
+    },
+  ];
+  const inCaseStateNotExistInputFieldsData = secondFormInputFields.concat([
+    {
+      name: "other_State",
+      label: "Other State",
+      placeholder: "Select State",
+    },
+  ]);
   const signup = async ({
     firstName,
     lastName,
@@ -146,6 +176,7 @@ const SignUp = () => {
     country,
     state,
     companyName,
+    other_State,
   }) => {
     try {
       const res = await publicAxios.patch(
@@ -155,7 +186,8 @@ const SignUp = () => {
         {
           create_profile: true,
           practitionerType: practitioner,
-          state: state,
+          state: state == "Other" ? other_State : state,
+
           country: country,
           ...(license?.length > 1 && { licenseNumber: license }),
           companyName: companyName,
@@ -475,6 +507,7 @@ const SignUp = () => {
                 country: "",
                 state: "",
                 license: "",
+                other_State: "",
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 setSubmitting(true);
@@ -488,6 +521,15 @@ const SignUp = () => {
                 companyName: Yup.string().required("Business Name is required"),
                 country: Yup.string().required("Country is required"),
                 state: Yup.string().required("Province / State is required"),
+                other_State: Yup.string().when(["state"], {
+                  is: (state) => {
+                    return state == "Other";
+                  },
+                  then: Yup.string().required("State is required"),
+                  // .min(1, "Entity Name is required"),
+                  otherwise: Yup.string().optional(),
+                }),
+                // other_State: Yup.string().optional(),
                 license: Yup.string().when(["practitioner", "country"], {
                   is: (practitioner, country) =>
                     (practitioner == "agent/broker" ||
@@ -500,6 +542,9 @@ const SignUp = () => {
             >
               {(props) => {
                 const { isSubmitting, handleSubmit, values } = props;
+                if (values.country) {
+                  setSelectedCountry(values.country);
+                }
                 return (
                   <form
                     onSubmit={handleSubmit}
@@ -517,14 +562,25 @@ const SignUp = () => {
                       rowGap={3}
                       sx={{ width: { md: "80%", xs: "100%" } }}
                     >
-                      {secondFormInputFields.map(
-                        ({ name, label, placeholder, select, options }) => (
+                      {(values.state == "Other"
+                        ? inCaseStateNotExistInputFieldsData
+                        : secondFormInputFields
+                      ).map(
+                        ({
+                          name,
+                          label,
+                          placeholder,
+                          sublabel,
+                          select,
+                          options,
+                        }) => (
                           <CustomInputField
                             key={name}
                             name={name}
                             label={label}
                             placeholder={placeholder}
                             select={select}
+                            sublabel={sublabel}
                             options={options}
                           />
                         )
