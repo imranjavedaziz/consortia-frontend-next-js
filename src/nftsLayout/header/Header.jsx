@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../context/AuthContext";
 import { removeCookies } from "../../utils/cookies/Cookie";
+import SessionTimeout from "../../SessionTimeout";
 // import { publicAxios } from "../../api";
 // import { STRIPE_VERIFY_IDENTITY } from "../../constants/endpoints";
 // import toast from "react-hot-toast";
@@ -164,6 +165,7 @@ export default function Header() {
   // };
   return (
     <>
+      <SessionTimeout />
       <Box
         sx={{
           margin: !isTablet ? "37px 0px 56px 0px" : "10px 10px",
