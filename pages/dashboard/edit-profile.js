@@ -22,6 +22,10 @@ import {
   EDIT_USER_PROFILE,
   GET_PROFILE_BY_USERID,
 } from "../../src/constants/endpoints";
+import {
+  getCountriesList,
+  getStateAgainstCountry,
+} from "../../src/utils/countriesAndStatesApi/getCountryAndStateList";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -29,58 +33,6 @@ const practitionerOptions = [
   { value: "title/escrow", label: "Title / Settlement" },
   { value: "mortgage broker", label: "Mortgage Broker" },
   { value: "appraiser", label: "Appraiser" },
-];
-
-const inputFields = [
-  {
-    name: "email",
-    label: "Email Address",
-    placeholder: "mail@example.com",
-    // disabled: true,
-  },
-  {
-    name: "phoneNumber",
-    label: "Phone Number",
-    placeholder: "Enter your phone number",
-    // disabled: true,
-  },
-  {
-    name: "practitionerType",
-    label: "Practitioner",
-    placeholder: "Select Category",
-    options: practitionerOptions,
-    select: true,
-    // disabled: true,
-  },
-  {
-    name: "licenseNumber",
-    label: "License Number",
-    placeholder: "License Number",
-  },
-  {
-    name: "bio",
-    label: "Bio",
-    placeholder: "Enter your Bio",
-  },
-  {
-    name: "companyName",
-    label: "Business Name",
-    placeholder: "Enter your Business Name",
-  },
-  {
-    name: "country",
-    label: "Country",
-    placeholder: "Select Country",
-    select: true,
-    // disabled: true,
-    options: listOfCountries,
-  },
-  {
-    name: "state",
-    label: "State / Province",
-    // disabled: true,
-    placeholder: "Select State",
-  },
 ];
 
 const consumerInputField = [
@@ -107,15 +59,103 @@ const EditProfile = () => {
   const [openVerificationModal, setOpenVerificationModal] = useState(false);
   const [refetchData, setRefetchData] = useState(false);
   const [profileInfo, setProfileInfo] = useState({});
+  const [countriesList, setCountries] = useState([]);
+  const [statesAgainstCountry, setStatesAgainstCountry] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [handleFormInitialization, setHandleFormInitialization] =
+    useState(true);
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo(profile_info);
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      const getCountryList = await getCountriesList();
+      setCountries(getCountryList);
+    };
+    getData();
+  }, []);
+  useEffect(() => {
+    if (selectedCountry || userData.country) {
+      getStates();
+    }
+  }, [selectedCountry]);
+
+  const getStates = async () => {
+    setStatesAgainstCountry([]);
+    const resStates = await getStateAgainstCountry(
+      selectedCountry ? selectedCountry : userData?.country
+    );
+    setStatesAgainstCountry(resStates);
+  };
+
   const fetchUpdatedData = () => {
     setRefetchData((prev) => !prev);
   };
+
+  const inputFields = [
+    {
+      name: "email",
+      label: "Email Address",
+      placeholder: "mail@example.com",
+      // disabled: true,
+    },
+    {
+      name: "phoneNumber",
+      label: "Phone Number",
+      placeholder: "Enter your phone number",
+      // disabled: true,
+    },
+    {
+      name: "practitionerType",
+      label: "Practitioner",
+      placeholder: "Select Category",
+      options: practitionerOptions,
+      select: true,
+      // disabled: true,
+    },
+    {
+      name: "licenseNumber",
+      label: "License Number",
+      placeholder: "License Number",
+    },
+    {
+      name: "bio",
+      label: "Bio",
+      placeholder: "Enter your Bio",
+    },
+    {
+      name: "companyName",
+      label: "Business Name",
+      placeholder: "Enter your Business Name",
+    },
+    {
+      name: "country",
+      label: "Country",
+      placeholder: "Select Country",
+      select: true,
+      // disabled: true,
+      options: countriesList,
+    },
+    {
+      name: "state",
+      label: "State / Province",
+      // disabled: true,
+      placeholder: "Select State",
+      select: true,
+      // disabled: true,
+      options: statesAgainstCountry,
+    },
+  ];
+  const inCaseStateNotExistInputFieldsData = inputFields.concat([
+    {
+      name: "other_state",
+      label: "Other State",
+      placeholder: "Select State",
+    },
+  ]);
 
   const getUserData = async () => {
     try {
@@ -140,6 +180,7 @@ const EditProfile = () => {
   }, [refetchData]);
 
   const updateUserData = async (values) => {
+    setHandleFormInitialization(false);
     const originalKeys = Object.keys(values);
     const valuesToSend = {};
     originalKeys.forEach((item) => {
@@ -147,18 +188,26 @@ const EditProfile = () => {
         if (item == "licenseNumber" && values[item] == "") {
           valuesToSend[item] = null;
         } else {
-          valuesToSend[item] = values[item];
+          if (item == "state" && values[item] == "Other") {
+            valuesToSend[item] = values["other_state"];
+          } else {
+            valuesToSend[item] = values[item];
+          }
         }
       }
     });
     if (Object.keys(valuesToSend).length > 0) {
       setUpdatedUserData(valuesToSend);
       try {
+        const { other_state, ...data } = valuesToSend;
         const res = await publicAxios.patch(
           `${EDIT_USER_PROFILE}/${
             JSON.parse(localStorage.getItem("profile_info"))?.user?.id
           }`,
-          { ...valuesToSend, edit_profile: true },
+          {
+            ...data,
+            edit_profile: true,
+          },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -182,6 +231,7 @@ const EditProfile = () => {
       toast.error("No changes detected");
     }
   };
+
   return (
     <Box marginY={{ xs: 0, md: 5 }}>
       <Typography variant="h3" marginY={{ md: 5 }}>
@@ -214,7 +264,7 @@ const EditProfile = () => {
           {profileInfo?.user?.role === "Practitioner"
             ? Object.keys(userData).length > 0 && (
                 <Formik
-                  enableReinitialize={true}
+                  enableReinitialize={handleFormInitialization}
                   initialValues={{
                     firstName: userData.firstName,
                     lastName: userData.lastName,
@@ -223,9 +273,20 @@ const EditProfile = () => {
                     practitionerType: userData.practitionerType,
                     bio: userData.bio,
                     companyName: userData.companyName,
-                    country: userData.country,
-                    state: userData.state,
+                    country: selectedCountry || userData.country.toLowerCase(),
+                    state: statesAgainstCountry?.some(
+                      (item) => item.value == userData.state.toLowerCase()
+                    )
+                      ? userData.state && userData.state.toLowerCase()
+                      : selectedCountry != userData.country
+                      ? ""
+                      : "Other",
                     licenseNumber: userData.licenseNumber ?? "",
+                    other_state: statesAgainstCountry?.some(
+                      (item) => item.value == userData.state.toLowerCase()
+                    )
+                      ? ""
+                      : userData.state.toLowerCase(),
                   }}
                   onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true);
@@ -268,6 +329,14 @@ const EditProfile = () => {
                     state: Yup.string().required(
                       "Province / State is required"
                     ),
+                    other_state: Yup.string().when(["state"], {
+                      is: (state) => {
+                        return state == "Other";
+                      },
+                      then: Yup.string().required("State is required"),
+                      // .min(1, "Entity Name is required"),
+                      otherwise: Yup.string().optional(),
+                    }),
                     licenseNumber: Yup.string().when(
                       ["practitionerType", "country"],
                       {
@@ -287,7 +356,15 @@ const EditProfile = () => {
                       handleSubmit,
                       initialValues,
                       resetForm,
+                      values,
                     } = props;
+                    if (values.country) {
+                      setSelectedCountry(values.country);
+                    }
+                    if (values.state != "Other") {
+                      values.other_state = "";
+                    }
+
                     return (
                       <form
                         onSubmit={handleSubmit}
@@ -331,7 +408,10 @@ const EditProfile = () => {
                               />
                             </Box>
                           </Box>
-                          {inputFields.map(
+                          {(values.state != "Other"
+                            ? inputFields
+                            : inCaseStateNotExistInputFieldsData
+                          ).map(
                             ({
                               name,
                               label,
