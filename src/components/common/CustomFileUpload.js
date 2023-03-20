@@ -11,11 +11,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import CancelIcon from "@mui/icons-material/Cancel";
 // import Cross from "../../../public/assets/icons/cross.svg";
-const secret = "NEXT_PUBLIC_ACCESS_KEY_SECRET";
 
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
-  secretAccessKey: process.env[secret],
+  secretAccessKey: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
 });
 
 const CustomFileUpload = ({
