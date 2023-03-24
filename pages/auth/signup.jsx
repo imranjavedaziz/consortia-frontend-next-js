@@ -207,6 +207,12 @@ const SignUp = () => {
     other_State,
   }) => {
     try {
+      const states = [
+        {
+          licenseNumber: license?.length > 1 ? license : "",
+          state: state == "Other" ? other_State : state,
+        },
+      ];
       const res = await publicAxios.patch(
         `${EDIT_USER_PROFILE}/${
           JSON.parse(localStorage.getItem("profile_info"))?.user?.id
@@ -214,10 +220,10 @@ const SignUp = () => {
         {
           create_profile: true,
           practitionerType: practitioner,
-          state: state == "Other" ? other_State : state,
-
+          // state: state == "Other" ? other_State : state,
+          states: states,
           country: country,
-          ...(license?.length > 1 && { licenseNumber: license }),
+          // ...(license?.length > 1 && { licenseNumber: license }),
           companyName: companyName,
         },
         {

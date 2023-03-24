@@ -65,7 +65,21 @@ const MintNFTS = () => {
   const [licenseTypeValue, setLicenseTypeValue] = useState("");
   const [data, setData] = useState({});
   const [userData, setUserData] = useState({});
-
+  const licenseNumbers = userData?.states?.map((item) => {
+    return {
+      value: item.licenseNumber,
+      label: item.licenseNumber,
+    };
+  });
+  // console.log(
+  //   "licenseNumbers",
+  //   licenseNumbers,
+  //   userData,
+  //   userData?.states?.map((item) => item.licenseNumber)
+  // );
+  // const licenseNumbersArray = userData?.states?.map(
+  //   (item) => item.licenseNumber
+  // );
   useEffect(() => {
     if (typeof window !== "undefined") {
       const localData = JSON.parse(localStorage.getItem("profile_info"));
@@ -140,7 +154,7 @@ const MintNFTS = () => {
             id: editPractitionerNftData?.id,
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
             licenseType: licenseTypeValue,
-            licenseNumber,
+            licenseNumber: userData?.states,
           });
           setSuccessData(
             "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
@@ -201,7 +215,7 @@ const MintNFTS = () => {
           bio,
           agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
           licenseType: licenseTypeValue,
-          licenseNumber,
+          license_number: userData?.states,
         },
         {
           headers: {
@@ -218,7 +232,7 @@ const MintNFTS = () => {
         id: res?.data?.data?.id,
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
         licenseType: licenseTypeValue,
-        licenseNumber,
+        licenseNumber: userData?.states,
       });
       setSuccessData(
         "Congratulations! Your identity is being verified, once it is done your Practitioner NFT will be minted."
@@ -296,7 +310,7 @@ const MintNFTS = () => {
                   // image: "",
                   bio: profileInfo?.user?.bio,
 
-                  licenseNumber: editPractitionerNftData?.licenseNumber || "",
+                  // licenseNumber: editPractitionerNftData?.licenseNumber || "",
                 }}
                 enableReinitialize={true}
                 onSubmit={async (values, { setSubmitting }) => {
@@ -311,9 +325,9 @@ const MintNFTS = () => {
                   // image: Yup.string().required("image is required"),
                   bio: Yup.string().required("Bio is required"),
 
-                  licenseNumber: Yup.string().required(
-                    "License Number is required"
-                  ),
+                  // licenseNumber: Yup.string().required(
+                  //   "License Number is required"
+                  // ),
                 })}
               >
                 {(props) => {
@@ -461,14 +475,68 @@ const MintNFTS = () => {
                           </Box>
                         </Box>
 
-                        <Box pt={3}>
+                        {licenseNumbers?.length > 0 &&
+                          licenseNumbers[0]?.value && (
+                            <Box pt={3}>
+                              <Typography variant="body1">
+                                License Numbers:
+                              </Typography>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  flexWrap: "wrap",
+                                }}
+                              >
+                                {licenseNumbers?.map((item, i) => {
+                                  return (
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                      key={item.name + i}
+                                    >
+                                      <FormControl>
+                                        <RadioGroup
+                                          aria-labelledby="demo-controlled-radio-buttons-group"
+                                          name="controlled-radio-buttons-group"
+                                          // value={licenseTypeValue}
+                                          // onChange={handleChange}
+                                        >
+                                          <FormControlLabel
+                                            value={item.value}
+                                            control={
+                                              <Radio
+                                                color="success"
+                                                size="small"
+                                                checked={false}
+                                                disabled={true}
+                                              />
+                                            }
+                                            label={
+                                              <Typography variant="subtitle1">
+                                                {item?.label}
+                                              </Typography>
+                                            }
+                                          />
+                                        </RadioGroup>
+                                      </FormControl>
+                                    </Box>
+                                  );
+                                })}
+                              </Box>
+                            </Box>
+                          )}
+
+                        {/* <Box pt={3}>
                           <CustomInputField
                             name="licenseNumber"
                             label="License Number:"
                             placeholder="Enter Your License Number"
                             disabled={editPractitionerNftData?.licenseNumber}
                           />
-                        </Box>
+                        </Box> */}
 
                         <Box display="flex" pt={7}>
                           <LoadingButton

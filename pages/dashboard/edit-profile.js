@@ -1,5 +1,5 @@
 import NftsLayout from "../../src/nftsLayout";
-import { Formik } from "formik";
+import { FieldArray, Formik } from "formik";
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import {
@@ -26,6 +26,7 @@ import {
   getCountriesList,
   getStateAgainstCountry,
 } from "../../src/utils/countriesAndStatesApi/getCountryAndStateList";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -78,7 +79,7 @@ const EditProfile = () => {
     getData();
   }, []);
   useEffect(() => {
-    if (selectedCountry || userData.country) {
+    if (selectedCountry || userData?.country) {
       getStates();
     }
   }, [selectedCountry]);
@@ -116,11 +117,11 @@ const EditProfile = () => {
       select: true,
       // disabled: true,
     },
-    {
-      name: "licenseNumber",
-      label: "License Number",
-      placeholder: "License Number",
-    },
+    // {
+    //   name: "licenseNumber",
+    //   label: "License Number",
+    //   placeholder: "License Number",
+    // },
     {
       name: "bio",
       label: "Bio",
@@ -139,15 +140,15 @@ const EditProfile = () => {
       // disabled: true,
       options: countriesList,
     },
-    {
-      name: "state",
-      label: "State / Province",
-      // disabled: true,
-      placeholder: "Select State",
-      select: true,
-      // disabled: true,
-      options: statesAgainstCountry,
-    },
+    // {
+    //   name: "state",
+    //   label: "State / Province",
+    //   // disabled: true,
+    //   placeholder: "Select State",
+    //   select: true,
+    //   // disabled: true,
+    //   options: statesAgainstCountry,
+    // },
   ];
   const inCaseStateNotExistInputFieldsData = inputFields.concat([
     {
@@ -180,50 +181,165 @@ const EditProfile = () => {
   }, [refetchData]);
 
   const updateUserData = async (values) => {
+    // debugger;
+    console.log("values", values);
     setHandleFormInitialization(false);
     const originalKeys = Object.keys(values);
     const valuesToSend = {};
+    // console.log("originalKeys", originalKeys);
+
+    // console.log("values", values.states);
+    // console.log("userData", userData.states);
+    // debugger;
+    const updatedData = [];
+    for (let i = 0; i < values.states.length; i++) {
+      for (let j = 0; j < userData?.states.length; j++) {
+        if (values.states[i].id == userData.states[j].id) {
+          // console.log(
+          //   "values.states[i].state",
+          //   values.states[i],
+          //   userData.states[j]
+          // );
+          if (
+            values.states[i].state !== userData.states[j].state ||
+            values.states[i].licenseNumber !== userData.states[j].licenseNumber
+          ) {
+            if (
+              values.states[i].state == "Other" &&
+              values.states[i].other_state != userData.states[j].state
+            ) {
+              updatedData.push(values.states[i]);
+            } else if (
+              (values.states[i].other_state != userData.states[j].state &&
+                values.states[i].state !== userData.states[j].state) ||
+              values.states[i].licenseNumber !==
+                userData.states[j].licenseNumber
+            ) {
+              updatedData.push(values.states[i]);
+            }
+            // else if (
+            //   values.states[i].other_state == userData.states[j].state &&
+            //   values.states[i].licenseNumber == userData.states[j].licenseNumber
+            // ) {
+            //   updatedData.push(values.states[i]);
+            // }
+          }
+        }
+      }
+      if (values.states[i]?.id == undefined) {
+        updatedData.push(values.states[i]);
+      }
+    }
+
     originalKeys.forEach((item) => {
       if (values[item] !== userData[item]) {
         if (item == "licenseNumber" && values[item] == "") {
           valuesToSend[item] = null;
         } else {
-          if (item == "state" && values[item] == "Other") {
-            valuesToSend[item] = values["other_state"];
+          // debugger;
+          // const updatedData = values.states.filter(
+          //   (item) =>
+          //     !userData?.states.some(
+          //       (data) =>
+          //         data.state.includes(item.state) &&
+          //         data.licenseNumber.includes(item.licenseNumber)
+          //     )
+          // );
+          // console.log("updatedData", updatedData);
+
+          console.log("updatedData", updatedData);
+
+          if (
+            item == "states" &&
+            updatedData.some((item) => item.state == "Other")
+          ) {
+            console.log("valuesToSend", valuesToSend);
+            console.log("other");
+            const mapData = updatedData.map((item) => {
+              if (item.other_state) {
+                return {
+                  state: item.other_state,
+                  licenseNumber: item.licenseNumber,
+                  ...(item?.id && { id: item?.id }),
+                };
+              } else {
+                return {
+                  state: item.state,
+                  licenseNumber: item.licenseNumber,
+                  ...(item?.id && { id: item?.id }),
+                };
+              }
+            });
+            valuesToSend[item] = mapData;
+            console.log("mapData", mapData);
           } else {
-            valuesToSend[item] = values[item];
+            // console.log("not other");
+            if (
+              item == "states" &&
+              updatedData.some((item) => item.state != "Other")
+            ) {
+              console.log("item.state", item.state);
+              console.log("not other");
+              const mapData = updatedData.map((item) => {
+                return {
+                  state: item.state,
+                  licenseNumber: item.licenseNumber,
+                  ...(item?.id && { id: item?.id }),
+                };
+              });
+              console.log("mapData", mapData);
+              valuesToSend[item] = mapData;
+            } else {
+              console.log("ddd");
+              if (updatedData.length > 0) {
+                valuesToSend[item] = values[item];
+              }
+            }
           }
         }
       }
     });
+
     if (Object.keys(valuesToSend).length > 0) {
       setUpdatedUserData(valuesToSend);
-      try {
-        const { other_state, ...data } = valuesToSend;
-        const res = await publicAxios.patch(
-          `${EDIT_USER_PROFILE}/${
-            JSON.parse(localStorage.getItem("profile_info"))?.user?.id
-          }`,
-          {
-            ...data,
-            edit_profile: true,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
+      // console.log("data final", valuesToSend);
+      if (
+        ((valuesToSend.practitionerType || values.practitionerType) ==
+          "agent/broker" ||
+          (valuesToSend.practitionerType || values.practitionerType) ==
+            "loan officer") &&
+        (valuesToSend.country || values.country) == "United States" &&
+        valuesToSend.states.some((item) => item.licenseNumber == "")
+      ) {
+        toast.error("Lisence number is required");
+      } else {
+        try {
+          const { other_state, ...data } = valuesToSend;
+          const res = await publicAxios.patch(
+            `${EDIT_USER_PROFILE}/${
+              JSON.parse(localStorage.getItem("profile_info"))?.user?.id
+            }`,
+            {
+              ...data,
+              edit_profile: true,
             },
-          }
-        );
-        toast.success(res?.data?.message);
-        setOpenVerificationModal(true);
-      } catch (error) {
-        if (Array.isArray(error?.data?.message)) {
-          toast.error(error?.data?.message?.error?.[0]);
-        } else {
-          if (typeof error?.data?.message === "string") {
-            toast.error(error?.data?.message);
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+              },
+            }
+          );
+          toast.success(res?.data?.message);
+          setOpenVerificationModal(true);
+        } catch (error) {
+          if (Array.isArray(error?.data?.message)) {
+            toast.error(error?.data?.message?.error?.[0]);
           } else {
-            toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            if (typeof error?.data?.message === "string") {
+              toast.error(error?.data?.message);
+            } else {
+              toast.error(Object.values(error?.data?.message)?.[0]?.[0]);
+            }
           }
         }
       }
@@ -274,19 +390,52 @@ const EditProfile = () => {
                     bio: userData.bio,
                     companyName: userData.companyName,
                     country: selectedCountry || userData.country.toLowerCase(),
-                    state: statesAgainstCountry?.some(
-                      (item) => item.value == userData.state.toLowerCase()
-                    )
-                      ? userData.state && userData.state.toLowerCase()
-                      : selectedCountry != userData.country
-                      ? ""
-                      : "Other",
-                    licenseNumber: userData.licenseNumber ?? "",
-                    other_state: statesAgainstCountry?.some(
-                      (item) => item.value == userData.state.toLowerCase()
-                    )
-                      ? ""
-                      : userData.state.toLowerCase(),
+                    // state: statesAgainstCountry?.some(
+                    //   (item) => item.value == userData.state.toLowerCase()
+                    // )
+                    //   ? userData.state && userData.state.toLowerCase()
+                    //   : selectedCountry != userData.country
+                    //   ? ""
+                    //   : "Other",
+                    // licenseNumber: userData.licenseNumber ?? "",
+                    // other_state: statesAgainstCountry?.some(
+                    //   (item) => item.value == userData.state.toLowerCase()
+                    // )
+                    //   ? ""
+                    //   : userData.state.toLowerCase(),
+                    states: (selectedCountry != userData.country
+                      ? [{ state: "", licenseNumber: "", other_state: "" }]
+                      : userData.states
+                    )?.map((item) => {
+                      return {
+                        state: statesAgainstCountry?.find((data) =>
+                          data.value.includes(item.state)
+                        )?.value
+                          ? statesAgainstCountry.find((data) =>
+                              data.value.includes(item.state)
+                            )?.value
+                          : selectedCountry != userData.country
+                          ? ""
+                          : "Other",
+                        licenseNumber:
+                          selectedCountry != userData.country
+                            ? ""
+                            : item.licenseNumber,
+                        other_state: statesAgainstCountry?.find((data) =>
+                          data.value.includes(item.state)
+                        )?.value
+                          ? ""
+                          : item.state,
+                        id: item.id,
+                      };
+                    }),
+                    // states: [
+                    //   {
+                    //     state: "",
+                    //     licenseNumber: "",
+                    //     other_state: "",
+                    //   },
+                    // ],
                   }}
                   onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true);
@@ -326,28 +475,43 @@ const EditProfile = () => {
                       .max(1000, "Bio should be less than 1000 characters")
                       .required("Bio is required"),
                     country: Yup.string().required("Country is required"),
-                    state: Yup.string().required(
-                      "Province / State is required"
+
+                    // other_state: Yup.string().when(["state"], {
+                    //   is: (state) => {
+                    //     return state == "Other";
+                    //   },
+                    //   then: Yup.string().required("State is required"),
+                    //   // .min(1, "Entity Name is required"),
+                    //   otherwise: Yup.string().optional(),
+                    // }),
+                    states: Yup.array().of(
+                      Yup.object().shape({
+                        state: Yup.string().required(
+                          "Province / State is required"
+                        ),
+                        licenseNumber: Yup.string().optional(
+                          "License Number is required"
+                        ),
+                        other_state: Yup.string().when(["state"], {
+                          is: (state) => {
+                            return state == "Other";
+                          },
+                          then: Yup.string().required("State is required"),
+                          otherwise: Yup.string().optional(),
+                        }),
+                      })
                     ),
-                    other_state: Yup.string().when(["state"], {
-                      is: (state) => {
-                        return state == "Other";
-                      },
-                      then: Yup.string().required("State is required"),
-                      // .min(1, "Entity Name is required"),
-                      otherwise: Yup.string().optional(),
-                    }),
-                    licenseNumber: Yup.string().when(
-                      ["practitionerType", "country"],
-                      {
-                        is: (practitionerType, country) =>
-                          (practitionerType == "agent/broker" ||
-                            practitionerType == "loan officer") &&
-                          country == "United States",
-                        then: Yup.string().required("This field is required"),
-                        otherwise: Yup.string().optional(),
-                      }
-                    ),
+                    // licenseNumber: Yup.string().when(
+                    //   ["practitionerType", "country"],
+                    //   {
+                    //     is: (practitionerType, country) =>
+                    //       (practitionerType == "agent/broker" ||
+                    //         practitionerType == "loan officer") &&
+                    //       country == "United States",
+                    //     then: Yup.string().required("This field is required"),
+                    //     otherwise: Yup.string().optional(),
+                    //   }
+                    // ),
                   })}
                 >
                   {(props) => {
@@ -361,9 +525,13 @@ const EditProfile = () => {
                     if (values.country) {
                       setSelectedCountry(values.country);
                     }
-                    if (values.state != "Other") {
-                      values.other_state = "";
-                    }
+                    console.log("values.states", values);
+                    values?.states?.map((item) => {
+                      if (item?.state != "Other" && item?.id) {
+                        // console.log("true");
+                        item.other_state = "";
+                      }
+                    });
 
                     return (
                       <form
@@ -408,10 +576,7 @@ const EditProfile = () => {
                               />
                             </Box>
                           </Box>
-                          {(values.state != "Other"
-                            ? inputFields
-                            : inCaseStateNotExistInputFieldsData
-                          ).map(
+                          {inputFields.map(
                             ({
                               name,
                               label,
@@ -438,6 +603,96 @@ const EditProfile = () => {
                               />
                             )
                           )}
+
+                          <FieldArray name="states">
+                            {({ insert, remove, push }) => (
+                              <>
+                                {values?.states?.length > 0 &&
+                                  values?.states?.map((statesData, index) => (
+                                    <>
+                                      <Box
+                                        display="flex"
+                                        alignItems="end"
+                                        // columnGap={2}
+                                        justifyContent="space-between"
+                                        key={index}
+                                      >
+                                        <Box>
+                                          <InputLabel
+                                            shrink
+                                            htmlFor="licenseNumber"
+                                          >
+                                            License Number
+                                          </InputLabel>
+                                          <CustomInputField
+                                            name={`states.${index}.licenseNumber`}
+                                            placeholder="License Number"
+                                          />
+                                        </Box>
+                                        <Box>
+                                          <InputLabel shrink htmlFor="state">
+                                            State / Province
+                                          </InputLabel>
+                                          <CustomInputField
+                                            name={`states.${index}.state`}
+                                            placeholder="State"
+                                            options={statesAgainstCountry}
+                                            select={true}
+                                            // width="100%"
+                                          />
+                                        </Box>
+                                        {!userData?.states?.find(
+                                          (remData) =>
+                                            remData?.id == statesData?.id
+                                        )?.id && (
+                                          <Box sx={{ height: "100%" }}>
+                                            <Button
+                                              variant="outlined"
+                                              startIcon={<RemoveIcon />}
+                                              sx={{ height: "100%" }}
+                                              onClick={() => remove(index)}
+                                            ></Button>
+                                          </Box>
+                                        )}
+                                      </Box>
+                                      {statesData?.state == "Other" && (
+                                        <Box>
+                                          <InputLabel
+                                            shrink
+                                            htmlFor="other_state"
+                                          >
+                                            Other State
+                                          </InputLabel>
+                                          <CustomInputField
+                                            name={`states.${index}.other_state`}
+                                            placeholder="State"
+
+                                            // width="100%"
+                                          />
+                                        </Box>
+                                      )}
+                                    </>
+                                  ))}
+                                <Box
+                                  sx={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "end",
+                                  }}
+                                >
+                                  <Box sx={{ width: "40%" }}>
+                                    <Button
+                                      variant="gradient"
+                                      size="large"
+                                      onClick={() => push()}
+                                    >
+                                      add licenseNumber
+                                    </Button>
+                                  </Box>
+                                </Box>
+                              </>
+                            )}
+                          </FieldArray>
 
                           <Box display="flex" flexDirection="column">
                             <Button
