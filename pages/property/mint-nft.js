@@ -226,7 +226,7 @@ const MintNFTS = () => {
             description: "description",
             address: values.address.replace(", USA", ""),
             document: categoryDocument,
-            docCategory: values.category,
+            docCategory: "settlement",
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
           });
           setSuccessData(
@@ -263,7 +263,7 @@ const MintNFTS = () => {
             description: "description",
             address: values.address.replace(", USA", ""),
             document: categoryDocument || editNftData?.document,
-            docCategory: values.category,
+            docCategory: "settlement",
             agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
           },
           {
@@ -342,7 +342,7 @@ const MintNFTS = () => {
           description: "description",
           address: values.address.replace(", USA", ""),
           document: categoryDocument,
-          docCategory: values.category,
+          docCategory: "settlement",
           agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
         },
         {
@@ -370,7 +370,7 @@ const MintNFTS = () => {
         description: "description",
         address: values.address.replace(", USA", ""),
         document: categoryDocument,
-        docCategory: values.category,
+        docCategory: "settlement",
         agentId: JSON.parse(localStorage.getItem("profile_info"))?.user?.id,
       });
       setSuccessData(
@@ -451,7 +451,7 @@ const MintNFTS = () => {
                     ? editNftData?.title?.split("@").at(-1)
                     : "",
                   address: editNftData?.address,
-                  category: editNftData?.docCategory,
+                  // category: editNftData?.docCategory,
                 }}
                 enableReinitialize={true}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -460,9 +460,9 @@ const MintNFTS = () => {
                 validationSchema={Yup.object().shape({
                   apartmentNo: Yup.string().optional(),
                   address: Yup.string().required("Address is required"),
-                  category: Yup.string().required(
-                    "Please choose a document category"
-                  ),
+                  // category: Yup.string().required(
+                  //   "Please choose a document category"
+                  // ),
                   property_category: Yup.string().required(
                     "Please choose a property category"
                   ),
@@ -567,7 +567,6 @@ const MintNFTS = () => {
                               Files types supported: JPG, PNG Max Size: 5MB
                             </Typography>
                             <CustomFileUpload
-                              // isUploading = {}
                               uploadingToS3={uploadingHousePhoto}
                               setUploadingToS3={setUploadingHousePhoto}
                               s3Url={housePhoto}
@@ -578,47 +577,36 @@ const MintNFTS = () => {
                               width="100%"
                             />
                           </Box>
-                          <CustomInputField
-                            name="category"
-                            // value={editNftData?.docCategory}
-                            label="Select Document Categories:"
-                            select
-                            options={documentOptions}
-                          />
-                          {(values?.category?.length > 1 ||
-                            editNftData?.docCategory) && (
-                            <Box>
-                              <InputLabel shrink>
-                                {values.category == "deed"
-                                  ? "Upload a copy of the deed:"
-                                  : "Upload a copy of the Settlement Statement"}
-                              </InputLabel>
-                              <Typography
-                                variant="subtitle1"
-                                sx={{
-                                  color: "#FAFBFC",
-                                  opacity: 0.5,
-                                  marginBottom: 1,
-                                }}
-                              >
-                                Files types supported: JPG, PNG, PDF, Max Size:
-                                100 MB
-                              </Typography>
-                              <CustomFileUpload
-                                maxUploadSizeMB={100}
-                                allowPdf={true}
-                                uploadingToS3={uploadingDocument}
-                                setUploadingToS3={setUploadingDocument}
-                                s3Url={categoryDocument}
-                                setS3Url={setCategoryDocument}
-                                editFilePayload={editNftData?.document_preview}
-                                property={true}
-                                borderRadius="24px"
-                                width="100%"
-                                privateBucket={true}
-                              />
-                            </Box>
-                          )}
+
+                          <Box>
+                            <InputLabel shrink>
+                              Upload a copy of the Settlement Statement
+                            </InputLabel>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{
+                                color: "#FAFBFC",
+                                opacity: 0.5,
+                                marginBottom: 1,
+                              }}
+                            >
+                              Files types supported: JPG, PNG, PDF, Max Size:
+                              100 MB
+                            </Typography>
+                            <CustomFileUpload
+                              maxUploadSizeMB={100}
+                              allowPdf={true}
+                              uploadingToS3={uploadingDocument}
+                              setUploadingToS3={setUploadingDocument}
+                              s3Url={categoryDocument}
+                              setS3Url={setCategoryDocument}
+                              editFilePayload={editNftData?.document_preview}
+                              property={true}
+                              borderRadius="24px"
+                              width="100%"
+                              privateBucket={true}
+                            />
+                          </Box>
 
                           <Box display="flex" pt={4}>
                             <LoadingButton
