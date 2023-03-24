@@ -243,11 +243,15 @@ const MintNFTS = () => {
             name: values.name,
             title:
               editNftData && values.apartmentNo
-                ? `${editNftData.title.split("@").at(0)}@${values.apartmentNo}`
+                ? `${(latLngPlusCode.plusCode || editNftData.title)
+                    .split("@")
+                    .at(0)}@${values.apartmentNo}`
                 : editNftData && values.apartmentNo.length == 0
-                ? editNftData.title.split("@").at(0)
+                ? (latLngPlusCode.plusCode || editNftData.title)
+                    .split("@")
+                    .at(0)
                 : editNftData
-                ? editNftData.title
+                ? latLngPlusCode.plusCode || editNftData.title
                 : values.apartmentNo
                 ? `${latLngPlusCode.plusCode}@${values.apartmentNo}`
                 : latLngPlusCode.plusCode,

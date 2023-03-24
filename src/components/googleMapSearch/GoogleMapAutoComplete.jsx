@@ -94,21 +94,23 @@ export default function GoogleMapAutoComplete(props) {
         ?.place_id == undefined
     ) {
       // debugger
-      Geocode.fromAddress(selectedValue).then(
-        (response) => {
-          const { lat, lng } = response.results[0].geometry.location;
-          return props.setLatLngPlusCode({
-            lat: lat,
-            lng: lng,
-            plusCode: openLocationCode?.encode(lat, lng),
-            // place_id: placeDetails?.place_id,
-            // detailedAddress: placeDetails?.adr_address,
-          });
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+      if (selectedValue) {
+        Geocode.fromAddress(selectedValue).then(
+          (response) => {
+            const { lat, lng } = response.results[0].geometry.location;
+            return props.setLatLngPlusCode({
+              lat: lat,
+              lng: lng,
+              plusCode: openLocationCode?.encode(lat, lng),
+              // place_id: placeDetails?.place_id,
+              // detailedAddress: placeDetails?.adr_address,
+            });
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      }
     } else {
       if (placePredictions?.length >= 1)
         placesService?.getDetails(
