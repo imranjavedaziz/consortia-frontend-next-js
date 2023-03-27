@@ -182,24 +182,13 @@ const EditProfile = () => {
 
   const updateUserData = async (values) => {
     // debugger;
-    console.log("values", values);
     setHandleFormInitialization(false);
     const originalKeys = Object.keys(values);
     const valuesToSend = {};
-    // console.log("originalKeys", originalKeys);
-
-    // console.log("values", values.states);
-    // console.log("userData", userData.states);
-    // debugger;
     const updatedData = [];
     for (let i = 0; i < values.states.length; i++) {
       for (let j = 0; j < userData?.states.length; j++) {
         if (values.states[i].id == userData.states[j].id) {
-          // console.log(
-          //   "values.states[i].state",
-          //   values.states[i],
-          //   userData.states[j]
-          // );
           if (
             values.states[i].state !== userData.states[j].state ||
             values.states[i].licenseNumber !== userData.states[j].licenseNumber
@@ -247,15 +236,14 @@ const EditProfile = () => {
           // );
           // console.log("updatedData", updatedData);
 
-          console.log("updatedData", updatedData);
+          // console.log("updatedData", updatedData);
 
           if (
             item == "states" &&
             updatedData.some((item) => item.state == "Other")
           ) {
-            console.log("valuesToSend", valuesToSend);
-            console.log("other");
-            const mapData = updatedData.map((item) => {
+            // console.log("valuesToSend", valuesToSend);
+            const changeData = updatedData.map((item) => {
               if (item.other_state) {
                 return {
                   state: item.other_state,
@@ -270,28 +258,29 @@ const EditProfile = () => {
                 };
               }
             });
-            valuesToSend[item] = mapData;
-            console.log("mapData", mapData);
+            valuesToSend[item] = changeData;
+            // console.log("changeData", changeData);
           } else {
             // console.log("not other");
             if (
               item == "states" &&
               updatedData.some((item) => item.state != "Other")
             ) {
-              console.log("item.state", item.state);
-              console.log("not other");
-              const mapData = updatedData.map((item) => {
+              const changeData = updatedData.map((item) => {
                 return {
                   state: item.state,
                   licenseNumber: item.licenseNumber,
                   ...(item?.id && { id: item?.id }),
                 };
               });
-              console.log("mapData", mapData);
-              valuesToSend[item] = mapData;
+              // console.log("changeData", changeData);
+              valuesToSend[item] = changeData;
             } else {
-              console.log("ddd");
-              if (updatedData.length > 0) {
+              // console.log("ddd", values[item]);
+              if (updatedData.length == 0) {
+                valuesToSend[item] = values[item];
+                delete valuesToSend.states;
+              } else {
                 valuesToSend[item] = values[item];
               }
             }
@@ -302,13 +291,12 @@ const EditProfile = () => {
 
     if (Object.keys(valuesToSend).length > 0) {
       setUpdatedUserData(valuesToSend);
-      // console.log("data final", valuesToSend);
       if (
         ((valuesToSend.practitionerType || values.practitionerType) ==
           "agent/broker" ||
           (valuesToSend.practitionerType || values.practitionerType) ==
             "loan officer") &&
-        (valuesToSend.country || values.country) == "United States" &&
+        (valuesToSend.country || values.country) == "united states" &&
         valuesToSend.states.some((item) => item.licenseNumber == "")
       ) {
         toast.error("Lisence number is required");
@@ -525,10 +513,8 @@ const EditProfile = () => {
                     if (values.country) {
                       setSelectedCountry(values.country);
                     }
-                    console.log("values.states", values);
                     values?.states?.map((item) => {
                       if (item?.state != "Other" && item?.id) {
-                        // console.log("true");
                         item.other_state = "";
                       }
                     });
