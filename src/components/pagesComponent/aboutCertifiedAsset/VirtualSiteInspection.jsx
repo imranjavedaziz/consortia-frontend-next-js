@@ -44,7 +44,7 @@ function VirtualSiteInspection() {
             >
               <Typography variant="body1">
                 STEP 3: HOW DO I ACCURATELY AND LEGALLY DISCLOSE THE CONDITION
-                OF THE PROPERTY? (Visual documentatio
+                OF THE PROPERTY? (Visual documentatio)
               </Typography>
             </Box>
             <Box>
