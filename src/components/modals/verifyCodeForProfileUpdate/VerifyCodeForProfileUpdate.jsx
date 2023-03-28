@@ -122,6 +122,7 @@ function VerifyCodeForProfileUpdate({
         setFetching(false);
         const user = res?.data?.data?.user;
         toast.success(res?.data?.message);
+        fetchUpdatedData();
         const profile_info = JSON.parse(localStorage.getItem("profile_info"));
         const newProfileData = {
           ...profile_info,

@@ -27,6 +27,8 @@ import {
   getStateAgainstCountry,
 } from "../../src/utils/countriesAndStatesApi/getCountryAndStateList";
 import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -93,7 +95,8 @@ const EditProfile = () => {
   };
 
   const fetchUpdatedData = () => {
-    setRefetchData((prev) => !prev);
+    console.log("refatched");
+    setRefetchData(!refetchData);
   };
 
   const inputFields = [
@@ -177,6 +180,7 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
+    console.log("getData");
     getUserData();
   }, [refetchData]);
 
@@ -396,15 +400,18 @@ const EditProfile = () => {
                       : userData.states
                     )?.map((item) => {
                       return {
-                        state: statesAgainstCountry?.find((data) =>
-                          data.value.includes(item.state)
-                        )?.value
-                          ? statesAgainstCountry.find((data) =>
-                              data.value.includes(item.state)
-                            )?.value
-                          : selectedCountry != userData.country
-                          ? ""
-                          : "Other",
+                        state:
+                          selectedCountry != userData.country
+                            ? ""
+                            : statesAgainstCountry?.find((data) =>
+                                data.value.includes(item.state)
+                              )?.value
+                            ? statesAgainstCountry.find((data) =>
+                                data.value.includes(item.state)
+                              )?.value
+                            : selectedCountry != userData.country
+                            ? ""
+                            : "Other",
                         licenseNumber:
                           selectedCountry != userData.country
                             ? ""
@@ -596,6 +603,14 @@ const EditProfile = () => {
                                 {values?.states?.length > 0 &&
                                   values?.states?.map((statesData, index) => (
                                     <>
+                                      {console.log(
+                                        "!userData?.states?.find(",
+                                        userData?.states?.find(
+                                          (remData) =>
+                                            remData?.id == statesData?.id
+                                        )?.id,
+                                        userData
+                                      )}
                                       <Box
                                         display="flex"
                                         alignItems="end"
@@ -616,9 +631,33 @@ const EditProfile = () => {
                                           />
                                         </Box>
                                         <Box>
-                                          <InputLabel shrink htmlFor="state">
-                                            State / Province
-                                          </InputLabel>
+                                          <Box
+                                            sx={{
+                                              display: "flex",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <InputLabel shrink htmlFor="state">
+                                              State / Province
+                                            </InputLabel>
+                                            {!userData?.states?.find(
+                                              (remData) =>
+                                                remData?.id == statesData?.id
+                                            )?.id && (
+                                              <Box sx={{ height: "100%" }}>
+                                                {/* <Button
+                                              variant="outlined"
+                                              startIcon={<RemoveIcon />}
+                                              sx={{ height: "100%" }}
+                                              onClick={() => remove(index)}
+                                            ></Button> */}
+                                                <DeleteIcon
+                                                  onClick={() => remove(index)}
+                                                />
+                                              </Box>
+                                            )}
+                                          </Box>
+
                                           <CustomInputField
                                             name={`states.${index}.state`}
                                             placeholder="State"
@@ -627,19 +666,6 @@ const EditProfile = () => {
                                             // width="100%"
                                           />
                                         </Box>
-                                        {!userData?.states?.find(
-                                          (remData) =>
-                                            remData?.id == statesData?.id
-                                        )?.id && (
-                                          <Box sx={{ height: "100%" }}>
-                                            <Button
-                                              variant="outlined"
-                                              startIcon={<RemoveIcon />}
-                                              sx={{ height: "100%" }}
-                                              onClick={() => remove(index)}
-                                            ></Button>
-                                          </Box>
-                                        )}
                                       </Box>
                                       {statesData?.state == "Other" && (
                                         <Box>
@@ -666,14 +692,24 @@ const EditProfile = () => {
                                     justifyContent: "end",
                                   }}
                                 >
-                                  <Box sx={{ width: "40%" }}>
-                                    <Button
+                                  <Box
+                                    sx={{
+                                      width: "40%",
+                                      display: "flex",
+                                      justifyContent: "end",
+                                    }}
+                                  >
+                                    {/* <Button
                                       variant="gradient"
                                       size="large"
                                       onClick={() => push()}
                                     >
-                                      add licenseNumber
-                                    </Button>
+                                      Add License Number
+                                    </Button> */}
+                                    <AddCircleOutlineIcon
+                                      onClick={() => push()}
+                                      sx={{ fontSize: 40, cursor: "pointer" }}
+                                    />
                                   </Box>
                                 </Box>
                               </>
