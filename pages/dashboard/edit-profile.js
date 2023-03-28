@@ -95,7 +95,7 @@ const EditProfile = () => {
   };
 
   const fetchUpdatedData = () => {
-    console.log("refatched");
+    // console.log("refatched");
     setRefetchData(!refetchData);
   };
 
@@ -180,13 +180,13 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    console.log("getData");
+    // console.log("getData");
     getUserData();
   }, [refetchData]);
 
   const updateUserData = async (values) => {
     // debugger;
-    setHandleFormInitialization(false);
+    setHandleFormInitialization((prev) => !prev);
     const originalKeys = Object.keys(values);
     const valuesToSend = {};
     const updatedData = [];
@@ -369,6 +369,7 @@ const EditProfile = () => {
           <Box>
             <Typography variant="h3">Profile Details</Typography>
           </Box>
+          {/* {console.log("handleFormInitialization", handleFormInitialization)} */}
           {profileInfo?.user?.role === "Practitioner"
             ? Object.keys(userData).length > 0 && (
                 <Formik
@@ -415,7 +416,7 @@ const EditProfile = () => {
                         licenseNumber:
                           selectedCountry != userData.country
                             ? ""
-                            : item.licenseNumber,
+                            : item.licenseNumber ?? "",
                         other_state: statesAgainstCountry?.find((data) =>
                           data.value.includes(item.state)
                         )?.value
@@ -603,14 +604,15 @@ const EditProfile = () => {
                                 {values?.states?.length > 0 &&
                                   values?.states?.map((statesData, index) => (
                                     <>
-                                      {console.log(
+                                      {/* {console.log(
                                         "!userData?.states?.find(",
                                         userData?.states?.find(
                                           (remData) =>
                                             remData?.id == statesData?.id
                                         )?.id,
-                                        userData
-                                      )}
+                                        userData,
+                                        statesData?.id
+                                      )} */}
                                       <Box
                                         display="flex"
                                         alignItems="end"
@@ -739,6 +741,9 @@ const EditProfile = () => {
                           editProfileKey={true}
                           profileUpdate={true}
                           fetchUpdatedData={fetchUpdatedData}
+                          setHandleFormInitialization={
+                            setHandleFormInitialization
+                          }
                           inputTypeCode
                         />
                       </form>
