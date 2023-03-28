@@ -623,7 +623,7 @@ const EditProfile = () => {
                                             shrink
                                             htmlFor="licenseNumber"
                                           >
-                                            License Number
+                                            License Number {index + 1}
                                           </InputLabel>
                                           <CustomInputField
                                             name={`states.${index}.licenseNumber`}
