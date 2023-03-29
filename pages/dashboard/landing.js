@@ -5,11 +5,13 @@ import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
 import { publicAxios } from "../../src/api";
 import { VIDEO_WATCHED } from "../../src/constants/endpoints";
+import YouTube from "react-youtube";
 
 function Landing() {
   useTitle("Dasboard");
   const { push } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
+
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo(profile_info);
@@ -17,7 +19,19 @@ function Landing() {
       updateVideoStatus();
     }
   }, []);
-
+  const [player, setPlayer] = useState(null);
+  const onReady = (event) => {
+    setPlayer(event.target);
+    event.target.addEventListener("onStateChange", onStateChange);
+  };
+  console.log("player.getPlaylist()", player.getPlaylist());
+  const onStateChange = (event) => {
+    console.log("event.data", event);
+    if (event?.data === 0) {
+      const nextVideoId = player.getPlaylist()?.[player.getPlaylistIndex() + 1];
+      player.loadVideoById(nextVideoId);
+    }
+  };
   const updateVideoStatus = async () => {
     try {
       const res = await publicAxios.get(VIDEO_WATCHED, {
@@ -28,6 +42,14 @@ function Landing() {
     } catch (error) {
       console.log(error);
     }
+  };
+  const opts = {
+    height: "373px",
+    width: "640",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+    },
   };
 
   return (
@@ -41,7 +63,7 @@ function Landing() {
         </Typography>
       </Box>
       <Box>
-        <CardMedia
+        {/* <CardMedia
           component="iframe"
           src="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
           controls
@@ -50,6 +72,18 @@ function Landing() {
           autoPlay
           allow="autoPlay"
           sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
+        /> */}
+        <YouTube
+          videoId="gebQXkAhSUk"
+          channelId="UCfRUkwXM-NBejbQBJXR8U6w"
+          onReady={onReady}
+          opts={{
+            playerVars: {
+              autoplay: 1,
+              listType: "playlist",
+              list: "UCfRUkwXM-NBejbQBJXR8U6w",
+            },
+          }}
         />
       </Box>
       <Box
