@@ -301,7 +301,12 @@ const EditProfile = () => {
           (valuesToSend.practitionerType || values.practitionerType) ==
             "loan officer") &&
         (valuesToSend.country || values.country) == "united states" &&
-        valuesToSend.states.some((item) => item.licenseNumber == "")
+        valuesToSend.states.some(
+          (item) =>
+            item.licenseNumber == "" ||
+            item.licenseNumber == undefined ||
+            item.licenseNumber == null
+        )
       ) {
         toast.error("Lisence number is required");
       } else {
