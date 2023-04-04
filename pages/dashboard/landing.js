@@ -9,29 +9,38 @@ import YouTube from "react-youtube";
 
 function Landing() {
   useTitle("Dasboard");
-  const { push } = useRouter();
+  const { push, asPath } = useRouter();
   const [profileInfo, setProfileInfo] = useState({});
+  const [videoCount, setVideoCount] = useState(0);
+  const [player, setPlayer] = useState({});
 
+  useEffect(() => {
+    if (!JSON.parse(localStorage.getItem("videos"))) getVideos();
+  }, []);
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo(profile_info);
-    if (profile_info?.user?.isConfirmed) {
+    if (!profile_info?.user?.isConfirmed) {
       updateVideoStatus();
+      let updatedData = structuredClone(profile_info);
+      updatedData.user.isConfirmed = true;
+      localStorage.setItem("profile_info", JSON.stringify(updatedData));
     }
-  }, []);
-  const [player, setPlayer] = useState(null);
-  const onReady = (event) => {
-    setPlayer(event.target);
-    event.target.addEventListener("onStateChange", onStateChange);
-  };
-  console.log("player.getPlaylist()", player.getPlaylist());
-  const onStateChange = (event) => {
-    console.log("event.data", event);
-    if (event?.data === 0) {
-      const nextVideoId = player.getPlaylist()?.[player.getPlaylistIndex() + 1];
-      player.loadVideoById(nextVideoId);
-    }
-  };
+
+    let videoCountLocal = JSON.parse(localStorage.getItem("video_count"));
+    const videosList = JSON.parse(localStorage.getItem("videos"));
+    localStorage.setItem(
+      "video_count",
+      JSON.stringify(
+        videoCountLocal === videosList?.length - 1 ? 0 : videoCountLocal + 1
+      )
+    );
+
+    videoCountLocal === videosList?.length - 1
+      ? setPlayer(videosList?.[0])
+      : setPlayer(videosList?.[videoCountLocal + 1]);
+  }, [asPath]);
+
   const updateVideoStatus = async () => {
     try {
       const res = await publicAxios.get(VIDEO_WATCHED, {
@@ -43,13 +52,22 @@ function Landing() {
       console.log(error);
     }
   };
-  const opts = {
-    height: "373px",
-    width: "640",
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-    },
+
+  const getVideos = async () => {
+    const res = await publicAxios.get(
+      "https://content-youtube.googleapis.com/youtube/v3/playlistItems?playlistId=PL0fdpt9qgI7lPBOwI9GdnZ9leeU5b5v9B&part=snippet&key=AIzaSyBFcsX8Ye6MM42TsUtbEIWnj7sSpmmYwLE&maxResults=50",
+      {}
+    );
+
+    if (res.status == 200) {
+      localStorage.setItem("video_count", JSON.stringify(0));
+      const updatedVideosData = res.data.items.map((item) => ({
+        position: item.snippet.position,
+        resourceId: item.snippet.resourceId,
+      }));
+      setPlayer(updatedVideosData?.[0]);
+      localStorage.setItem("videos", JSON.stringify(updatedVideosData));
+    }
   };
 
   return (
@@ -63,17 +81,30 @@ function Landing() {
         </Typography>
       </Box>
       <Box>
-        {/* <CardMedia
-          component="iframe"
-          src="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
-          controls
-          title="title"
-          image="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
-          autoPlay
-          allow="autoPlay"
-          sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
-        /> */}
-        <YouTube
+        {profileInfo?.user?.isConfirmed ? (
+          <CardMedia
+            component="iframe"
+            src={`https://www.youtube.com/embed/${player?.resourceId?.videoId}`}
+            controls
+            title="title"
+            image={`https://www.youtube.com/embed/${player?.resourceId?.videoId}`}
+            autoPlay
+            allow="autoPlay"
+            sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
+          />
+        ) : (
+          <CardMedia
+            component="iframe"
+            src="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
+            controls
+            title="title"
+            image="https://consortiamedia.s3.amazonaws.com/Getting+Started+-+WITH+CAPTIONS.mp4"
+            autoPlay
+            allow="autoPlay"
+            sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
+          />
+        )}
+        {/* <YouTube
           videoId="gebQXkAhSUk"
           channelId="UCfRUkwXM-NBejbQBJXR8U6w"
           onReady={onReady}
@@ -84,7 +115,16 @@ function Landing() {
               list: "UCfRUkwXM-NBejbQBJXR8U6w",
             },
           }}
-        />
+        /> */}
+        {/* <iframe
+          width="560"
+          height="315"
+          src={`https://www.youtube.com/embed/${player?.resourceId?.videoId}`}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe> */}
       </Box>
       <Box
         sx={{
