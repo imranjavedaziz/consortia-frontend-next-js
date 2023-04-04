@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useTitle } from "../../src/utils/Title";
 import { publicAxios } from "../../src/api";
 import { VIDEO_WATCHED } from "../../src/constants/endpoints";
-import YouTube from "react-youtube";
 
 function Landing() {
   useTitle("Dasboard");
@@ -104,18 +103,6 @@ function Landing() {
             sx={{ height: { xs: "150px", md: "373px" }, border: "none" }}
           />
         )}
-        {/* <YouTube
-          videoId="gebQXkAhSUk"
-          channelId="UCfRUkwXM-NBejbQBJXR8U6w"
-          onReady={onReady}
-          opts={{
-            playerVars: {
-              autoplay: 1,
-              listType: "playlist",
-              list: "UCfRUkwXM-NBejbQBJXR8U6w",
-            },
-          }}
-        /> */}
         {/* <iframe
           width="560"
           height="315"
