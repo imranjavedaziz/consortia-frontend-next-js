@@ -38,6 +38,7 @@
     "react-google-autocomplete": "^2.7.1",
     "react-hot-toast": "^2.4.0",
     "react-phone-input-2": "^2.15.1",
+    "react-youtube": "^10.1.0",
     "yup": "^0.32.11"
   }
 }
