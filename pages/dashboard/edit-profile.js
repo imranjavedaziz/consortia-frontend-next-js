@@ -344,7 +344,7 @@ const EditProfile = () => {
       toast.error("No changes detected");
     }
   };
-
+  console.log("statesAgainstCountry", statesAgainstCountry);
   return (
     <Box marginY={{ xs: 0, md: 5 }}>
       <Typography variant="h3" marginY={{ md: 5 }}>
@@ -410,10 +410,10 @@ const EditProfile = () => {
                           selectedCountry != userData.country
                             ? ""
                             : statesAgainstCountry?.find((data) =>
-                                data.value.includes(item.state)
+                                data.value.includes(item.state.toLowerCase())
                               )?.value
                             ? statesAgainstCountry.find((data) =>
-                                data.value.includes(item.state)
+                                data.value.includes(item.state.toLowerCase())
                               )?.value
                             : selectedCountry != userData.country
                             ? ""
@@ -423,7 +423,7 @@ const EditProfile = () => {
                             ? ""
                             : item.licenseNumber ?? "",
                         other_state: statesAgainstCountry?.find((data) =>
-                          data.value.includes(item.state)
+                          data.value.includes(item.state.toLowerCase())
                         )?.value
                           ? ""
                           : item.state,
