@@ -292,8 +292,9 @@ const EditProfile = () => {
         }
       }
     });
-
+    // console.log("iiii", valuesToSend);
     if (Object.keys(valuesToSend).length > 0) {
+      debugger;
       setUpdatedUserData(valuesToSend);
       if (
         ((valuesToSend.practitionerType || values.practitionerType) ==
@@ -301,7 +302,7 @@ const EditProfile = () => {
           (valuesToSend.practitionerType || values.practitionerType) ==
             "loan officer") &&
         (valuesToSend.country || values.country) == "united states" &&
-        valuesToSend.states.some(
+        valuesToSend?.states?.some(
           (item) =>
             item.licenseNumber == "" ||
             item.licenseNumber == undefined ||
