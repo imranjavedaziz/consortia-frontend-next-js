@@ -344,7 +344,7 @@ const EditProfile = () => {
       toast.error("No changes detected");
     }
   };
-  console.log("statesAgainstCountry", statesAgainstCountry);
+  // console.log("statesAgainstCountry", statesAgainstCountry);
   return (
     <Box marginY={{ xs: 0, md: 5 }}>
       <Typography variant="h3" marginY={{ md: 5 }}>
