@@ -110,11 +110,11 @@ const Header = ({ token, signupData }) => {
       name: "About Certified Asset",
       path: "/about-certified-asset",
     },
-    {
-      name: "Order Certified Asset",
-      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+    //   target: "_blank",
+    // },
     {
       name: "Contact us",
       path: "https://consortia.typeform.com/inquiry",
@@ -132,11 +132,11 @@ const Header = ({ token, signupData }) => {
   };
   const betweenMdXlMenuItems = navigationItems.slice(0, 3);
   const moreMenuItems = [
-    {
-      name: "Order Certified Asset",
-      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+    //   target: "_blank",
+    // },
     {
       name: "Contact us",
       path: "https://consortia.typeform.com/inquiry",

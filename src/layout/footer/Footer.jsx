@@ -28,11 +28,11 @@ function Footer() {
   ];
   const footerContent = [
     { name: "About Certified Asset", path: "/about-certified-asset" },
-    {
-      name: "Order Certified Asset",
-      path: "https://reconsortia.com/order-certified-asset",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://reconsortia.com/order-certified-asset",
+    //   target: "_blank",
+    // },
     { name: "Privacy Policy", path: "privacy-policy" },
     { name: "Term of Services", path: "/terms-of-services" },
     {
