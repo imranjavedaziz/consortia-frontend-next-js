@@ -28,11 +28,11 @@ function Footer() {
   ];
   const footerContent = [
     { name: "About Certified Asset", path: "/about-certified-asset" },
-    {
-      name: "Order Certified Asset",
-      path: "https://reconsortia.com/order-certified-asset",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://reconsortia.com/order-certified-asset",
+    //   target: "_blank",
+    // },
     { name: "Privacy Policy", path: "privacy-policy" },
     { name: "Term of Services", path: "/terms-of-services" },
     {
@@ -58,12 +58,14 @@ function Footer() {
             justifyContent: { xs: "center", md: "space-between" },
           }}
         >
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            alt="Logo"
-            height={upSm ? 74 : belowSm ? 20 : 34}
-            width={upSm ? 126 : belowSm ? 114 : 208}
-          />
+          <Link href="/">
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              alt="Logo"
+              height={upSm ? 74 : belowSm ? 20 : 34}
+              width={upSm ? 126 : belowSm ? 114 : 208}
+            />
+          </Link>
 
           {/* <Box
             sx={{
