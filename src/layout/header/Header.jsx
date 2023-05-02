@@ -170,12 +170,14 @@ const Header = ({ token, signupData }) => {
     >
       <Box sx={{ display: "flex", justifyContent: "center", padding: "24px" }}>
         <ImageLogo>
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            width={152}
-            height={29}
-            alt="Logo"
-          />
+          <Link href="/">
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              width={152}
+              height={29}
+              alt="Logo"
+            />
+          </Link>
         </ImageLogo>
       </Box>
       <List>
@@ -210,12 +212,14 @@ const Header = ({ token, signupData }) => {
         >
           <Grid item xs={2} sm={1}>
             <ImageLogo>
-              <Image
-                src="/assets/images/consortiaLogo.svg"
-                width={isNotLap ? 100 : 111}
-                height={58}
-                alt="Logo"
-              />
+              <Link href="/">
+                <Image
+                  src="/assets/images/consortiaLogo.svg"
+                  width={isNotLap ? 100 : 111}
+                  height={58}
+                  alt="Logo"
+                />
+              </Link>
             </ImageLogo>
           </Grid>
           <Grid item xs={7} sm={isLoggedIn ? 10 : 8.5}>
@@ -389,12 +393,14 @@ const Header = ({ token, signupData }) => {
             </Box>
             <Box>
               <ImageLogo>
-                <Image
-                  src="/assets/images/consortiaLogo.svg"
-                  width={isNotLap ? 100 : 180}
-                  height={29}
-                  alt="Logo"
-                />
+                <Link href="/">
+                  <Image
+                    src="/assets/images/consortiaLogo.svg"
+                    width={isNotLap ? 100 : 180}
+                    height={29}
+                    alt="Logo"
+                  />
+                </Link>
               </ImageLogo>
             </Box>
             {token && !Boolean(signupData) ? (

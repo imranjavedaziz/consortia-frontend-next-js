@@ -259,7 +259,7 @@ const CreditCardInput = ({ mintNFTData, isPractitionerNFT }) => {
       >
         <DialogTitle>
           <Typography variant="h3">
-            {isPractitionerNFT ? "Practitioner NFT $20" : "Property NFT $20"}
+            {isPractitionerNFT ? "Practitioner NFT $50" : "Property NFT $50"}
           </Typography>
         </DialogTitle>
         <DialogContent>

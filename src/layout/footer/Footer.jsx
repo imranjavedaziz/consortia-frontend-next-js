@@ -58,12 +58,14 @@ function Footer() {
             justifyContent: { xs: "center", md: "space-between" },
           }}
         >
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            alt="Logo"
-            height={upSm ? 74 : belowSm ? 20 : 34}
-            width={upSm ? 126 : belowSm ? 114 : 208}
-          />
+          <Link href="/">
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              alt="Logo"
+              height={upSm ? 74 : belowSm ? 20 : 34}
+              width={upSm ? 126 : belowSm ? 114 : 208}
+            />
+          </Link>
 
           {/* <Box
             sx={{

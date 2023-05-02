@@ -129,7 +129,7 @@ function AboutCertifiedAsset() {
             ORDER A CERTIFIED ASSET
           </Typography>
           <Link
-            href="https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx"
+            href="https://consortia.mn.co/landing/plans/292003"
             target="_blank"
             style={{ textDecoration: "none" }}
           >
