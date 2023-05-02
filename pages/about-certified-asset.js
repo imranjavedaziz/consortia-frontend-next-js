@@ -117,17 +117,19 @@ function AboutCertifiedAsset() {
           }}
         >
           <Typography variant="body1">
-            ORDER YOUR CERTIFIED ASSET NOW
+            GET TRAINED ON CERTIFIED ASSET
           </Typography>
           <Typography
             variant="subtitle2"
             color="rgb(145, 145, 145)"
             sx={{ padding: "20px 0px" }}
+            style={{ lineHeight: "16px" }}
           >
-            AND SELL YOUR LISTING FASTER!
+            WE REQUIRE AGENTS AND LENDERS GET TRAINED IN CERTIFIED ASSET TO
+            ORDER A CERTIFIED ASSET
           </Typography>
           <Link
-            href="https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx"
+            href="https://consortia.mn.co/landing/plans/292003"
             target="_blank"
             style={{ textDecoration: "none" }}
           >
@@ -140,7 +142,7 @@ function AboutCertifiedAsset() {
                 padding: "15px 40px",
               }}
             >
-              ORDER YOUR CERTIFIED ASSET
+              GET TRAINING
             </Button>
           </Link>
         </Box>

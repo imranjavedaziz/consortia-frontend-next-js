@@ -26,7 +26,7 @@ const GradientMintPropertyNfts = styled(Box)(({ theme }) => ({
   background: theme.palette.border.default,
   borderRadius: "24px",
   padding: "1px",
-  marginTop: "40px",
+  marginTop: "8px",
 }));
 const MintPropertyNfts = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -433,6 +433,16 @@ const MintNFTS = () => {
       <Box>
         <Box>
           <Typography variant="h3">Mint Property NFT</Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              lineHeight: "26px",
+              marginTop: "26px",
+              fontSize: `11px !important`,
+            }}
+          >
+            Must wait 45 days after purchasing property to create Property NFT
+          </Typography>
         </Box>
         <GradientMintPropertyNfts>
           <MintPropertyNfts>

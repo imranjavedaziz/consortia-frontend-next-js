@@ -110,11 +110,11 @@ const Header = ({ token, signupData }) => {
       name: "About Certified Asset",
       path: "/about-certified-asset",
     },
-    {
-      name: "Order Certified Asset",
-      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+    //   target: "_blank",
+    // },
     {
       name: "Contact us",
       path: "https://consortia.typeform.com/inquiry",
@@ -132,11 +132,11 @@ const Header = ({ token, signupData }) => {
   };
   const betweenMdXlMenuItems = navigationItems.slice(0, 3);
   const moreMenuItems = [
-    {
-      name: "Order Certified Asset",
-      path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
-      target: "_blank",
-    },
+    // {
+    //   name: "Order Certified Asset",
+    //   path: "https://consortia.typeform.com/to/eu6OzeyT#hubspot_utk=xxxxx&hubspot_page_name=xxxxx&hubspot_page_url=xxxxx",
+    //   target: "_blank",
+    // },
     {
       name: "Contact us",
       path: "https://consortia.typeform.com/inquiry",
@@ -170,12 +170,14 @@ const Header = ({ token, signupData }) => {
     >
       <Box sx={{ display: "flex", justifyContent: "center", padding: "24px" }}>
         <ImageLogo>
-          <Image
-            src="/assets/images/consortiaLogo.svg"
-            width={152}
-            height={29}
-            alt="Logo"
-          />
+          <Link href="/">
+            <Image
+              src="/assets/images/consortiaLogo.svg"
+              width={152}
+              height={29}
+              alt="Logo"
+            />
+          </Link>
         </ImageLogo>
       </Box>
       <List>
@@ -210,12 +212,14 @@ const Header = ({ token, signupData }) => {
         >
           <Grid item xs={2} sm={1}>
             <ImageLogo>
-              <Image
-                src="/assets/images/consortiaLogo.svg"
-                width={isNotLap ? 100 : 111}
-                height={58}
-                alt="Logo"
-              />
+              <Link href="/">
+                <Image
+                  src="/assets/images/consortiaLogo.svg"
+                  width={isNotLap ? 100 : 111}
+                  height={58}
+                  alt="Logo"
+                />
+              </Link>
             </ImageLogo>
           </Grid>
           <Grid item xs={7} sm={isLoggedIn ? 10 : 8.5}>
@@ -389,12 +393,14 @@ const Header = ({ token, signupData }) => {
             </Box>
             <Box>
               <ImageLogo>
-                <Image
-                  src="/assets/images/consortiaLogo.svg"
-                  width={isNotLap ? 100 : 180}
-                  height={29}
-                  alt="Logo"
-                />
+                <Link href="/">
+                  <Image
+                    src="/assets/images/consortiaLogo.svg"
+                    width={isNotLap ? 100 : 180}
+                    height={29}
+                    alt="Logo"
+                  />
+                </Link>
               </ImageLogo>
             </Box>
             {token && !Boolean(signupData) ? (
