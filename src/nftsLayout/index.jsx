@@ -13,6 +13,8 @@ import { useRouter } from "next/router";
 import { useTitle } from "../utils/Title";
 import toast, { Toaster } from "react-hot-toast";
 import CompletePractitionerProfile from "../components/modals/CompletePractitionerProfile";
+import ConsumerProfilePopup from "../../src/components/modals/ConsumerProfilePopup";
+// import { loadStripe } from "@stripe/stripe-js";
 import { publicAxios } from "../api";
 import VerificationModal from "../components/modals/verificationModal/VerificationModal";
 import ChangePasswordDumpUsers from "../components/modals/changePasswordDumpUsers/ChangePasswordDumpUsers";
@@ -34,6 +36,8 @@ function NftsLayout({ children }) {
     liveStripe,
   } = useAuthContext();
   const [completeProfileOpen, setCompleteProfileOpen] = useState(false);
+  const [profileImagePopup, setProfileImagePopup] = useState(false);
+
   const [dumpUserOpen, setDumpUserOpen] = useState(false);
 
   const isLaptop = useMediaQuery("(min-width:900px)");
@@ -86,6 +90,15 @@ function NftsLayout({ children }) {
       ) {
         setCompleteProfileOpen(true);
       }
+        // to add consumer profile photo
+      if (
+        profile_info?.user?.email_verified &&
+        profile_info?.user?.role === "Consumer" &&
+        !profile_info?.user?.headshot
+      ) {
+        setProfileImagePopup(true);
+      }
+
     }
 
     if (stripeVerificationCode.length > 1) {
@@ -162,7 +175,14 @@ function NftsLayout({ children }) {
         btnText1="consumer"
         btnText2="practitioner"
       />
-
+      <ConsumerProfilePopup
+        open={profileImagePopup}
+        setOpen={setProfileImagePopup}
+        title="Complete Profile"
+        text="Please complete your Consumer profile to start minting NFTs"
+        btnText1="consumer"
+        btnText2="practitioner"
+      />
       <Dialog
         open={isStripeModalOpen}
         // TransitionComponent={Transition}
