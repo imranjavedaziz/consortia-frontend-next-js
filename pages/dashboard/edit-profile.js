@@ -29,6 +29,9 @@ import {
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import UpdateProfilePopup from '../../src/components/modals/UpdateProfilePopup'
+import { useAuthContext } from "../../src/context/AuthContext";
+import EditIcon from '@mui/icons-material/Edit';
 
 const practitionerOptions = [
   { value: "agent/broker", label: "Real Estate Agent/Broker" },
@@ -67,11 +70,32 @@ const EditProfile = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [handleFormInitialization, setHandleFormInitialization] =
     useState(true);
+  const [profileImg, setProfileImg] = useState(null);
+  const [profileImagePopup, setProfileImagePopup] = useState(false);
+  const [headshot, setHeadshot] = useState("");
+  const [uploadingHeadshot, setUploadingHeadshot] = useState(false);
+
+  const {
+    // setChoosePractitionerOpen,
+    // setShowSecondForm,
+    refetchFromLocalStorage,
+    // setOpenVerificationFailure,
+    // setOpenVerificationSuccess,
+  } = useAuthContext();
 
   useEffect(() => {
     const profile_info = JSON.parse(localStorage.getItem("profile_info"));
     setProfileInfo(profile_info);
   }, []);
+
+  useEffect(() => {
+    const profile_img = JSON.parse(localStorage.getItem("profile_info"))?.user
+      ?.headshot;
+    if (typeof profile_img == "string" && profile_img?.length > 1) {
+      setProfileImg(profile_img);
+    }
+  }, [refetchFromLocalStorage]);
+  
 
   useEffect(() => {
     const getData = async () => {
@@ -375,6 +399,14 @@ const EditProfile = () => {
           <Box>
             <Typography variant="h3">Profile Details</Typography>
           </Box>
+          <UpdateProfilePopup
+            open={profileImagePopup}
+            setOpen={setProfileImagePopup}
+            title="Profile Photo"
+            text="Please upload profile photo to update your Headshot"
+            btnText1="consumer"
+            btnText2="practitioner"
+          />
           {/* {console.log("handleFormInitialization", handleFormInitialization)} */}
           {profileInfo?.user?.role === "Practitioner"
             ? Object.keys(userData).length > 0 && (
@@ -557,8 +589,25 @@ const EditProfile = () => {
                           }}
                         >
                           <Box>
+                            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+                              <Box >
+                                <img
+                                  alt="Profile Image"
+                                  src={profileImg}
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "150px",
+                                    height: "150px"
+                                  }}
+                                />
+                              </Box>
+                              <EditIcon
+                                style={{ cursor: "pointer", margin: "10px 0" }}
+                                onClick={()=> setProfileImagePopup(true)}
+                              />
+                            </Box>
                             <InputLabel shrink htmlFor="firstName">
-                              Name
+                              Names
                             </InputLabel>
                             <Box
                               display="flex"
@@ -819,6 +868,23 @@ const EditProfile = () => {
                           rowGap={3}
                         >
                           <Box>
+                            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+                              <Box >
+                                <img
+                                  alt="Profile Image"
+                                  src={profileImg}
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "150px",
+                                    height: "150px"
+                                  }}
+                                />
+                              </Box>
+                              <EditIcon
+                                style={{ cursor: "pointer", margin: "10px 0" }}
+                                onClick={()=> setProfileImagePopup(true)}
+                              />
+                            </Box>
                             <InputLabel shrink htmlFor="firstName">
                               Name
                             </InputLabel>
